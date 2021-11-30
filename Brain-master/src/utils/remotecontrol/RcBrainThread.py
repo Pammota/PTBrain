@@ -124,8 +124,8 @@ class RcBrainThread:
         data = {}
         # BRAKE command
         if self.currentState[4]:
-            data['action']        =  '3'
-            data['steerAngle']    =  float(self.steerAngle)
+            data['action']        =  '1'
+            data['speed']    =  float(self.speed)
         # SPEED command
         elif self.currentState[0] or self.currentState[1] or self.currentState[8] or self.currentState[9]:
             data['action']        =  '1'                  #^ additions for constant speed speed
