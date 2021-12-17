@@ -13,7 +13,7 @@ class Controller:
     def update_speed(self, speed, startup=False, time_elapsed=0):
         if speed > 0:
             if self.speed == 0:
-                self.speed = 20
+                self.speed = 26
                 return {'action': '1', 'speed': float(self.speed/100.0)}, True
             else:
                 if startup is True and time_elapsed < self.time_threshold:

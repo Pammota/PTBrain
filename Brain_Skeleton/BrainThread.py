@@ -75,7 +75,7 @@ class BrainThread(Thread):
                                 command = json.loads(bts)"""
             self.outP_com.send(command)
 
-            command, startup = self.controller.update_speed(15)
+            command, startup = self.controller.update_speed(17)
             """command = json.dumps(command).encode()
                                 bts = command.decode()
                                 command = json.loads(bts)"""
@@ -92,16 +92,12 @@ class BrainThread(Thread):
                 cv2.imshow("video", frame)
                 cv2.waitKey(1)
 
+        time.sleep(1)
+        
         command = self.controller.update_angle(0)
-        """command = json.dumps(command).encode()
-                            bts = command.decode()
-                            command = json.loads(bts)"""
         self.outP_com.send(command)
 
         command, startup = self.controller.update_speed(0)
-        """command = json.dumps(command).encode()
-                            bts = command.decode()
-                            command = json.loads(bts)"""
         self.outP_com.send(command)
 
     def plot_timeframes_graph(self, timeframes):
@@ -153,7 +149,7 @@ class BrainThread(Thread):
 
         outP_obj, self.inP_obj = Pipe()  # out will be sent from ObjectDetectionThread
                                    # in will be recieved in BrainThread (here)
-        
+
         self.outP_com, self.inP_com = Pipe()  # out will be sent from BrainThread (here)
                                             # in will  be received in writeThread
 
