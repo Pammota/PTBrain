@@ -72,15 +72,15 @@ class BrainThread(Thread):
 
             ############### here takes place the processing of the info #############
 
-            command = self.controller.update_angle(lane_info)
             crt_angle = float(self.controller.angle)
+            command = self.controller.update_angle(lane_info)
             if command['steerAngle'] != crt_angle:
                 self.outP_com.send(command)
 
             time_elapsed = time.time() - time_startup
 
-            command, startup = self.controller.update_speed(17, startup, time_elapsed=time_elapsed)
             crt_speed = float(self.controller.speed/100.0)
+            command, startup = self.controller.update_speed(17, startup, time_elapsed=time_elapsed)
             if command['speed'] != crt_speed:
                 self.outP_com.send(command)
 
