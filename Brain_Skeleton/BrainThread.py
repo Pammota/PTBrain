@@ -92,8 +92,6 @@ class BrainThread(Thread):
                 cv2.imshow("video", frame)
                 cv2.waitKey(1)
 
-        time.sleep(1)
-        
         command = self.controller.update_angle(0)
         self.outP_com.send(command)
 
