@@ -75,7 +75,7 @@ class BrainThread(Thread):
                                 command = json.loads(bts)"""
             self.outP_com.send(command)
 
-            command = self.controller.update_speed(15)
+            command, startup = self.controller.update_speed(15)
             """command = json.dumps(command).encode()
                                 bts = command.decode()
                                 command = json.loads(bts)"""
@@ -98,7 +98,7 @@ class BrainThread(Thread):
                             command = json.loads(bts)"""
         self.outP_com.send(command)
 
-        command = self.controller.update_speed(0)
+        command, startup = self.controller.update_speed(0)
         """command = json.dumps(command).encode()
                             bts = command.decode()
                             command = json.loads(bts)"""
