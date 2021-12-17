@@ -70,11 +70,15 @@ class BrainThread(Thread):
             ############### here takes place the processing of the info #############
 
             command = self.controller.update_angle(lane_info)
-            command = json.dumps(command).encode()
+            """command = json.dumps(command).encode()
+                                bts = command.decode()
+                                command = json.loads(bts)"""
             self.outP_com.send(command)
 
             command = self.controller.update_speed(15)
-            command = json.dumps(command).encode()
+            """command = json.dumps(command).encode()
+                                bts = command.decode()
+                                command = json.loads(bts)"""
             self.outP_com.send(command)
 
             end = time.time()
@@ -89,11 +93,15 @@ class BrainThread(Thread):
                 cv2.waitKey(1)
 
         command = self.controller.update_angle(0)
-        command = json.dumps(command).encode()
+        """command = json.dumps(command).encode()
+                            bts = command.decode()
+                            command = json.loads(bts)"""
         self.outP_com.send(command)
 
         command = self.controller.update_speed(0)
-        command = json.dumps(command).encode()
+        """command = json.dumps(command).encode()
+                            bts = command.decode()
+                            command = json.loads(bts)"""
         self.outP_com.send(command)
 
     def plot_timeframes_graph(self, timeframes):
