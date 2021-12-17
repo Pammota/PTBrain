@@ -72,15 +72,13 @@ class BrainThread(Thread):
 
             crt_angle = float(self.controller.angle)
             command = self.controller.update_angle(lane_info)
-            if command['steerAngle'] != crt_angle:
-                self.outP_com.send(command)
+            self.outP_com.send(command)
 
             time_elapsed = time.time() - time_startup
 
             crt_speed = float(self.controller.speed/100.0)
             command, startup = self.controller.update_speed(17, startup, time_elapsed=time_elapsed)
-            if command['speed'] != crt_speed:
-                self.outP_com.send(command)
+            self.outP_com.send(command)
 
             if startup is True and ex_startup is False:
                 time_startup = time.time()
