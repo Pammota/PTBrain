@@ -153,16 +153,15 @@ class BrainThread(Thread):
 
         outP_obj, self.inP_obj = Pipe()  # out will be sent from ObjectDetectionThread
                                    # in will be recieved in BrainThread (here)
-        if self.cameraSpoof is not None:
-            self.outP_com, self.inP_com = Pipe()  # out will be sent from BrainThread (here)
+        
+        self.outP_com, self.inP_com = Pipe()  # out will be sent from BrainThread (here)
                                             # in will  be received in writeThread
 
         # adds threads
         self.threads.append(ImageProcessingThread(inP_img, [outP_imgProc_lane, outP_imgProc_obj]))
         self.threads.append(LaneDetectionThread(inP_imgProc_lane, outP_lane))
         self.threads.append(ObjectDetectionThread(inP_imgProc_obj, outP_obj))
-        if self.cameraSpoof is not None:  # only if we simulate
-            self.threads.append(WriteThread(self.inP_com))
+        self.threads.append(WriteThread(self.inP_com))
 
         # starts all threads
         for thread in self.threads:
