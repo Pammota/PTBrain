@@ -64,8 +64,6 @@ class BrainThread(Thread):
             else:
                 break
 
-            print("Waiting for all threads to finish execution")
-
             # waits for the outputs of the other threads and gets them
             lane_info = self.inP_lane.recv()
             obj_info = self.inP_obj.recv()
