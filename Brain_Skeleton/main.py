@@ -3,6 +3,6 @@ from BrainThread import BrainThread
 import time
 import os
 
-brain = BrainThread("C:\\Users\\flavi\\OneDrive\\Desktop\\BFMC\\Records\\bfmc2020_online_1.avi")
+brain = BrainThread()
 
 brain.start()
