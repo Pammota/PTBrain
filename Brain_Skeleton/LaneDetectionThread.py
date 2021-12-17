@@ -30,6 +30,8 @@ class LaneDetectionThread(Thread):
 
             disp -= 5
 
+            disp = int(disp)
+
             disp *= 3
 
             theta = int(disp)

@@ -51,6 +51,9 @@ class BrainThread(Thread):
 
         start = time.time()
 
+        startup, ex_startup = False, False
+        time_startup = 0
+
         while True:
             # grabs an image from the camera (or from the video)
             grabbed, frame = self.camera.read()
@@ -70,16 +73,17 @@ class BrainThread(Thread):
             ############### here takes place the processing of the info #############
 
             command = self.controller.update_angle(lane_info)
-            """command = json.dumps(command).encode()
-                                bts = command.decode()
-                                command = json.loads(bts)"""
             self.outP_com.send(command)
 
-            command, startup = self.controller.update_speed(17)
-            """command = json.dumps(command).encode()
-                                bts = command.decode()
-                                command = json.loads(bts)"""
+            time_elapsed = time.time() - time_startup
+
+            command, startup = self.controller.update_speed(17, startup, time_elapsed=time_elapsed)
             self.outP_com.send(command)
+
+            if startup is True and ex_startup is False:
+                time_startup = time.time()
+
+            ex_startup = startup
 
             end = time.time()
             if end - start > 10:
