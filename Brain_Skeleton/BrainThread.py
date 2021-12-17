@@ -72,13 +72,15 @@ class BrainThread(Thread):
 
             crt_angle = float(self.controller.angle)
             command = self.controller.update_angle(lane_info)
-            self.outP_com.send(command)
+            if command['steerAngle'] != crt_angle:
+                self.send_command(command)
 
             time_elapsed = time.time() - time_startup
 
             crt_speed = float(self.controller.speed/100.0)
             command, startup = self.controller.update_speed(17, startup, time_elapsed=time_elapsed)
-            self.outP_com.send(command)
+            if command['speed'] != crt_speed:
+                self.send_command(command)
 
             if startup is True and ex_startup is False:
                 time_startup = time.time()
@@ -98,10 +100,16 @@ class BrainThread(Thread):
                 cv2.waitKey(1)
 
         command = self.controller.update_angle(0)
-        self.outP_com.send(command)
+        self.send_command(command)
 
         command, startup = self.controller.update_speed(0)
-        self.outP_com.send(command)
+        self.send_command(command)
+
+    def send_command(self, command):
+        for i in range(10):
+            time.sleep(0.001)
+            self.outP_com.send(command)
+
 
     def plot_timeframes_graph(self, timeframes):
         canvas = np.ones((600, 1200, 3)) * 255
