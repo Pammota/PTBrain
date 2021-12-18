@@ -27,6 +27,8 @@ class BrainThread(Thread):
         self.cameraSpoof = cameraSpoof
         self.camera = cv2.VideoCapture(0 if cameraSpoof is None else cameraSpoof)
 
+        self.baseSpeed = 17
+
         self.show_vid = show_vid
         self.show_lane = show_lane
 
@@ -83,7 +85,11 @@ class BrainThread(Thread):
             time_elapsed = time.time() - time_startup
 
             crt_speed = float(self.controller.speed/100.0)
-            command, startup = self.controller.update_speed(17, startup, time_elapsed=time_elapsed)
+            if abs(self.controller.angle) > 6:
+                speed = self.baseSpeed + 3
+            else:
+                speed = self.baseSpeed
+            command, startup = self.controller.update_speed(speed, startup, time_elapsed=time_elapsed)
             if command['speed'] != crt_speed:
                 self.send_command(command)
 
