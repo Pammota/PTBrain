@@ -1,6 +1,6 @@
 
 class Controller:
-    def __init__(self, time_threshold=0.5):
+    def __init__(self, time_threshold=0.25):
         self.speed = 0
         self.angle = 0
         self.time_threshold = time_threshold
