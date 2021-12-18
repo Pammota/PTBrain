@@ -12,7 +12,7 @@ import json
 import os
 
 class BrainThread(Thread):
-    def __init__(self, cameraSpoof=None):
+    def __init__(self, cameraSpoof=None, show_vid=False, show_lane=False):
         """
 
         :param cameraSpoof: holds a path to a video file for the environment to be "simulated"
@@ -27,6 +27,9 @@ class BrainThread(Thread):
         self.cameraSpoof = cameraSpoof
         self.camera = cv2.VideoCapture(0 if cameraSpoof is None else cameraSpoof)
 
+        self.show_vid = show_vid
+        self.show_lane = show_lane
+
         #  holds pipes managed by this object
         self.outP_img = None
         self.inP_lane = None
@@ -34,7 +37,9 @@ class BrainThread(Thread):
         self.outP_com = None
         self.inP_com = None
 
+        #  creates a controller object to control the car
         self.controller = Controller()
+        time.sleep(0.1)
 
         # creates and starts the threads managed by this object
         self._init_threads()
@@ -95,9 +100,12 @@ class BrainThread(Thread):
 
             # messaage sent to the serial con or logged
 
-            if self.cameraSpoof is not None:
-                cv2.imshow("video", frame)
-                cv2.waitKey(1)
+            cv2.imshow("video", frame)
+            cv2.waitKey(1)
+
+        """If we want to stop the threads, we exit from the Brain thread, flush pipes, 
+            and send through them a "stop" signal, which would make them break out
+            of the infinite loops"""
 
         command = self.controller.update_angle(0)
         self.send_command(command)
@@ -106,9 +114,10 @@ class BrainThread(Thread):
         self.send_command(command)
 
     def send_command(self, command):
-        for i in range(10):
-            time.sleep(0.001)
-            self.outP_com.send(command)
+        if self.cameraSpoof is None:
+            for i in range(10):
+                time.sleep(0.001)
+                self.outP_com.send(command)
 
 
     def plot_timeframes_graph(self, timeframes):
@@ -161,14 +170,16 @@ class BrainThread(Thread):
         outP_obj, self.inP_obj = Pipe()  # out will be sent from ObjectDetectionThread
                                    # in will be recieved in BrainThread (here)
 
-        self.outP_com, self.inP_com = Pipe()  # out will be sent from BrainThread (here)
+        if self.cameraSpoof is None:
+            self.outP_com, self.inP_com = Pipe()  # out will be sent from BrainThread (here)
                                             # in will  be received in writeThread
 
         # adds threads
         self.threads.append(ImageProcessingThread(inP_img, [outP_imgProc_lane, outP_imgProc_obj]))
-        self.threads.append(LaneDetectionThread(inP_imgProc_lane, outP_lane))
+        self.threads.append(LaneDetectionThread(inP_imgProc_lane, outP_lane, show_lane=self.show_lane))
         self.threads.append(ObjectDetectionThread(inP_imgProc_obj, outP_obj))
-        self.threads.append(WriteThread(self.inP_com))
+        if self.cameraSpoof is None:
+            self.threads.append(WriteThread(self.inP_com))
 
         # starts all threads
         for thread in self.threads:

@@ -52,7 +52,7 @@ class WriteThread(Thread):
         logFile = 'historyFile.txt'
 
         # comm init
-        self.serialCom = serial.Serial(devFile,256000,timeout=0.001)
+        self.serialCom = serial.Serial(devFile, 256000, timeout=0.003)
         self.serialCom.flushInput()
         self.serialCom.flushOutput()
 
