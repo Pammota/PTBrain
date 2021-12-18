@@ -57,10 +57,10 @@ class WriteThread(Thread):
         self.serialCom.flushOutput()
 
         # log file init
-        self.historyFile = FileHandler(logFile)
+        #self.historyFile = FileHandler(logFile)
 
         self.serialCom = self.serialCom
-        self.logFile = logFile
+        #self.logFile = logFile
         self.messageConverter = MessageConverter()
 
 
