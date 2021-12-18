@@ -46,6 +46,12 @@ class BrainThread(Thread):
 
     def run(self):
 
+        command = self.controller.update_angle(0)
+        self.send_command(command)
+
+        command, startup = self.controller.update_speed(0)
+        self.send_command(command)
+
         # grabs the first image from the camera so it can be preprocessed before
         # anything else is processed
         grabbed, frame = self.camera.read()
@@ -59,7 +65,7 @@ class BrainThread(Thread):
         startup, ex_startup = False, False
         time_startup = 0
 
-        while True:
+        while 0:
             # grabs an image from the camera (or from the video)
             grabbed, frame = self.camera.read()
 
