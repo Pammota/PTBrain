@@ -17,7 +17,7 @@ class LaneDetectionThread(Thread):
         self.show_lane = show_lane
 
     def preprocessing(self, frame):
-        frame_copy = frame[int(int(frame.shape[0] * 0.4)):, :]
+        frame_copy = frame[int(int(frame.shape[0] * 0.45)):, :]
 
         frame_grayscale = cv2.cvtColor(frame_copy, cv2.COLOR_BGR2GRAY)
 
@@ -116,7 +116,7 @@ class LaneDetectionThread(Thread):
                                     maxLineGap=100)
             left_lanes = []
             right_lanes = []
-            frame_copy = frame[int(frame.shape[0] * 0.4):, :]  # used for displaying
+            frame_copy = frame[int(frame.shape[0] * 0.45):, :]  # used for displaying
 
             if lines is not None:
                 # classify lanes based on their slope
