@@ -31,10 +31,8 @@ class ObjectDetectionThread(Thread):
             # waits for the preprocessed image and gets it
             image, active = self.inP_img.recv()
             if active:
-                print("detecting...")
                 (img_annotated, output, tl_info) = od.perform_object_detection_video(self.object_detector,
                                               image, self.traffic_light_classifier)
-                print("finished detection")
             else:
                 img_annotated = image
                 output = {}

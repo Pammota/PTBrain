@@ -21,11 +21,11 @@ class ImageProcessingThread(Thread):
 
         while True:
 
+
             # waits for the raw image and gets it
             frame, active = self.inP_img.recv()
             frameClone = copy.copy(frame)
 
-            print("preprocessing")
 
             ################ here takes place the processing of the image ###########
 
