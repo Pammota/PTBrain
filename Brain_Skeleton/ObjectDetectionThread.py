@@ -4,6 +4,7 @@ import random
 import os
 
 from tensorflow.keras.models import load_model
+import tensorflow as tf
 
 import object_detection as od
 
@@ -45,7 +46,7 @@ class ObjectDetectionThread(Thread):
             self.outP_obj.send((img_annotated, output, tl_info))  # sends the results of the detection back
 
     def init_models(self):
-        self.traffic_light_classifier = load_model("model")
+        self.traffic_light_classifier = load_model("modelh5.h5")
         print("done?")
         self.object_detector = od.load_ssd_coco()
         print("done?")
