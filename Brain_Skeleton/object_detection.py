@@ -43,7 +43,6 @@ def load_model(model_name):
 
     model_dir = str(model_dir) + "/saved_model"
     model = tf.saved_model.load(str(model_dir))
-    print("done?")
 
     return model
 
