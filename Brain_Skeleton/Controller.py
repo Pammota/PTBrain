@@ -9,9 +9,11 @@ class Controller:
         self.angle = theta
         return {'action': '2', 'steerAngle': float(self.angle)}
 
+    @staticmethod
+    def must_stop(traffic_lights_info):
 
-    def must_stop(self, traffic_lights_info):
-
+        if len(traffic_lights_info) == 0:
+            return False
         dominant = max(traffic_lights_info, key=lambda x: x.get('score'))
 
         color = dominant.get('label')

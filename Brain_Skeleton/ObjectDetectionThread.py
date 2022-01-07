@@ -29,16 +29,20 @@ class ObjectDetectionThread(Thread):
         while True:
 
             # waits for the preprocessed image and gets it
-            image = self.inP_img.recv()
-
-            (img_annotated, output) = od.perform_object_detection_video(self.object_detector,
-                                                image, self.traffic_light_classifier)
+            image, active = self.inP_img.recv()
+            if active:
+                (img_annotated, output, tl_info) = od.perform_object_detection_video(self.object_detector,
+                                              image, self.traffic_light_classifier)
+            else:
+                img_annotated = image
+                output = {}
+                tl_info = []
 
             ######### here takes place the lane detection ###########
 
             ######### here the lane detection ends ###########
 
-            self.outP_obj.send((img_annotated, output))  # sends the results of the detection back
+            self.outP_obj.send((img_annotated, output, tl_info))  # sends the results of the detection back
 
     def init_models(self):
         self.object_detector = od.load_ssd_coco()

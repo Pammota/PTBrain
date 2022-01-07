@@ -60,6 +60,7 @@ class BrainThread(Thread):
 
         startup, ex_startup = False, False
         time_startup = 0
+        active = True
 
         while True:
             # grabs an image from the camera (or from the video)
@@ -68,7 +69,7 @@ class BrainThread(Thread):
             # sends the image through the pipe if it exists
             if grabbed is True:
                 frame = cv2.resize(frame, (600, 400))
-                self.outP_img.send(frame)
+                self.outP_img.send((frame, active))
             else:
                 break
 
@@ -94,6 +95,7 @@ class BrainThread(Thread):
                 speed = 0
             command, startup = self.controller.update_speed(speed, startup, time_elapsed=time_elapsed)
             if command['speed'] != crt_speed:
+                active = False
                 self.send_command(command)
 
             if startup is True and ex_startup is False:
