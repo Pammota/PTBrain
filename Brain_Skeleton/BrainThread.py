@@ -48,6 +48,7 @@ class BrainThread(Thread):
 
     def run(self):
 
+        print("began anything")
         # grabs the first image from the camera so it can be preprocessed before
         # anything else is processed
         grabbed, frame = self.camera.read()
@@ -68,6 +69,7 @@ class BrainThread(Thread):
 
             # sends the image through the pipe if it exists
             if grabbed is True:
+                print("sent image to the processers")
                 frame = cv2.resize(frame, (600, 400))
                 self.outP_img.send((frame, active))
             else:
@@ -75,7 +77,9 @@ class BrainThread(Thread):
 
             # waits for the outputs of the other threads and gets them
             lane_info = self.inP_lane.recv()
+            print("recieved lane info")
             annotated_image, obj_info, traffic_lights_info = self.inP_obj.recv()
+            print("recieved object info")
 
             ############### here takes place the processing of the info #############
 
