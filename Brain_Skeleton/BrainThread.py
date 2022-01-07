@@ -67,13 +67,14 @@ class BrainThread(Thread):
 
             # sends the image through the pipe if it exists
             if grabbed is True:
+                frame = cv2.resize(frame, (600, 400))
                 self.outP_img.send(frame)
             else:
                 break
 
             # waits for the outputs of the other threads and gets them
             lane_info = self.inP_lane.recv()
-            obj_info = self.inP_obj.recv()
+            annotated_image, obj_info, traffic_lights_info = self.inP_obj.recv()
 
             ############### here takes place the processing of the info #############
 
@@ -89,6 +90,8 @@ class BrainThread(Thread):
                 speed = self.baseSpeed + 3
             else:
                 speed = self.baseSpeed
+            if Controller.must_stop(traffic_lights_info):
+                speed = 0
             command, startup = self.controller.update_speed(speed, startup, time_elapsed=time_elapsed)
             if command['speed'] != crt_speed:
                 self.send_command(command)
@@ -104,10 +107,9 @@ class BrainThread(Thread):
                 break
             ############### here processing of info ends ############
 
-            # messaage sent to the serial con or logged
 
-            """cv2.imshow("video", frame)
-            cv2.waitKey(1)"""
+            cv2.imshow("video", annotated_image)
+            cv2.waitKey(1)
 
         """If we want to stop the threads, we exit from the Brain thread, flush pipes, 
             and send through them a "stop" signal, which would make them break out

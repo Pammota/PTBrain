@@ -10,6 +10,16 @@ class Controller:
         return {'action': '2', 'steerAngle': float(self.angle)}
 
 
+    def must_stop(self, traffic_lights_info):
+
+        dominant = max(traffic_lights_info, key=lambda x: x.get('score'))
+
+        color = dominant.get('label')
+        if color == 1 or color == 2:
+            return True
+
+        return False
+
     def update_speed(self, speed, startup=False, time_elapsed=0):
         if speed > 0:
             if self.speed == 0:
@@ -33,4 +43,4 @@ class Controller:
                     return {'action': '1', 'speed': float(self.speed/100.0)}, False
         else:
             self.speed = 0
-            return {'action': '1', 'speed': float(self.speed/100.0)}, True
+            return {'action': '1', 'speed': float(self.speed/100.0)}, False

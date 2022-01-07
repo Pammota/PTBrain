@@ -3,6 +3,11 @@ import time
 import random
 import os
 
+from tensorflow.keras.models import load_model
+
+import object_detection as od
+
+
 class ObjectDetectionThread(Thread):
     def __init__(self, inP_img, outP_obj):
         """
@@ -14,6 +19,11 @@ class ObjectDetectionThread(Thread):
         self.inP_img = inP_img
         self.outP_obj = outP_obj
 
+        self.object_detector = None
+        self.traffic_light_classifier = None
+        self.init_models()
+
+
     def run(self):
 
         while True:
@@ -21,8 +31,15 @@ class ObjectDetectionThread(Thread):
             # waits for the preprocessed image and gets it
             image = self.inP_img.recv()
 
+            (img_annotated, output) = od.perform_object_detection_video(self.object_detector,
+                                                image, self.traffic_light_classifier)
+
             ######### here takes place the lane detection ###########
 
             ######### here the lane detection ends ###########
 
-            self.outP_obj.send(0)  # sends the results of the detection back
+            self.outP_obj.send((img_annotated, output))  # sends the results of the detection back
+
+    def init_models(self):
+        self.object_detector = od.load_ssd_coco()
+        self.traffic_light_classifier = load_model("model")
