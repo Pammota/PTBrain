@@ -104,7 +104,7 @@ class BrainThread(Thread):
             ex_startup = startup
 
             end = time.time()
-            if end - start > 180:
+            if end - start > 1800:
                 time.sleep(0.01)
                 break
             ############### here processing of info ends ############
