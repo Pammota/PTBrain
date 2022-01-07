@@ -46,4 +46,6 @@ class ObjectDetectionThread(Thread):
 
     def init_models(self):
         self.object_detector = od.load_ssd_coco()
+        print("done?")
         self.traffic_light_classifier = load_model("model")
+        print("done?")
