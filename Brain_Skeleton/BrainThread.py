@@ -55,7 +55,7 @@ class BrainThread(Thread):
 
         # sends the image through the pipe if it exists
         if grabbed is True:
-            self.outP_img.send(frame)
+            self.outP_img.send((frame, True))
 
         start = time.time()
 
