@@ -46,6 +46,8 @@ class BrainThread(Thread):
         # creates and starts the threads managed by this object
         self._init_threads()
 
+        self.traffic_light_history = []
+
     def run(self):
 
         # grabs the first image from the camera so it can be preprocessed before
@@ -62,7 +64,7 @@ class BrainThread(Thread):
         time_startup = 0
         active = True
 
-        while True:
+        while False:
             # grabs an image from the camera (or from the video)
             grabbed, frame = self.camera.read()
 
@@ -93,9 +95,15 @@ class BrainThread(Thread):
                 speed = self.baseSpeed
             if Controller.must_stop(traffic_lights_info):
                 speed = 0
+                self.traffic_light_history.append(0)
+            else:
+                self.traffic_light_history.append(1)
             command, startup = self.controller.update_speed(speed, startup, time_elapsed=time_elapsed)
+
+            n = max(0, len(self.traffic_light_history))
+            median_state = sum(self.traffic_light_history[max(-1, )])
+
             if command['speed'] != crt_speed:
-                active = False
                 self.send_command(command)
 
             if startup is True and ex_startup is False:
