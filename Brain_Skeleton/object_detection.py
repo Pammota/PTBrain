@@ -94,7 +94,7 @@ def save_image_annotated(img_rgb, file_name, output, model_traffic_lights=None):
             color = (128, 0, 0)
             label_text = "Stop Sign " + str(score)
         if obj_class == LABEL_TRAFFIC_LIGHT:
-            color = (255, 255, 255)
+            color = (0, 0, 255)
             label_text = "Traffic Light " + str(score)
 
             if model_traffic_lights:
@@ -120,8 +120,8 @@ def save_image_annotated(img_rgb, file_name, output, model_traffic_lights=None):
                     label_text = 'NO-LIGHT'  # This is not a traffic light
 
         if color and label_text and accept_box(output["boxes"], idx, 5.0) and score > 30:
-            cv2.rectangle(img_rgb, (box["x"], box["y"]), (box["x2"], box["y2"]), color, 2)
-            cv2.putText(img_rgb, label_text, (box["x"], box["y"]), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
+            cv2.rectangle(img_rgb, (box["x"], box["y"]), (box["x2"], box["y2"]), color, 3)
+            cv2.putText(img_rgb, label_text, (box["x"], box["y"]), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
 
     cv2.imwrite(output_file, cv2.cvtColor(img_rgb, cv2.COLOR_RGB2BGR))
     #print(output_file)
@@ -213,7 +213,7 @@ def perform_object_detection_video(model, video_frame, model_traffic_lights=None
             color = (128, 0, 0)
             label_text = "Stop Sign " + str(score)
         if obj_class == LABEL_TRAFFIC_LIGHT:
-            color = (255, 255, 255)
+            color = (0, 0, 255)
             label_text = "Traffic Light " + str(score)
 
             if model_traffic_lights:
@@ -238,15 +238,15 @@ def perform_object_detection_video(model, video_frame, model_traffic_lights=None
                     label_text = 'NO-LIGHT'  # This is not a traffic light
 
                 tr_li_info = {'score': score, 'box': box, 'label': label}
-                if score > 50:
+                if score > 20:
                     traffic_lights_info.append(tr_li_info)
 
         # Use the score variable to indicate how confident we are it is a traffic light (in % terms)
         # On the actual video frame, we display the confidence that the light is either red, green,
         # yellow, or not a valid traffic light.
-        if color and label_text and accept_box(output["boxes"], idx, 5.0) and score > 40:
+        if color and label_text and accept_box(output["boxes"], idx, 5.0) and score > 20:
             cv2.rectangle(img_rgb, (box["x"], box["y"]), (box["x2"], box["y2"]), color, 2)
-            cv2.putText(img_rgb, label_text, (box["x"], box["y"]), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
+            cv2.putText(img_rgb, label_text, (box["x"], box["y"]), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
 
     output_frame = cv2.cvtColor(img_rgb, cv2.COLOR_RGB2BGR)
     return output_frame, output, traffic_lights_info

@@ -64,7 +64,7 @@ class BrainThread(Thread):
         time_startup = 0
         active = True
 
-        while False:
+        while True:
             # grabs an image from the camera (or from the video)
             grabbed, frame = self.camera.read()
 
@@ -100,8 +100,10 @@ class BrainThread(Thread):
                 self.traffic_light_history.append(1)
             command, startup = self.controller.update_speed(speed, startup, time_elapsed=time_elapsed)
 
-            n = max(0, len(self.traffic_light_history))
-            median_state = sum(self.traffic_light_history[max(-1, )])
+            n = max(0, len(self.traffic_light_history) - 7)
+            median_state = sum(self.traffic_light_history[n: -1])
+            if median_state > 4:
+                active = False
 
             if command['speed'] != crt_speed:
                 self.send_command(command)

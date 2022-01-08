@@ -24,9 +24,9 @@ class ObjectDetectionThread(Thread):
         self.traffic_light_classifier = None
         self.init_models()
 
-
     def run(self):
-
+        for i in range(10):
+            print("Initiating!!!!")
         while True:
 
             # waits for the preprocessed image and gets it
@@ -46,7 +46,7 @@ class ObjectDetectionThread(Thread):
             self.outP_obj.send((img_annotated, output, tl_info))  # sends the results of the detection back
 
     def init_models(self):
-        #self.traffic_light_classifier = load_model("model2_4")
+        self.traffic_light_classifier = load_model("model2_4")
         print("done?")
-        #self.object_detector = od.load_ssd_coco()
+        self.object_detector = od.load_ssd_coco()
         print("done?")

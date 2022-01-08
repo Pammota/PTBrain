@@ -26,7 +26,6 @@ class ImageProcessingThread(Thread):
             frame, active = self.inP_img.recv()
             frameClone = copy.copy(frame)
 
-
             ################ here takes place the processing of the image ###########
 
             ################ here the processing of the image ends ###########
