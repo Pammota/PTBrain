@@ -64,7 +64,7 @@ class BrainThread(Thread):
         time_startup = 0
         active = True
 
-        while True:
+        while False:
             # grabs an image from the camera (or from the video)
             grabbed, frame = self.camera.read()
 
