@@ -184,8 +184,8 @@ class BrainThread(Thread):
 
         # defines the pipes for interthread communication
 
-        zero_theta_command = Controller.update_angle(0)
-        zero_speed_command = Controller.update_speed(0)
+        zero_theta_command = self.controller.update_angle(0)
+        zero_speed_command = self.controller.update_speed(0)
 
         self.outP_img, inP_img = Pipe()  # out will be sent from BrainThread (here),
                                    # in will be recieved in ImageProcessingThread
