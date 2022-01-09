@@ -15,7 +15,7 @@ class LaneDetectionThread(Thread):
         self.inP_img = inP_img
         self.outP_lane = outP_lane
         self.show_lane = show_lane
-        self.writer = cv2.VideoWriter('PHT_Video.mp4', cv2.VideoWriter_fourcc(*'DIVX'), 15, (640, 480))
+        self.writer = cv2.VideoWriter('PHT_Video.mp4', cv2.VideoWriter_fourcc(*'MP4V'), 15, (640, 480))
 
     def getTheta(self, lane, isRight):
         x1, y1, x2, y2 = lane
