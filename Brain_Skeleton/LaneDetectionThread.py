@@ -154,11 +154,11 @@ class LaneDetectionThread(Thread):
 
                     left_lane = self.averagelanes(left_lanes)
                     self.draw_lane(frame_copy, left_lane, (255, 0, 0))
-                    self.draw_lane(frame, left_lane, (255, 0, 0))
+                    # self.draw_lane(frame, left_lane, (255, 0, 0))
 
                     right_lane = self.averagelanes(right_lanes)
                     self.draw_lane(frame_copy, right_lane, (0, 0, 255))
-                    self.draw_lane(frame, right_lane, (0, 0, 255))
+                    # self.draw_lane(frame, right_lane, (0, 0, 255))
 
                     theta = self.angle(left_lane, right_lane, frame_copy.shape[1], frame_copy.shape[0])
                 else:
@@ -166,14 +166,14 @@ class LaneDetectionThread(Thread):
                         left_lane = self.averagelanes(left_lanes)
                         theta = self.getTheta(left_lane, False)
                         self.draw_lane(frame_copy, left_lane, (255, 0, 0))
-                        self.draw_lane(frame, left_lane, (255, 0, 0))
+                        # self.draw_lane(frame, left_lane, (255, 0, 0))
                     else:
                         if len(right_lanes):
                             # print("right")
                             right_lane = self.averagelanes(right_lanes)
                             theta = self.getTheta(right_lane, True)
                             self.draw_lane(frame_copy, right_lane, (0, 0, 255))
-                            self.draw_lane(frame, left_lane, (255, 0, 0))
+                            # self.draw_lane(frame, left_lane, (255, 0, 0))
                         else:
                             if len(theta_list) != 0:
                                 theta = theta_list[len(theta_list)-1]
