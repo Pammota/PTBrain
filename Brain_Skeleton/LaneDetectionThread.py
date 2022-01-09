@@ -25,11 +25,12 @@ class LaneDetectionThread(Thread):
             slope = float((x1 - x2) / (y2 - y1))
 
         theta = math.atan(slope)
+        theta = theta * 25
 
-        if theta * 25 >= 23:
+        if theta >= 23:
             theta = 22.5
         else:
-            if theta * 25 <= -23:
+            if theta <= -23:
                 theta = -22.5
         return theta
 
@@ -112,11 +113,11 @@ class LaneDetectionThread(Thread):
         # print("x0 - width / 2 = " + str((x0 - width / 2)))
         # print("tan = " + str(float((x0 - width / 2) / y0)))
         theta = math.atan(float((x0 - width / 2) / y0))
-
-        if theta * 40 >= 23:
+        theta = theta * 40
+        if theta >= 23:
             theta = 22.5
 
-        if theta * 40 <= -23:
+        if theta <= -23:
             theta = -22.5
         return theta
 
