@@ -177,7 +177,7 @@ class LaneDetectionThread(Thread):
                 # print(str(i) + ": theta = " + str(theta))
 
                 if len(theta_list) != 5:
-                    theta_average = 0
+                    theta_average = theta
                     theta_list.append(theta)
                 else:
                     theta_average = theta_list[0]
