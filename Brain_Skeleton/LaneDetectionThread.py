@@ -26,7 +26,7 @@ class LaneDetectionThread(Thread):
 
         theta = math.atan(slope)
 
-        return theta * 30
+        return theta * 40
 
 
     def preprocessing(self, frame):
@@ -107,7 +107,7 @@ class LaneDetectionThread(Thread):
         # print("x0 - width / 2 = " + str((x0 - width / 2)))
         # print("tan = " + str(float((x0 - width / 2) / y0)))
         theta = math.atan(float((x0 - width / 2) / y0))
-        return theta * 30
+        return theta * 40
 
     def run(self):
         start = time.time()
@@ -166,7 +166,7 @@ class LaneDetectionThread(Thread):
                             theta = theta_list[theta_list[len(theta_list)-1]]
                 # print(str(i) + ": theta = " + str(theta))
 
-                if len(theta_list) != 15:
+                if len(theta_list) != 8:
                     theta_average = 0
                     theta_list.append(theta)
                 else:
