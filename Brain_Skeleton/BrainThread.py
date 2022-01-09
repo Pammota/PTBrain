@@ -85,14 +85,7 @@ class BrainThread(Thread):
             crt_angle = float(self.controller.angle)
             command = self.controller.update_angle(lane_info)
             if command['steerAngle'] != crt_angle:
-                print("theta: " + str(command['steerAngle']))
-                print("brain: " + str(time.time()))
-                print("")
                 self.writethread.set_theta_command(command)
-
-                print("theta: " + str(command['steerAngle']))
-                print("microcontroller: " + str(time.time()))
-                print("")
 
             time_elapsed = time.time() - time_startup
 
