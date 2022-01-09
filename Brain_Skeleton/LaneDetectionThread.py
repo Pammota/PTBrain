@@ -16,6 +16,19 @@ class LaneDetectionThread(Thread):
         self.outP_lane = outP_lane
         self.show_lane = show_lane
 
+    def getTheta(self, lane, isRight):
+        x1, y1, x2, y2 = lane
+
+        if isRight:
+            slope = float((x1 - x2) / (y2 - y1))
+        else:
+            slope = float((x1 - x2) / (y2 - y1))
+
+        theta = math.atan(slope)
+
+        return theta * 40
+
+
     def preprocessing(self, frame):
         frame_copy = frame[int(int(frame.shape[0] * 0.6)):, :]
 
@@ -138,13 +151,15 @@ class LaneDetectionThread(Thread):
                     theta = self.angle(left_lane, right_lane, frame_copy.shape[1], frame_copy.shape[0])
                 else:
                     if len(left_lanes):  # identify only left_lanes
-                        theta = 19
+                        left_lane = self.averagelanes(left_lanes)
+                        theta = self.getTheta(left_lane, False)
                         left_lane = self.averagelanes(left_lanes)
                         self.draw_lane(frame_copy, left_lane, (255, 0, 0))
                     else:
                         if len(right_lanes):
                             # print("right")
-                            theta = -16
+                            right_lane = self.averagelanes(right_lanes)
+                            theta = self.getTheta(right_lane, True)
                             right_lane = self.averagelanes(right_lanes)
                             self.draw_lane(frame_copy, right_lane, (0, 0, 255))
                         else:
