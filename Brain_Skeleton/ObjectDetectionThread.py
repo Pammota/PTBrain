@@ -31,13 +31,13 @@ class ObjectDetectionThread(Thread):
 
             # waits for the preprocessed image and gets it
             image, active = self.inP_img.recv()
-            if active:
+            """if active:
                 (img_annotated, output, tl_info) = od.perform_object_detection_video(self.object_detector,
                                               image, self.traffic_light_classifier)
-            else:
-                img_annotated = image
-                output = {}
-                tl_info = []
+            else:"""
+            img_annotated = image
+            output = {}
+            tl_info = []
 
             ######### here takes place the lane detection ###########
 
