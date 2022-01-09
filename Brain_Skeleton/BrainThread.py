@@ -62,9 +62,9 @@ class BrainThread(Thread):
 
         startup, ex_startup = False, False
         time_startup = 0
-        active = True
+        active = False
 
-        while False:
+        while True:
             # grabs an image from the camera (or from the video)
             grabbed, frame = self.camera.read()
 
@@ -114,7 +114,7 @@ class BrainThread(Thread):
             ex_startup = startup
 
             end = time.time()
-            if end - start > 1800:
+            if end - start > 10:
                 time.sleep(0.01)
                 break
             ############### here processing of info ends ############
