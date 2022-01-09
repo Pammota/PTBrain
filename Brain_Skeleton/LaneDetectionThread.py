@@ -109,7 +109,7 @@ class LaneDetectionThread(Thread):
         # print("x0 - width / 2 = " + str((x0 - width / 2)))
         # print("tan = " + str(float((x0 - width / 2) / y0)))
         theta = math.atan(float((x0 - width / 2) / y0))
-        theta = theta * 40
+        theta = theta * 30
         if theta >= 23:
             theta = 22.5
 
