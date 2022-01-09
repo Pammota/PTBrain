@@ -46,7 +46,7 @@ class ObjectDetectionThread(Thread):
             self.outP_obj.send((img_annotated, output, tl_info))  # sends the results of the detection back
 
     def init_models(self):
-        #self.traffic_light_classifier = load_model("model2_4")
+        #self.traffic_light_classifier = load_model("model_mobilenet_v3.h5")
         print("done?")
-        #self.object_detector = od.load_ssd_coco()
+        #self.object_detector = od.load_ssd_coco("mobilenet")
         print("done?")

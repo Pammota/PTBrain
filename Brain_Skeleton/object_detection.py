@@ -5,7 +5,7 @@ import cv2  # Computer vision library
 import glob  # Filename handling library
 
 # Inception V3 model for Keras
-from tensorflow.keras.applications.inception_v3 import preprocess_input
+from tensorflow.keras.applications.mobilenet_v3 import preprocess_input
 
 LABEL_PERSON = 1
 LABEL_CAR = 3
@@ -47,12 +47,15 @@ def load_model(model_name):
     return model
 
 
-def load_ssd_coco():
+def load_ssd_coco(model="resnet"):
     """
     Load the neural network that has the SSD architecture, trained on the COCO
     data set.
     """
-    return load_model("ssd_resnet50_v1_fpn_640x640_coco17_tpu-8")
+    if model == "resnet":
+        return load_model("ssd_resnet50_v1_fpn_640x640_coco17_tpu-8")
+    else:
+        return load_model("ssd_mobilenet_v2_fpnlite_640x640_coco17_tpu-8")
 
 
 def save_image_annotated(img_rgb, file_name, output, model_traffic_lights=None):
@@ -111,13 +114,13 @@ def save_image_annotated(img_rgb, file_name, output, model_traffic_lights=None):
                 label = np.argmax(prediction)
                 score_light = str(int(np.max(prediction) * 100))
                 if label == 0:
-                    label_text = "Green " + score_light
+                    label_text = "Red " + score_light
                 elif label == 1:
                     label_text = "Yellow " + score_light
                 elif label == 2:
-                    label_text = "Red " + score_light
+                    label_text = "No_light " + score_light
                 else:
-                    label_text = 'NO-LIGHT'  # This is not a traffic light
+                    label_text = 'Green'  # This is not a traffic light
 
         if color and label_text and accept_box(output["boxes"], idx, 5.0) and score > 30:
             cv2.rectangle(img_rgb, (box["x"], box["y"]), (box["x2"], box["y2"]), color, 3)
@@ -220,7 +223,7 @@ def perform_object_detection_video(model, video_frame, model_traffic_lights=None
 
                 # Annotate the image and save it
                 img_traffic_light = img_rgb[box["y"]:box["y2"], box["x"]:box["x2"]]
-                img_inception = cv2.resize(img_traffic_light, (299, 299))
+                img_inception = cv2.resize(img_traffic_light, (224, 224))
 
                 img_inception = np.array([preprocess_input(img_inception)])
 
@@ -229,22 +232,22 @@ def perform_object_detection_video(model, video_frame, model_traffic_lights=None
                 score_light = str(int(np.max(prediction) * 100))
 
                 if label == 0:
-                    label_text = "Green " + score_light
+                    label_text = "Red " + score_light
                 elif label == 1:
                     label_text = "Yellow " + score_light
                 elif label == 2:
                     label_text = "Red " + score_light
                 else:
-                    label_text = 'NO-LIGHT'  # This is not a traffic light
+                    label_text = 'Green'  # This is not a traffic light
 
                 tr_li_info = {'score': score, 'box': box, 'label': label}
-                if score > 20:
+                if score > 30:
                     traffic_lights_info.append(tr_li_info)
 
         # Use the score variable to indicate how confident we are it is a traffic light (in % terms)
         # On the actual video frame, we display the confidence that the light is either red, green,
         # yellow, or not a valid traffic light.
-        if color and label_text and accept_box(output["boxes"], idx, 5.0) and score > 20:
+        if color and label_text and accept_box(output["boxes"], idx, 5.0) and score > 30:
             cv2.rectangle(img_rgb, (box["x"], box["y"]), (box["x2"], box["y2"]), color, 2)
             cv2.putText(img_rgb, label_text, (box["x"], box["y"]), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
 
