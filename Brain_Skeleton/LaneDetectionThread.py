@@ -18,11 +18,7 @@ class LaneDetectionThread(Thread):
 
     def getTheta(self, lane, isRight):
         x1, y1, x2, y2 = lane
-
-        if isRight:
-            slope = float((x1 - x2) / (y2 - y1))
-        else:
-            slope = float((x1 - x2) / (y2 - y1))
+        slope = float((x1 - x2) / (y2 - y1))
 
         theta = math.atan(slope)
         theta = theta * 25
@@ -134,7 +130,7 @@ class LaneDetectionThread(Thread):
             ######### here takes place the lane detection ###########
             frame_edge = self.preprocessing(frame)
 
-            lines = cv2.HoughLinesP(frame_edge, rho=1, theta=np.pi / 180, threshold=70, minLineLength=10,
+            lines = cv2.HoughLinesP(frame_edge, rho=1, theta=np.pi / 180, threshold=60, minLineLength=10,
                                     maxLineGap=100)
             left_lanes = []
             right_lanes = []
@@ -144,11 +140,14 @@ class LaneDetectionThread(Thread):
                 # classify lanes based on their slope
                 for line in lines:
                     x1, y1, x2, y2 = line[0]
-                    slope = float((y2 - y1) / (x2 - x1))
-                    if slope < 0.0:
-                        left_lanes.append([x1, y1, x2, y2])
-                    else:
-                        right_lanes.append([x1, y1, x2, y2])
+                    if x1 != x2 and y1 != y2:
+                        slope = float((x1 - x2) / (y2 - y1))
+                        angle = math.atan(slope)
+                        if angle > 80 or angle < -80:
+                            if slope < 0.0:
+                                left_lanes.append([x1, y1, x2, y2])
+                            else:
+                                right_lanes.append([x1, y1, x2, y2])
 
                 if len(left_lanes) and len(right_lanes):  # identify both lanes
 
