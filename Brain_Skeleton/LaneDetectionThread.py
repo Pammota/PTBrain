@@ -30,7 +30,7 @@ class LaneDetectionThread(Thread):
 
 
     def preprocessing(self, frame):
-        frame_copy = frame[int(int(frame.shape[0] * 0.8)):, :]
+        frame_copy = frame[int(int(frame.shape[0] * 0.7)):, :]
 
         frame_grayscale = cv2.cvtColor(frame_copy, cv2.COLOR_BGR2GRAY)
 
@@ -126,7 +126,7 @@ class LaneDetectionThread(Thread):
                                     maxLineGap=100)
             left_lanes = []
             right_lanes = []
-            frame_copy = frame[int(frame.shape[0] * 0.8):, :]  # used for displaying
+            frame_copy = frame[int(frame.shape[0] * 0.7):, :]  # used for displaying
 
             if lines is not None:
                 # classify lanes based on their slope
@@ -164,7 +164,7 @@ class LaneDetectionThread(Thread):
                             theta = theta_list[theta_list[len(theta_list)-1]]
                 # print(str(i) + ": theta = " + str(theta))
 
-                if len(theta_list) != 8:
+                if len(theta_list) != 50:
                     theta_average = 0
                     theta_list.append(theta)
                 else:
