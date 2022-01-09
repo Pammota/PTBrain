@@ -26,7 +26,7 @@ class LaneDetectionThread(Thread):
 
         theta = math.atan(slope)
 
-        return theta * 40
+        return theta * 30
 
 
     def preprocessing(self, frame):
@@ -107,7 +107,7 @@ class LaneDetectionThread(Thread):
         # print("x0 - width / 2 = " + str((x0 - width / 2)))
         # print("tan = " + str(float((x0 - width / 2) / y0)))
         theta = math.atan(float((x0 - width / 2) / y0))
-        return theta * 40
+        return theta * 30
 
     def run(self):
         start = time.time()
