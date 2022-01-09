@@ -207,7 +207,7 @@ class BrainThread(Thread):
 
         # adds threads
         self.threads.append(ImageProcessingThread(inP_img, [outP_imgProc_lane, outP_imgProc_obj]))
-        self.threads.append(LaneDetectionThread(inP_imgProc_lane, outP_lane, show_lane=self.show_lane))
+        self.threads.append(LaneDetectionThread(inP_imgProc_lane, outP_lane))
         self.threads.append(ObjectDetectionThread(inP_imgProc_obj, outP_obj))
         if self.cameraSpoof is None:
             self.threads.append(WriteThread(self.inP_com, zero_theta_command, zero_speed_command))
