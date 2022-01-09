@@ -134,8 +134,8 @@ class BrainThread(Thread):
             and send through them a "stop" signal, which would make them break out
             of the infinite loops"""
 
+        self.lanedetectionthread.writer.write(self.lanedetectionthread.list_of_frames)
         self.lanedetectionthread.writer.release()
-
         command = self.controller.update_angle(0)
         self.writethread.set_speed_command(command)
 
