@@ -10,7 +10,7 @@ class Controller:
 
     def update_angle(self, theta):
         error = theta-1.5
-        self.angle = theta + error * self.p + (error-self.last_error)*self.d
+        self.angle = theta - error * self.p - (error-self.last_error)*self.d
         self.last_error = error
         return {'action': '2', 'steerAngle': float(self.angle)}
 
