@@ -78,7 +78,6 @@ class WriteThread(Thread):
         """
         while True:
             # Unpacking the dictionary into action and values
-            print(self.theta_command)
             command_msg = self.messageConverter.get_command(**self.theta_command)
             # print(command_msg)
             self.serialCom.write(command_msg.encode('ascii'))
