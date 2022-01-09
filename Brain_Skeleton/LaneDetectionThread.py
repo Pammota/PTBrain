@@ -163,6 +163,7 @@ class LaneDetectionThread(Thread):
                 theta_average /= len(theta_list)
 
             print("theta_average = " + str(theta_average))
+            cv2.imshow("PHT", frame_copy)
 
             end = time.time()
             # print("Frame time = " + str(end - start))
