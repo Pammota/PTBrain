@@ -95,6 +95,8 @@ class MessageConverter:
         command += ';\r\n'
         return command
 
+
+
     # ===================================== VERIFY COMMAND ===============================
     def verify_command(self, action, commandDict):
         """The purpose of this method to verify the command, the command has the right number and named parameters.

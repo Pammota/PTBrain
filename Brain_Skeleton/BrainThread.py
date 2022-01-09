@@ -22,6 +22,7 @@ class BrainThread(Thread):
         super(BrainThread, self).__init__()
 
         self.threads = []  # holds the threads managed by this object
+        self.writethread = None
 
         # constructs the video feed (from file if cameraSpoof exists, otherwise from camera
         self.cameraSpoof = cameraSpoof
@@ -87,7 +88,7 @@ class BrainThread(Thread):
                 print("theta: " + str(command['steerAngle']))
                 print("brain: " + str(time.time()))
                 print("")
-                self.send_command(command)
+                self.writethread.set_theta_command(command)
 
                 print("theta: " + str(command['steerAngle']))
                 print("microcontroller: " + str(time.time()))
@@ -113,7 +114,7 @@ class BrainThread(Thread):
                 active = False"""
 
             if command['speed'] != crt_speed:
-                self.send_command(command)
+                self.writethread.set_speed_command(command)
 
             if startup is True and ex_startup is False:
                 time_startup = time.time()
@@ -183,6 +184,9 @@ class BrainThread(Thread):
 
         # defines the pipes for interthread communication
 
+        zero_theta_command = Controller.update_angle(0)
+        zero_speed_command = Controller.update_speed(0)
+
         self.outP_img, inP_img = Pipe()  # out will be sent from BrainThread (here),
                                    # in will be recieved in ImageProcessingThread
 
@@ -207,7 +211,8 @@ class BrainThread(Thread):
         self.threads.append(LaneDetectionThread(inP_imgProc_lane, outP_lane, show_lane=self.show_lane))
         self.threads.append(ObjectDetectionThread(inP_imgProc_obj, outP_obj))
         if self.cameraSpoof is None:
-            self.threads.append(WriteThread(self.inP_com))
+            self.threads.append(WriteThread(self.inP_com, zero_theta_command, zero_speed_command))
+            self.writethread = self.threads[-1]
 
         # starts all threads
         for thread in self.threads:
