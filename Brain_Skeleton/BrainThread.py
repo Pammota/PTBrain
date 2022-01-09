@@ -46,6 +46,8 @@ class BrainThread(Thread):
         # creates and starts the threads managed by this object
         self._init_threads()
 
+        self.traffic_light_history = []
+
     def run(self):
 
         # grabs the first image from the camera so it can be preprocessed before
@@ -54,26 +56,28 @@ class BrainThread(Thread):
 
         # sends the image through the pipe if it exists
         if grabbed is True:
-            self.outP_img.send(frame)
+            self.outP_img.send((frame, True))
 
         start = time.time()
 
         startup, ex_startup = False, False
         time_startup = 0
+        active = True
 
-        while True:
+        while False:
             # grabs an image from the camera (or from the video)
             grabbed, frame = self.camera.read()
 
             # sends the image through the pipe if it exists
             if grabbed is True:
-                self.outP_img.send(frame)
+                frame = cv2.resize(frame, (600, 400))
+                self.outP_img.send((frame, active))
             else:
                 break
 
             # waits for the outputs of the other threads and gets them
             lane_info = self.inP_lane.recv()
-            obj_info = self.inP_obj.recv()
+            annotated_image, obj_info, traffic_lights_info = self.inP_obj.recv()
 
             ############### here takes place the processing of the info #############
 
@@ -89,7 +93,18 @@ class BrainThread(Thread):
                 speed = self.baseSpeed + 3
             else:
                 speed = self.baseSpeed
+            if Controller.must_stop(traffic_lights_info):
+                speed = 0
+                self.traffic_light_history.append(0)
+            else:
+                self.traffic_light_history.append(1)
             command, startup = self.controller.update_speed(speed, startup, time_elapsed=time_elapsed)
+
+            n = max(0, len(self.traffic_light_history) - 7)
+            median_state = sum(self.traffic_light_history[n: -1])
+            if median_state > 4:
+                active = False
+
             if command['speed'] != crt_speed:
                 self.send_command(command)
 
@@ -99,15 +114,14 @@ class BrainThread(Thread):
             ex_startup = startup
 
             end = time.time()
-            if end - start > 10:
+            if end - start > 1800:
                 time.sleep(0.01)
                 break
             ############### here processing of info ends ############
 
-            # messaage sent to the serial con or logged
 
-            """cv2.imshow("video", frame)
-            cv2.waitKey(1)"""
+            cv2.imshow("video", annotated_image)
+            cv2.waitKey(1)
 
         """If we want to stop the threads, we exit from the Brain thread, flush pipes, 
             and send through them a "stop" signal, which would make them break out

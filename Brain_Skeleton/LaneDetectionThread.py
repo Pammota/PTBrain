@@ -97,7 +97,6 @@ class LaneDetectionThread(Thread):
         return theta * 40
 
     def run(self):
-
         start = time.time()
         theta_list = []
         theta_average = 0.0
@@ -105,7 +104,7 @@ class LaneDetectionThread(Thread):
         while True:
 
             # waits for the preprocessed image and gets it
-            frame = self.inP_img.recv()
+            frame, active = self.inP_img.recv()
 
             ######### here takes place the lane detection ###########
 
@@ -163,10 +162,8 @@ class LaneDetectionThread(Thread):
                     theta_average += angle
                 theta_average /= len(theta_list)
 
-            print("theta_average = " + str(theta_average))
+            #print("theta_average = " + str(theta_average))
 
-            cv2.imshow("PHT", frame_copy)
-            cv2.waitKey(1)
             end = time.time()
             # print("Frame time = " + str(end - start))
             print("\n")
