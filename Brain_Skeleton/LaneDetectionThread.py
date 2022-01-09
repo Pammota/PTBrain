@@ -120,11 +120,9 @@ class LaneDetectionThread(Thread):
             frame, active = self.inP_img.recv()
 
             ######### here takes place the lane detection ###########
-
-            theta_average = 0.0
             frame_edge = self.preprocessing(frame)
 
-            lines = cv2.HoughLinesP(frame_edge, rho=1, theta=np.pi / 180, threshold=80, minLineLength=10,
+            lines = cv2.HoughLinesP(frame_edge, rho=1, theta=np.pi / 180, threshold=30, minLineLength=10,
                                     maxLineGap=100)
             left_lanes = []
             right_lanes = []
