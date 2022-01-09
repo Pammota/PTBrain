@@ -64,7 +64,7 @@ class BrainThread(Thread):
         time_startup = 0
         active = False
 
-        while True:
+        while False:
             # grabs an image from the camera (or from the video)
             grabbed, frame = self.camera.read()
 
@@ -141,9 +141,9 @@ class BrainThread(Thread):
             for i in range(10):
                 time.sleep(0.001)
                 self.outP_com.send(command)
-        print("theta: " + str(command['steerAngle']))
+        """print("theta: " + str(command['steerAngle']))
         print("microcontroller: " + str(time.time()))
-        print("")
+        print("")"""
 
 
     def plot_timeframes_graph(self, timeframes):
