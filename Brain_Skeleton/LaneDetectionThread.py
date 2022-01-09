@@ -162,7 +162,7 @@ class LaneDetectionThread(Thread):
                     theta_average += angle
                 theta_average /= len(theta_list)
 
-            #print("theta_average = " + str(theta_average))
+            print("theta_average = " + str(theta_average))
 
             end = time.time()
             # print("Frame time = " + str(end - start))
