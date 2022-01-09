@@ -5,13 +5,13 @@ import numpy as np
 import cv2
 
 class LaneDetectionThread(Thread):
-    def _init_(self, inP_img, outP_lane, show_lane=False):
+    def __init__(self, inP_img, outP_lane, show_lane=False):
         """
 
         :param inP_img: receives a preprocessed image from a pipe
         :param outP_lane: outputs the result of the detection through the pipe
         """
-        super(LaneDetectionThread, self)._init_()
+        super(LaneDetectionThread, self).__init__()
         self.inP_img = inP_img
         self.outP_lane = outP_lane
         self.show_lane = show_lane
