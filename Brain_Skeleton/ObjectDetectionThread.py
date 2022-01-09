@@ -1,4 +1,4 @@
-from threading import Thread, Event, Barrier
+from threading import Thread, Event
 import time
 import random
 import os
