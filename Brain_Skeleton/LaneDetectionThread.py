@@ -122,7 +122,7 @@ class LaneDetectionThread(Thread):
             ######### here takes place the lane detection ###########
             frame_edge = self.preprocessing(frame)
 
-            lines = cv2.HoughLinesP(frame_edge, rho=1, theta=np.pi / 180, threshold=30, minLineLength=10,
+            lines = cv2.HoughLinesP(frame_edge, rho=1, theta=np.pi / 180, threshold=70, minLineLength=10,
                                     maxLineGap=100)
             left_lanes = []
             right_lanes = []
