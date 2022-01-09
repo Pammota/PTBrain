@@ -93,17 +93,17 @@ class BrainThread(Thread):
                 speed = self.baseSpeed + 3
             else:
                 speed = self.baseSpeed
-            if Controller.must_stop(traffic_lights_info):
+            """if Controller.must_stop(traffic_lights_info):
                 speed = 0
                 self.traffic_light_history.append(0)
             else:
-                self.traffic_light_history.append(1)
+                self.traffic_light_history.append(1)"""
             command, startup = self.controller.update_speed(speed, startup, time_elapsed=time_elapsed)
 
-            n = max(0, len(self.traffic_light_history) - 7)
+            """n = max(0, len(self.traffic_light_history) - 7)
             median_state = sum(self.traffic_light_history[n: -1])
             if median_state > 4:
-                active = False
+                active = False"""
 
             if command['speed'] != crt_speed:
                 self.send_command(command)
