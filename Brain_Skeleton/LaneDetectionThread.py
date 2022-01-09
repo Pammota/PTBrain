@@ -166,16 +166,18 @@ class LaneDetectionThread(Thread):
                             theta = theta_list[theta_list[len(theta_list)-1]]
                 # print(str(i) + ": theta = " + str(theta))
 
-                if len(theta_list) != 5:
+                if len(theta_list) != 10:
+                    theta_average = 0
                     theta_list.append(theta)
                 else:
+                    theta_average = theta_list[0]
                     theta_list = theta_list[1:]
                     theta_list.append(theta)
 
-                theta_average = 0
-                for angle in theta_list:
-                    theta_average += angle
-                theta_average /= len(theta_list)
+                # theta_average = 0
+                # for angle in theta_list:
+                #     theta_average += angle
+                # theta_average /= len(theta_list)
 
             print("theta_average = " + str(theta_average))
             cv2.imshow("PHT", frame_copy)
