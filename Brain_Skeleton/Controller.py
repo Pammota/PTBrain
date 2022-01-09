@@ -12,6 +12,8 @@ class Controller:
         #error = theta-1.5
         #self.angle = theta - error * self.p - (error-self.last_error)*self.d
         #self.last_error = error
+        if theta < 2 and theta >-2:
+            print("rau tare pula")
         self.angle = theta
         return {'action': '2', 'steerAngle': float(self.angle)}
 
