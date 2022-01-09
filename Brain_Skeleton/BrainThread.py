@@ -84,6 +84,9 @@ class BrainThread(Thread):
             crt_angle = float(self.controller.angle)
             command = self.controller.update_angle(lane_info)
             if command['steerAngle'] != crt_angle:
+                print("theta: " + str(command['steerAngle']))
+                print("brain: " + str(time.time()))
+                print("")
                 self.send_command(command)
 
             time_elapsed = time.time() - time_startup
@@ -138,6 +141,9 @@ class BrainThread(Thread):
             for i in range(10):
                 time.sleep(0.001)
                 self.outP_com.send(command)
+        print("theta: " + str(command['steerAngle']))
+        print("microcontroller: " + str(time.time()))
+        print("")
 
 
     def plot_timeframes_graph(self, timeframes):
