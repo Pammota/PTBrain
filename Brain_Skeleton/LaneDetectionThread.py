@@ -172,7 +172,7 @@ class LaneDetectionThread(Thread):
                             right_lane = self.averagelanes(right_lanes)
                             self.draw_lane(frame_copy, right_lane, (0, 0, 255))
                         else:
-                            theta = theta_list[theta_list[len(theta_list)-1]]
+                            theta = theta_list[len(theta_list)-1]
                 # print(str(i) + ": theta = " + str(theta))
 
                 if len(theta_list) != 5:
