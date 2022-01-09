@@ -21,7 +21,7 @@ class LaneDetectionThread(Thread):
         slope = float((x1 - x2) / (y2 - y1))
 
         theta = math.atan(slope)
-        theta = theta * 25
+        theta = theta * 15
 
         if theta >= 23:
             theta = 22.5
