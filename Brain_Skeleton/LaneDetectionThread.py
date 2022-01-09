@@ -143,7 +143,7 @@ class LaneDetectionThread(Thread):
                     if x1 != x2 and y1 != y2:
                         slope = float((x1 - x2) / (y2 - y1))
                         angle = math.atan(slope)
-                        if angle > 80 or angle < -80:
+                        if not(angle > 80 or angle < -80):
                             if slope < 0.0:
                                 left_lanes.append([x1, y1, x2, y2])
                             else:
@@ -175,7 +175,7 @@ class LaneDetectionThread(Thread):
                             if len(theta_list) != 0:
                                 theta = theta_list[len(theta_list)-1]
                             else:
-                                theta = 0;
+                                theta = 0
                 # print(str(i) + ": theta = " + str(theta))
 
                 if len(theta_list) != 5:
