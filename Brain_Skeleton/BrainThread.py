@@ -23,6 +23,7 @@ class BrainThread(Thread):
 
         self.threads = []  # holds the threads managed by this object
         self.writethread = None
+        self.lanedetectionthread = None
 
         # constructs the video feed (from file if cameraSpoof exists, otherwise from camera
         self.cameraSpoof = cameraSpoof
@@ -121,7 +122,7 @@ class BrainThread(Thread):
             ex_startup = startup
 
             end = time.time()
-            if end - start > 20:
+            if end - start > 10:
                 time.sleep(0.01)
                 break
             ############### here processing of info ends ############
@@ -132,6 +133,8 @@ class BrainThread(Thread):
         """If we want to stop the threads, we exit from the Brain thread, flush pipes, 
             and send through them a "stop" signal, which would make them break out
             of the infinite loops"""
+
+        self.lanedetectionthread.writer.release()
 
         command = self.controller.update_angle(0)
         self.writethread.set_speed_command(command)
@@ -207,6 +210,7 @@ class BrainThread(Thread):
         # adds threads
         self.threads.append(ImageProcessingThread(inP_img, [outP_imgProc_lane, outP_imgProc_obj]))
         self.threads.append(LaneDetectionThread(inP_imgProc_lane, outP_lane, show_lane=self.show_lane))
+        self.lanedetectionthread = self.threads[-1]
         self.threads.append(ObjectDetectionThread(inP_imgProc_obj, outP_obj))
         if self.cameraSpoof is None:
             self.threads.append(WriteThread(self.inP_com, zero_theta_command, zero_speed_command))
