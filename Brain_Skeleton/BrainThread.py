@@ -65,7 +65,7 @@ class BrainThread(Thread):
         time_startup = 0
         active = True
 
-        while False:
+        while True:
             # grabs an image from the camera (or from the video)
             grabbed, frame = self.camera.read()
 
@@ -121,11 +121,10 @@ class BrainThread(Thread):
             ex_startup = startup
 
             end = time.time()
-            if end - start > 300:
+            if end - start > 20:
                 time.sleep(0.01)
                 break
             ############### here processing of info ends ############
-
 
             cv2.imshow("video", annotated_image)
             cv2.waitKey(1)
