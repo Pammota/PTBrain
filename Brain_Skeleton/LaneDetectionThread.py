@@ -196,6 +196,9 @@ class LaneDetectionThread(Thread):
                 # theta_average /= len(theta_list)
 
             # self.writer.write(frame)
+            addition = np.zeros((640, 60, 3), dtype=np.uint8)
+            cv2.putText(addition, str(theta_average), (0, 0), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 0), 2)
+            frame = cv2.hconcat(addition, frame)
             self.list_of_frames.append(frame)
             print("theta_average = " + str(theta_average))
 
