@@ -133,9 +133,11 @@ class BrainThread(Thread):
         """If we want to stop the threads, we exit from the Brain thread, flush pipes, 
             and send through them a "stop" signal, which would make them break out
             of the infinite loops"""
+
         for frame in self.lanedetectionthread.list_of_frames:
             frame = cv2.resize(frame, (640, 480))
             self.lanedetectionthread.writer.write(frame)
+
         self.lanedetectionthread.writer.release()
         command = self.controller.update_angle(0)
         if self.cameraSpoof is not None:

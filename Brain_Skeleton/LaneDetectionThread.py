@@ -205,8 +205,9 @@ class LaneDetectionThread(Thread):
 
             #cv2.imshow("PHT", frame_copy)
 
-            cv2.imshow("PHT", frame_copy)
-            cv2.imshow("Frame", frame)
+            ########### !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! here commented out !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            """cv2.imshow("PHT", frame_copy)
+            cv2.imshow("Frame", frame)"""
 
             # print("Frame time = " + str(end - start))
             #print("\n")
