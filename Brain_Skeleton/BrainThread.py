@@ -103,11 +103,11 @@ class BrainThread(Thread):
                 self.traffic_light_history.append(1)
 
             n = max(0, len(self.traffic_light_history) - 7)
-            print(self.traffic_light_history)
+            #print(self.traffic_light_history)
             median_state = sum(self.traffic_light_history[n: -1])
-            if median_state > 4:
-                active = False
-            else:
+            if median_state <= 4:
+                """active = False
+                else:"""
                 speed = 0
             command, startup = self.controller.update_speed(speed, startup, time_elapsed=time_elapsed)
 
@@ -122,7 +122,7 @@ class BrainThread(Thread):
             ex_startup = startup
 
             end = time.time()
-            if end - start > 10:
+            if end - start > 1000:
                 time.sleep(0.01)
                 break
             ############### here processing of info ends ############
@@ -137,18 +137,19 @@ class BrainThread(Thread):
         self.lanedetectionthread.writer.release()
 
         command = self.controller.update_angle(0)
-        self.writethread.set_speed_command(command)
+        if self.cameraSpoof is not None:
+            self.writethread.set_speed_command(command)
 
         command, startup = self.controller.update_speed(0)
-        self.writethread.set_theta_command(command)
+        if self.cameraSpoof is not None:
+            self.writethread.set_theta_command(command)
+
 
     def send_command(self, command):
         if self.cameraSpoof is None:
             for i in range(10):
                 time.sleep(0.001)
                 self.outP_com.send(command)
-
-
 
     def plot_timeframes_graph(self, timeframes):
         canvas = np.ones((600, 1200, 3)) * 255

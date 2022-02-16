@@ -2,12 +2,14 @@ from threading import Thread, Event
 import time
 import random
 import os
-
-from tensorflow.keras.models import load_model
+from helpers import *
+import cv2
+import numpy as np
 import tensorflow as tf
-
+import config
+from TFLiteModel import TFLiteModel
+from tensorflow.keras.models import load_model
 import object_detection as od
-
 
 class ObjectDetectionThread(Thread):
     def __init__(self, inP_img, outP_obj):
@@ -22,34 +24,121 @@ class ObjectDetectionThread(Thread):
 
         self.object_detector = None
         self.traffic_light_classifier = None
+
+        self.traffic_light_classifier_tflite = None
+        self.object_detector_tflite = None
+
         self.init_models()
 
+    def perform_object_detection(self, image):
+
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+        _, _, _, _, boxes, labels, objectness, scores = self.object_detector_tflite.predict(image)
+        # first 4 outputs are, in order: all bounding boxes (51150 boxes), anchors, num_detections (100), all scores
+        # the ones picked are a list of 100 objects detected ordered by highest objectness score
+
+        last_idx = 0
+        while objectness[0][last_idx] > config.DETECTION_SCORE_THRESHOLD:
+            last_idx += 1
+        objectness = objectness[0][:last_idx]
+        boxes = [[int(y1 * image.shape[0]), int(x1 * image.shape[1]),
+                  int(y2 * image.shape[0]), int(x2 * image.shape[1])]
+                 for y1, x1, y2, x2 in boxes[0][:last_idx]]  # rescale bounding boxes according to the image size
+        labels = [int(label) for label in labels[0][:last_idx]]
+        scores = scores[0][:last_idx]
+
+        traffic_lights_info = []
+
+        for box, object_label, confidence, score in zip(boxes, labels, objectness, scores):
+
+            y1, x1, y2, x2 = box
+            score = int(score[object_label] * 100)
+            color = None
+            label_text = ""
+            color_label_text = ""
+
+            # set the color of the bounding box and the text according to the object_label
+            if object_label == config.LABEL_PERSON:
+                color = (0, 255, 255)
+                label_text = "Person " + str(score)
+            if object_label == config.LABEL_CAR:
+                color = (255, 255, 0)
+                label_text = "Car " + str(score)
+            if object_label == config.LABEL_STOP_SIGN:
+                color = (128, 0, 0)
+                label_text = "Stop Sign " + str(score)
+            if object_label == config.LABEL_TRAFFIC_LIGHT:
+                color = (255, 255, 255)
+                label_text = "Traffic Light " + str(score)
+
+                image_traffic_light = image[y1:y2, x1:x2]
+                prediction = self.traffic_light_classifier_tflite.predict(image_traffic_light)
+                prediction = prediction[0]  # model operates in batches, so output is an array of predictions
+                                    # but our batch size is actually 1, so we have to take that single element
+                light_label = np.argmax(prediction, axis=0)
+                light_score = int(prediction[light_label] * 100)
+
+                if light_label == 0:
+                    color_label_text = "Green " + str(light_score)
+                elif light_label == 1:
+                    color_label_text = "Yellow " + str(light_score)
+                elif light_label == 2:
+                    color_label_text = "Red " + str(light_score)
+                else:
+                    color_label_text += "NO-LIGHT " + str(light_score)  # This is not a traffic light, or is a traffic light that is off
+                traffic_lights_info.append({"color": light_label, "score": score, "box": box})
+
+            if color and label_text and accept_box(boxes, box, 5.0):
+                cv2.rectangle(image, (x1, y1), (x2, y2), color, 2)
+                cv2.putText(image, label_text, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (255, 0, 0), 2)
+            if color_label_text:
+                cv2.putText(image, color_label_text, (x1, y2+13), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (255, 0, 0), 2)
+
+        output_frame = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+        detection_output = {"num_detections": len(boxes), "boxes": boxes, "labels:": labels}
+
+        return output_frame, detection_output, traffic_lights_info
+
     def run(self):
-        for i in range(10):
-            print("Initiating!!!!")
+
         while True:
 
             # waits for the preprocessed image and gets it
             image, active = self.inP_img.recv()
-            """if active:
+
+
+            ######### here takes place the object detection ###########
+            img_annotated, output, tl_info = image, {}, []
+            if active:
                 start = time.time()
-                (img_annotated, output, tl_info) = od.perform_object_detection_video(self.object_detector,
+
+                if config.RUN_MODE == "NORMAL":
+                    (img_annotated, output, tl_info) = od.perform_object_detection_video(self.object_detector,
                                               image, self.traffic_light_classifier)
+                if config.RUN_MODE == "TFLITE":
+                    (img_annotated, output, tl_info) = self.perform_object_detection(image)
+
                 end = time.time()
-                print(end - start)"""
+                print(end - start)
 
-            img_annotated = image
-            output = {}
-            tl_info = []
-
-            ######### here takes place the lane detection ###########
-
-            ######### here the lane detection ends ###########
+            ######### here the object detection ends ###########
 
             self.outP_obj.send((img_annotated, output, tl_info))  # sends the results of the detection back
 
     def init_models(self):
-        #self.traffic_light_classifier = load_model("model_mobilenet_v3.h5")
-        print("done?")
-        #self.object_detector = od.load_ssd_coco("mobilenet")
-        print("done?")
+
+        ###################### keras - tensorflow models ######################################
+        if config.RUN_MODE == "NORMAL":
+            self.traffic_light_classifier = load_model("models/model_mobilenet_v3.h5")
+            self.object_detector = od.load_ssd_coco("mobilenet")
+            print("done?")
+
+        ###################### tflite models (interpreters) ###################################
+        if config.RUN_MODE == "TFLITE":
+            self.traffic_light_classifier_tflite = TFLiteModel("models/model_mobilenet_v3_static_input.tflite",
+                                                        input_shape=config.CLASSIFIER_INPUT_SHAPE,
+                                                        quantized_input=True, quantized_output=True)
+            self.object_detector_tflite = TFLiteModel("models/mobilenet_coco_static_input.tflite",
+                                                      input_shape=config.DETECTOR_INPUT_SHAPE,
+                                                      quantized_input=False, quantized_output=False)
