@@ -15,7 +15,8 @@ class LaneDetectionThread(Thread):
         self.inP_img = inP_img
         self.outP_lane = outP_lane
         self.show_lane = show_lane
-        self.writer = cv2.VideoWriter('PHT_Video.mp4', cv2.VideoWriter_fourcc(*'MP4V'), 15, (640, 480))
+        self.writer = cv2.VideoWriter('PHT_Video.avi', cv2.VideoWriter_fourcc(*'DIVX'), 15, (640, 480))
+        self.list_of_frames = []
 
     def getTheta(self, lane, isRight):
         x1, y1, x2, y2 = lane
@@ -154,11 +155,11 @@ class LaneDetectionThread(Thread):
 
                     left_lane = self.averagelanes(left_lanes)
                     self.draw_lane(frame_copy, left_lane, (255, 0, 0))
-                    self.draw_lane(frame, left_lane, (255, 0, 0))
+                    # self.draw_lane(frame, left_lane, (255, 0, 0))
 
                     right_lane = self.averagelanes(right_lanes)
                     self.draw_lane(frame_copy, right_lane, (0, 0, 255))
-                    self.draw_lane(frame, right_lane, (0, 0, 255))
+                    # self.draw_lane(frame, right_lane, (0, 0, 255))
 
                     theta = self.angle(left_lane, right_lane, frame_copy.shape[1], frame_copy.shape[0])
                 else:
@@ -166,14 +167,14 @@ class LaneDetectionThread(Thread):
                         left_lane = self.averagelanes(left_lanes)
                         theta = self.getTheta(left_lane, False)
                         self.draw_lane(frame_copy, left_lane, (255, 0, 0))
-                        self.draw_lane(frame, left_lane, (255, 0, 0))
+                        # self.draw_lane(frame, left_lane, (255, 0, 0))
                     else:
                         if len(right_lanes):
                             # print("right")
                             right_lane = self.averagelanes(right_lanes)
                             theta = self.getTheta(right_lane, True)
                             self.draw_lane(frame_copy, right_lane, (0, 0, 255))
-                            self.draw_lane(frame, left_lane, (255, 0, 0))
+                            # self.draw_lane(frame, left_lane, (255, 0, 0))
                         else:
                             if len(theta_list) != 0:
                                 theta = theta_list[len(theta_list)-1]
@@ -194,10 +195,18 @@ class LaneDetectionThread(Thread):
                 #     theta_average += angle
                 # theta_average /= len(theta_list)
 
-            self.writer.write(frame)
+            # self.writer.write(frame)
+            # addition = np.zeros((640, 60, 3), dtype=np.uint8)
+            # cv2.putText(addition, str(theta_average), (0, 0), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255), 2)
+            frame = cv2.resize(frame, (640, 480))
+            # frame = cv2.hconcat(addition, frame)
+            self.list_of_frames.append(frame)
             print("theta_average = " + str(theta_average))
 
             #cv2.imshow("PHT", frame_copy)
+
+            cv2.imshow("PHT", frame_copy)
+            cv2.imshow("Frame", frame)
 
             # print("Frame time = " + str(end - start))
             #print("\n")
