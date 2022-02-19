@@ -12,7 +12,7 @@ import json
 import os
 
 class BrainThread(Thread):
-    def __init__(self, cameraSpoof=None, show_vid=False, show_lane=False):
+    def __init__(self, cameraSpoof=None, show_vid=False, show_lane=False, stop_car=False):
         """
 
         :param cameraSpoof: holds a path to a video file for the environment to be "simulated"
@@ -33,6 +33,7 @@ class BrainThread(Thread):
 
         self.show_vid = show_vid
         self.show_lane = show_lane
+        self.stop_car = stop_car
 
         #  holds pipes managed by this object
         self.outP_img = None
@@ -66,7 +67,9 @@ class BrainThread(Thread):
         time_startup = 0
         active = True
 
-        while False:
+        print(self.stop_car)
+
+        while not self.stop_car:
             # grabs an image from the camera (or from the video)
             grabbed, frame = self.camera.read()
 
