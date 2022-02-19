@@ -1,4 +1,5 @@
 from tensorflow.keras.applications.mobilenet_v3 import preprocess_input
+import tflite_runtime.interpreter as tflite
 import tensorflow as tf
 import numpy as np
 import cv2
@@ -6,7 +7,11 @@ import cv2
 class TFLiteModel:
     def __init__(self, model_path, input_shape=None, quantized_input=False, quantized_output=False):
         # configuring the interpreter
-        self.interpreter = tf.lite.Interpreter(model_path=model_path)
+        if "_edgetpu" in model_path:
+            self.interpreter = tflite.Interpreter(model_path=model_path,
+                                 experimental_delegates=[tflite.load_delegate('libedgetpu.so.1')])
+        else:
+            self.interpreter = tflite.Interpreter(model_path=model_path)
         if input_shape is not None:
             self.interpreter.resize_tensor_input(0, (1, input_shape[0], input_shape[1], 3))
         self.interpreter.allocate_tensors()
@@ -43,7 +48,7 @@ class TFLiteModel:
             input_data = np.array(input_data, dtype=np.uint8)
         input_tensor = tf.convert_to_tensor(input_data)
 
-        self.interpreter.set_tensor(self.input_details[0]['index'], input_tensor)
+        self.interpreter.set_tensor(self.input_details[0]['index'], input_data)
 
         self.interpreter.invoke()
         outputs = []

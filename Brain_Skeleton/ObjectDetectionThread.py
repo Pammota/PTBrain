@@ -8,8 +8,8 @@ import numpy as np
 import tensorflow as tf
 import config
 from TFLiteModel import TFLiteModel
-from tensorflow.keras.models import load_model
 import object_detection as od
+from ObjectStabilizer import ObjectStabilizer
 
 class ObjectDetectionThread(Thread):
     def __init__(self, inP_img, outP_obj):
@@ -27,34 +27,46 @@ class ObjectDetectionThread(Thread):
 
         self.traffic_light_classifier_tflite = None
         self.object_detector_tflite = None
+        self.stabilizer = ObjectStabilizer(9, 0.7)
 
         self.init_models()
+
 
     def perform_object_detection(self, image):
 
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
-        _, _, _, _, boxes, labels, objectness, scores = self.object_detector_tflite.predict(image)
-        # first 4 outputs are, in order: all bounding boxes (51150 boxes), anchors, num_detections (100), all scores
-        # the ones picked are a list of 100 objects detected ordered by highest objectness score
+        prediction = self.object_detector_tflite.predict(image)
+
+        scores, boxes, num_detections, labels = prediction #tf1 mobilenet + efficientdet
+        #boxes, labels, scores, num_predictions = prediction #tf2 mobilenet
 
         last_idx = 0
-        while objectness[0][last_idx] > config.DETECTION_SCORE_THRESHOLD:
+        while scores[0][last_idx] > config.DETECTION_SCORE_THRESHOLD:
             last_idx += 1
-        objectness = objectness[0][:last_idx]
+        scores = scores[0][:last_idx]
         boxes = [[int(y1 * image.shape[0]), int(x1 * image.shape[1]),
                   int(y2 * image.shape[0]), int(x2 * image.shape[1])]
                  for y1, x1, y2, x2 in boxes[0][:last_idx]]  # rescale bounding boxes according to the image size
         labels = [int(label) for label in labels[0][:last_idx]]
-        scores = scores[0][:last_idx]
+
+        boxes, labels, scores = NM_Supress(boxes, labels, scores)
+        num_detections = len(labels)
+
+        ids = self.stabilizer.add_frame(boxes, labels, scores)
 
         traffic_lights_info = []
 
-        for box, object_label, confidence, score in zip(boxes, labels, objectness, scores):
+        for idx in range(len(ids)):
+            exists, box, object_label, score = self.stabilizer.get_object_data(ids[idx])
+
+            if not exists:
+                continue
 
             y1, x1, y2, x2 = box
-            score = int(score[object_label] * 100)
+            score = int(score * 100)
             color = None
+            object_label += 1
             label_text = ""
             color_label_text = ""
 
@@ -89,7 +101,7 @@ class ObjectDetectionThread(Thread):
                     color_label_text += "NO-LIGHT " + str(light_score)  # This is not a traffic light, or is a traffic light that is off
                 traffic_lights_info.append({"color": light_label, "score": score, "box": box})
 
-            if color and label_text and accept_box(boxes, box, 5.0):
+            if color and label_text:# and accept_box(boxes, box, 5.0):
                 cv2.rectangle(image, (x1, y1), (x2, y2), color, 2)
                 cv2.putText(image, label_text, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (255, 0, 0), 2)
             if color_label_text:
@@ -107,7 +119,6 @@ class ObjectDetectionThread(Thread):
             # waits for the preprocessed image and gets it
             image, active = self.inP_img.recv()
 
-
             ######### here takes place the object detection ###########
             img_annotated, output, tl_info = image, {}, []
             if active:
@@ -117,7 +128,10 @@ class ObjectDetectionThread(Thread):
                     (img_annotated, output, tl_info) = od.perform_object_detection_video(self.object_detector,
                                               image, self.traffic_light_classifier)
                 if config.RUN_MODE == "TFLITE":
-                    (img_annotated, output, tl_info) = self.perform_object_detection(image)
+                    try:
+                        (img_annotated, output, tl_info) = self.perform_object_detection(image)
+                    except cv2.error:
+                        (img_annotated, output, tl_info) = np.zeros([640, 640, 3]), {}, []
 
                 end = time.time()
                 print(end - start)
@@ -130,15 +144,15 @@ class ObjectDetectionThread(Thread):
 
         ###################### keras - tensorflow models ######################################
         if config.RUN_MODE == "NORMAL":
-            self.traffic_light_classifier = load_model("models/model_mobilenet_v3.h5")
+            self.traffic_light_classifier = tf.keras.models.load_model("models/model_mobilenet_v3.h5")
             self.object_detector = od.load_ssd_coco("mobilenet")
             print("done?")
 
         ###################### tflite models (interpreters) ###################################
         if config.RUN_MODE == "TFLITE":
-            self.traffic_light_classifier_tflite = TFLiteModel("models/model_mobilenet_v3_static_input.tflite",
+            self.traffic_light_classifier_tflite = TFLiteModel("models/model_mobilenet_v3_static_input_edgetpu.tflite",
                                                         input_shape=config.CLASSIFIER_INPUT_SHAPE,
                                                         quantized_input=True, quantized_output=True)
-            self.object_detector_tflite = TFLiteModel("models/mobilenet_coco_static_input.tflite",
+            self.object_detector_tflite = TFLiteModel("models/tf2_ssd_mobilenet_v2_coco17_ptq_edgetpu.tflite",
                                                       input_shape=config.DETECTOR_INPUT_SHAPE,
                                                       quantized_input=False, quantized_output=False)

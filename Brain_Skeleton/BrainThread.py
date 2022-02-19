@@ -140,11 +140,11 @@ class BrainThread(Thread):
 
         self.lanedetectionthread.writer.release()
         command = self.controller.update_angle(0)
-        if self.cameraSpoof is not None:
+        if self.cameraSpoof is None:
             self.writethread.set_speed_command(command)
 
         command, startup = self.controller.update_speed(0)
-        if self.cameraSpoof is not None:
+        if self.cameraSpoof is None:
             self.writethread.set_theta_command(command)
 
 
