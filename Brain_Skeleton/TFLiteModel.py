@@ -34,8 +34,11 @@ class TFLiteModel:
 
     def predict(self, image):
 
-        # prepare daa for being inputted in model
-        image = cv2.resize(image, self.input_shape[1:3])
+        # prepare data for being inputted in model
+
+        image_shape = (self.input_shape[1], self.input_shape[2])
+
+        image = cv2.resize(image, image_shape)
         image = preprocess_input(image)
         image = np.expand_dims(image, axis=0)
 
