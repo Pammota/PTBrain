@@ -108,11 +108,11 @@ class BrainThread(Thread):
             else:
                 self.traffic_light_history.append(1)  #appends 1 if color is green or no light
 
-            n = max(0, len(self.traffic_light_history) - 7)
+            n = max(0, len(self.traffic_light_history) - 5)
             self.traffic_light_history = self.traffic_light_history[n:]
             print(self.traffic_light_history)
             median_state = sum(self.traffic_light_history[n:])  #sums green states
-            if median_state <= 4:  # if less than haf green states then we must stop
+            if median_state <= 3:  # if less than haf green states then we must stop
                 speed = 0
 
             print(speed)
