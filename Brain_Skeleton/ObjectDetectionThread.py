@@ -96,9 +96,11 @@ class ObjectDetectionThread(Thread):
 
                 if light_label == 0:
                     color_label_text = "Green " + str(light_score)
+                    color = (0, 255, 0)
                 elif light_label == 1:
                     color_label_text = "Yellow " + str(light_score)
                 elif light_label == 2:
+                    color = (0, 0, 255)
                     color_label_text = "Red " + str(light_score)
                 else:
                     color_label_text += "NO-LIGHT " + str(light_score)  # This is not a traffic light, or is a traffic light that is off
@@ -106,9 +108,9 @@ class ObjectDetectionThread(Thread):
 
             if color and label_text:# and accept_box(boxes, box, 5.0):
                 cv2.rectangle(image, (x1, y1), (x2, y2), color, 2)
-                cv2.putText(image, label_text, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (255, 0, 0), 2)
+                cv2.putText(image, label_text, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 0.55, color, 2)
             if color_label_text:
-                cv2.putText(image, color_label_text, (x1, y2+13), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (255, 0, 0), 2)
+                cv2.putText(image, color_label_text, (x1, y2+13), cv2.FONT_HERSHEY_SIMPLEX, 0.55, color, 2)
 
         output_frame = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
         detection_output = {"num_detections": len(boxes), "boxes": boxes, "labels:": labels}
