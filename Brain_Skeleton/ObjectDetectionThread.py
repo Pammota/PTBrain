@@ -100,7 +100,7 @@ class ObjectDetectionThread(Thread):
                 elif light_label == 1:
                     color_label_text = "Yellow " + str(light_score)
                 elif light_label == 2:
-                    color = (0, 0, 255)
+                    color = (255, 0, 0)
                     color_label_text = "Red " + str(light_score)
                 else:
                     color_label_text += "NO-LIGHT " + str(light_score)  # This is not a traffic light, or is a traffic light that is off
