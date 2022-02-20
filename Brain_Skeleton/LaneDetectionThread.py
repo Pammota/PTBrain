@@ -127,7 +127,7 @@ class LaneDetectionThread(Thread):
         while True:
 
             # waits for the preprocessed image and gets it
-            frame, active = self.inP_img.recv()
+            frame = self.inP_img.recv()
 
             ######### here takes place the lane detection ###########
             frame_edge = self.preprocessing(frame)

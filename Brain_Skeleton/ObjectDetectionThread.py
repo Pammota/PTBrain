@@ -38,8 +38,11 @@ class ObjectDetectionThread(Thread):
 
         prediction = self.object_detector_tflite.predict(image)
 
-        scores, boxes, num_detections, labels = prediction #tf1 mobilenet + efficientdet
-        #boxes, labels, scores, num_predictions = prediction #tf2 mobilenet
+        num_detections = 100
+
+        scores, boxes, num_detections, labels = prediction  #tf2 mobilenet + efficientdet
+        #boxes, labels, scores, num_predictions = prediction #t1 mobilenet
+        #_, _, _, _, boxes, labels, scores, _ = prediction  # non edgetpu
 
         last_idx = 0
         while last_idx < num_detections and scores[0][last_idx] > config.DETECTION_SCORE_THRESHOLD:
@@ -117,24 +120,24 @@ class ObjectDetectionThread(Thread):
         while True:
 
             # waits for the preprocessed image and gets it
-            image, active = self.inP_img.recv()
+            image = self.inP_img.recv()
 
             ######### here takes place the object detection ###########
             img_annotated, output, tl_info = image, {}, []
-            if active:
-                start = time.time()
 
-                if config.RUN_MODE == "NORMAL":
-                    (img_annotated, output, tl_info) = od.perform_object_detection_video(self.object_detector,
-                                              image, self.traffic_light_classifier)
-                if config.RUN_MODE == "TFLITE":
-                    try:
-                        (img_annotated, output, tl_info) = self.perform_object_detection(image)
-                    except cv2.error:
-                        (img_annotated, output, tl_info) = np.zeros([640, 640, 3]), {}, []
+            start = time.time()
 
-                end = time.time()
-                print(end - start)
+            if config.RUN_MODE == "NORMAL":
+                (img_annotated, output, tl_info) = od.perform_object_detection_video(self.object_detector,
+                                          image, self.traffic_light_classifier)
+            if config.RUN_MODE == "TFLITE":
+                try:
+                    (img_annotated, output, tl_info) = self.perform_object_detection(image)
+                except cv2.error:
+                    (img_annotated, output, tl_info) = np.zeros([640, 640, 3]), {}, []
+
+            end = time.time()
+            print(end - start)
 
             ######### here the object detection ends ###########
 

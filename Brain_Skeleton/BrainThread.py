@@ -59,13 +59,12 @@ class BrainThread(Thread):
 
         # sends the image through the pipe if it exists
         if grabbed is True:
-            self.outP_img.send((frame, True))
+            self.outP_img.send(frame)
 
         start = time.time()
 
         startup, ex_startup = False, False
         time_startup = 0
-        active = True
 
         print(self.stop_car)
 
@@ -76,13 +75,15 @@ class BrainThread(Thread):
             # sends the image through the pipe if it exists
             if grabbed is True:
                 frame = cv2.resize(frame, (600, 400))
-                self.outP_img.send((frame, active))
+                self.outP_img.send(frame)
             else:
                 break
 
             # waits for the outputs of the other threads and gets them
             lane_info = self.inP_lane.recv()
             annotated_image, obj_info, traffic_lights_info = self.inP_obj.recv()
+
+            print(traffic_lights_info)
 
             ############### here takes place the processing of the info #############
 
@@ -99,21 +100,24 @@ class BrainThread(Thread):
                 speed = self.baseSpeed + 3
             else:
                 speed = self.baseSpeed
-            if Controller.must_stop(traffic_lights_info):
+
+            must_stop = Controller.must_stop(traffic_lights_info)
+            if must_stop:
                 print("controller thinks we should stop")
-                self.traffic_light_history.append(0)
+                self.traffic_light_history.append(0)  #appends 0 if color is red or yellow
             else:
-                self.traffic_light_history.append(1)
+                self.traffic_light_history.append(1)  #appends 1 if color is green or no light
 
             n = max(0, len(self.traffic_light_history) - 7)
-            #print(self.traffic_light_history)
-            median_state = sum(self.traffic_light_history[n: -1])
-            if median_state <= 4:
-                """active = False
-                else:"""
+            self.traffic_light_history = self.traffic_light_history[n:]
+            print(self.traffic_light_history)
+            median_state = sum(self.traffic_light_history[n:])  #sums green states
+            if median_state <= 4:  # if less than haf green states then we must stop
                 speed = 0
-            command, startup = self.controller.update_speed(speed, startup, time_elapsed=time_elapsed)
 
+            print(speed)
+
+            command, startup = self.controller.update_speed(speed, startup, time_elapsed=time_elapsed)
 
             if command['speed'] != crt_speed:
                 if self.cameraSpoof is None:
