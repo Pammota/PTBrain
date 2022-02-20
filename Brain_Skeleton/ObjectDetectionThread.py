@@ -74,12 +74,12 @@ class ObjectDetectionThread(Thread):
             color_label_text = ""
 
             # set the color of the bounding box and the text according to the object_label
-            if object_label == config.LABEL_PERSON:
+            """if object_label == config.LABEL_PERSON:
                 color = (0, 255, 255)
                 label_text = "Person " + str(score)
             if object_label == config.LABEL_CAR:
                 color = (255, 255, 0)
-                label_text = "Car " + str(score)
+                label_text = "Car " + str(score)"""
             if object_label == config.LABEL_STOP_SIGN:
                 color = (128, 0, 0)
                 label_text = "Stop Sign " + str(score)
@@ -117,6 +117,8 @@ class ObjectDetectionThread(Thread):
 
     def run(self):
 
+        consec_frames = 0
+        (img_annotated, output, tl_info) = np.zeros([640, 640, 3]), {}, []
         while True:
 
             # waits for the preprocessed image and gets it
@@ -132,12 +134,15 @@ class ObjectDetectionThread(Thread):
                                           image, self.traffic_light_classifier)
             if config.RUN_MODE == "TFLITE":
                 try:
-                    (img_annotated, output, tl_info) = self.perform_object_detection(image)
+                    if consec_frames % 5 == 0:
+                        (img_annotated, output, tl_info) = self.perform_object_detection(image)
                 except cv2.error:
                     (img_annotated, output, tl_info) = np.zeros([640, 640, 3]), {}, []
 
             end = time.time()
             print(end - start)
+
+            consec_frames += 1
 
             ######### here the object detection ends ###########
 
