@@ -11,7 +11,7 @@ class TFLiteModel:
             self.interpreter = tflite.Interpreter(model_path=model_path,
                                  experimental_delegates=[tflite.load_delegate('libedgetpu.so.1')])
         else:
-            self.interpreter = tflite.Interpreter(model_path=model_path)
+            self.interpreter = tf.lite.Interpreter(model_path=model_path)
         if input_shape is not None:
             self.interpreter.resize_tensor_input(0, (1, input_shape[0], input_shape[1], 3))
         self.interpreter.allocate_tensors()
