@@ -136,8 +136,12 @@ class BrainThread(Thread):
 
             ex_startup = startup
 
+            if self.cameraSpoof is None:
+                self.outP_com.send(True)
+
             end = time.time()
             print("Ended brain loop after {}".format(end - loop_start_time))
+            print("---------------------------------------------------------------------\n\n")
             ############### here processing of info ends ############
 
             """cv2.imshow("video", annotated_image)

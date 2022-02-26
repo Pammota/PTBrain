@@ -77,6 +77,8 @@ class WriteThread(Thread):
         """ Represents the thread activity to redirectionate the message.
         """
         while True:
+
+            allow = self.inP.recv()
             # Unpacking the dictionary into action and values
             command_msg = self.messageConverter.get_command(**self.theta_command)
             # print(command_msg)

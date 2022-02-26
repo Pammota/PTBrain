@@ -159,8 +159,8 @@ class ObjectDetectionThread(Thread):
         ###################### tflite models (interpreters) ###################################
         if config.RUN_MODE == "TFLITE":
             self.traffic_light_classifier_tflite = TFLiteModel("models/model_mobilenet_v3_static_input_edgetpu.tflite",
-                                                        input_shape=config.CLASSIFIER_INPUT_SHAPE,
-                                                        quantized_input=True, quantized_output=True)
+                                                         input_shape=config.CLASSIFIER_INPUT_SHAPE,
+                                                         quantized_input=True, quantized_output=True)
             self.object_detector_tflite = TFLiteModel("models/tf2_ssd_mobilenet_v2_coco17_ptq_edgetpu.tflite",
-                                                      input_shape=config.DETECTOR_INPUT_SHAPE,
-                                                      quantized_input=False, quantized_output=False)
+                                                       input_shape=config.DETECTOR_INPUT_SHAPE,
+                                                       quantized_input=False, quantized_output=False)
