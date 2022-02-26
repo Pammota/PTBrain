@@ -89,10 +89,14 @@ class BrainThread(Thread):
 
             # waits for the outputs of the other threads and gets them
             lane_info = self.inP_lane.recv()
+
+            current_time = time.time()
+            print("grabbed lane detection info after {}".format(current_time - loop_start_time))
+
             annotated_image, obj_info, traffic_lights_info = self.inP_obj.recv()
 
             current_time = time.time()
-            print("Grabbed detection info after {}".format(current_time - loop_start_time))
+            print("Grabbed object detection info after {}".format(current_time - loop_start_time))
 
             #print(traffic_lights_info)
 
