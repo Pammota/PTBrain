@@ -275,7 +275,7 @@ class LaneDetectionThread(Thread):
 
             ######### here the lane detection ends ###########
 
-            self.outP_lane.send(theta_average)   # sends the results of the detection back
+            self.outP_lane.send(-theta_average)   # sends the results of the detection back
 
 # class LaneDetectionThread(Thread):
 #     def __init__(self, inP_img, outP_lane, show_lane=False):
