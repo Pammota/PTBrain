@@ -84,6 +84,9 @@ class BrainThread(Thread):
             else:
                 break
 
+            current_time = time.time()
+            print("Sent detection info after {}".format(current_time - start))
+
             # waits for the outputs of the other threads and gets them
             lane_info = self.inP_lane.recv()
             annotated_image, obj_info, traffic_lights_info = self.inP_obj.recv()
