@@ -23,7 +23,7 @@ class ImageProcessingThread(Thread):
 
 
             # waits for the raw image and gets it
-            frame, active = self.inP_img.recv()
+            frame = self.inP_img.recv()
             frameClone = copy.copy(frame)
 
             ################ here takes place the processing of the image ###########
@@ -32,4 +32,4 @@ class ImageProcessingThread(Thread):
 
             # sends the processed frame through pipes to the other threads
             for outP in self.outPs_img:
-                outP.send((frameClone, active))
+                outP.send(frameClone)

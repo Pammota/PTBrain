@@ -23,12 +23,13 @@ class Controller:
             return False
         dominant = max(traffic_lights_info, key=lambda x: x.get('score'))
 
-        color = dominant.get('label')
+        color = dominant.get('color')
         print(color)
         if color == 1:
             return True
         if color == 2:
             return True
+
         return False
 
     def update_speed(self, speed, startup=False, time_elapsed=0):

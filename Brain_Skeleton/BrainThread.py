@@ -12,7 +12,7 @@ import json
 import os
 
 class BrainThread(Thread):
-    def __init__(self, cameraSpoof=None, show_vid=False, show_lane=False):
+    def __init__(self, cameraSpoof=None, show_vid=False, show_lane=False, stop_car=False):
         """
 
         :param cameraSpoof: holds a path to a video file for the environment to be "simulated"
@@ -33,6 +33,7 @@ class BrainThread(Thread):
 
         self.show_vid = show_vid
         self.show_lane = show_lane
+        self.stop_car = stop_car
 
         #  holds pipes managed by this object
         self.outP_img = None
@@ -58,28 +59,31 @@ class BrainThread(Thread):
 
         # sends the image through the pipe if it exists
         if grabbed is True:
-            self.outP_img.send((frame, True))
+            self.outP_img.send(frame)
 
         start = time.time()
 
         startup, ex_startup = False, False
         time_startup = 0
-        active = True
 
-        while True:
+        print(self.stop_car)
+
+        while not self.stop_car:
             # grabs an image from the camera (or from the video)
             grabbed, frame = self.camera.read()
 
             # sends the image through the pipe if it exists
             if grabbed is True:
                 frame = cv2.resize(frame, (600, 400))
-                self.outP_img.send((frame, active))
+                self.outP_img.send(frame)
             else:
                 break
 
             # waits for the outputs of the other threads and gets them
             lane_info = self.inP_lane.recv()
             annotated_image, obj_info, traffic_lights_info = self.inP_obj.recv()
+
+            print(traffic_lights_info)
 
             ############### here takes place the processing of the info #############
 
@@ -96,21 +100,24 @@ class BrainThread(Thread):
                 speed = self.baseSpeed + 3
             else:
                 speed = self.baseSpeed
-            if Controller.must_stop(traffic_lights_info):
+
+            must_stop = Controller.must_stop(traffic_lights_info)
+            if must_stop:
                 print("controller thinks we should stop")
-                self.traffic_light_history.append(0)
+                self.traffic_light_history.append(0)  #appends 0 if color is red or yellow
             else:
-                self.traffic_light_history.append(1)
+                self.traffic_light_history.append(1)  #appends 1 if color is green or no light
 
-            n = max(0, len(self.traffic_light_history) - 7)
+            n = max(0, len(self.traffic_light_history) - 5)
+            self.traffic_light_history = self.traffic_light_history[n:]
             print(self.traffic_light_history)
-            median_state = sum(self.traffic_light_history[n: -1])
-            if median_state > 4:
-                active = False
-            else:
+            median_state = sum(self.traffic_light_history[n:])  #sums green states
+            if median_state <= 3:  # if less than haf green states then we must stop
                 speed = 0
-            command, startup = self.controller.update_speed(speed, startup, time_elapsed=time_elapsed)
 
+            print(speed)
+
+            command, startup = self.controller.update_speed(speed, startup, time_elapsed=time_elapsed)
 
             if command['speed'] != crt_speed:
                 if self.cameraSpoof is None:
@@ -122,7 +129,7 @@ class BrainThread(Thread):
             ex_startup = startup
 
             end = time.time()
-            if end - start > 10:
+            if end - start > 1000:
                 time.sleep(0.01)
                 break
             ############### here processing of info ends ############
@@ -133,23 +140,26 @@ class BrainThread(Thread):
         """If we want to stop the threads, we exit from the Brain thread, flush pipes, 
             and send through them a "stop" signal, which would make them break out
             of the infinite loops"""
+
         for frame in self.lanedetectionthread.list_of_frames:
             frame = cv2.resize(frame, (640, 480))
             self.lanedetectionthread.writer.write(frame)
+
         self.lanedetectionthread.writer.release()
         command = self.controller.update_angle(0)
-        self.writethread.set_speed_command(command)
+        if self.cameraSpoof is None:
+            self.writethread.set_speed_command(command)
 
         command, startup = self.controller.update_speed(0)
-        self.writethread.set_theta_command(command)
+        if self.cameraSpoof is None:
+            self.writethread.set_theta_command(command)
+
 
     def send_command(self, command):
         if self.cameraSpoof is None:
             for i in range(10):
                 time.sleep(0.001)
                 self.outP_com.send(command)
-
-
 
     def plot_timeframes_graph(self, timeframes):
         canvas = np.ones((600, 1200, 3)) * 255
