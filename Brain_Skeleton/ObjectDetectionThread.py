@@ -138,6 +138,8 @@ class ObjectDetectionThread(Thread):
                     (img_annotated, output, tl_info) = self.perform_object_detection(image)
                 except cv2.error:
                     (img_annotated, output, tl_info) = np.zeros([640, 640, 3]), {}, []
+            if config.RUN_MODE == "NO_DETECTION":
+                (img_annotated, output, tl_info) = np.zeros([640, 640, 3]), {}, []
 
             end = time.time()
             print(end - start)
