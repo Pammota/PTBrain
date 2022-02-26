@@ -85,7 +85,7 @@ class BrainThread(Thread):
                 break
 
             current_time = time.time()
-            print("Sent detection info after {}".format(current_time - start))
+            print("Sent detection info after {}".format(current_time - loop_start_time))
 
             # waits for the outputs of the other threads and gets them
             lane_info = self.inP_lane.recv()
