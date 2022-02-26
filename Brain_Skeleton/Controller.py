@@ -19,12 +19,12 @@ class Controller:
     def must_stop(traffic_lights_info):
 
         if len(traffic_lights_info) == 0:
-            print("empty")
+            #print("empty")
             return False
         dominant = max(traffic_lights_info, key=lambda x: x.get('score'))
 
         color = dominant.get('color')
-        print(color)
+        #print(color)
         if color == 1:
             return True
         if color == 2:

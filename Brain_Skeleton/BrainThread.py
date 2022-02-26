@@ -69,12 +69,17 @@ class BrainThread(Thread):
         print(self.stop_car)
 
         while not self.stop_car:
+
+
+            loop_start_time = time.time()
             # grabs an image from the camera (or from the video)
             grabbed, frame = self.camera.read()
 
+            current_time = time.time()
+            print("Grabbed camera image after {}".format(current_time - loop_start_time))
+
             # sends the image through the pipe if it exists
             if grabbed is True:
-                frame = cv2.resize(frame, (600, 400))
                 self.outP_img.send(frame)
             else:
                 break
@@ -83,7 +88,10 @@ class BrainThread(Thread):
             lane_info = self.inP_lane.recv()
             annotated_image, obj_info, traffic_lights_info = self.inP_obj.recv()
 
-            print(traffic_lights_info)
+            current_time = time.time()
+            print("Grabbed detection info after {}".format(current_time - loop_start_time))
+
+            #print(traffic_lights_info)
 
             ############### here takes place the processing of the info #############
 
@@ -110,12 +118,12 @@ class BrainThread(Thread):
 
             n = max(0, len(self.traffic_light_history) - 5)
             self.traffic_light_history = self.traffic_light_history[n:]
-            print(self.traffic_light_history)
+            #print(self.traffic_light_history)
             median_state = sum(self.traffic_light_history[n:])  #sums green states
             if median_state <= 3:  # if less than haf green states then we must stop
                 speed = 0
 
-            print(speed)
+            #print(speed)
 
             command, startup = self.controller.update_speed(speed, startup, time_elapsed=time_elapsed)
 
@@ -129,9 +137,7 @@ class BrainThread(Thread):
             ex_startup = startup
 
             end = time.time()
-            if end - start > 1000:
-                time.sleep(0.01)
-                break
+            print("Ended brain loop after {}".format(end - loop_start_time))
             ############### here processing of info ends ############
 
             """cv2.imshow("video", annotated_image)
