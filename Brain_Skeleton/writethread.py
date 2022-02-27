@@ -73,7 +73,7 @@ class WriteThread(Thread):
     def set_speed_command(self, speed_command):
         self.speed_command = speed_command
 
-    def get_theta_command(self, theta_command):
+    def get_theta_command(self):
         return self.theta_command
 
     def get_speed_command(self):
