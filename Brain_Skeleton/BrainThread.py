@@ -67,7 +67,6 @@ class BrainThread(Thread):
 
         while not self.stop_car:
 
-
             loop_start_time = time.time()
             # grabs an image from the camera (or from the video)
             grabbed, frame = self.camera.read()
@@ -151,8 +150,8 @@ class BrainThread(Thread):
             print("---------------------------------------------------------------------\n\n")
             ############### here processing of info ends ############
 
-            """cv2.imshow("video", annotated_image)
-            cv2.waitKey(1)"""
+            cv2.imshow("video", annotated_image)
+            cv2.waitKey(1)
 
         """If we want to stop the threads, we exit from the Brain thread, flush pipes, 
             and send through them a "stop" signal, which would make them break out
