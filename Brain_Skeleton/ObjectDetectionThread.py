@@ -120,6 +120,15 @@ class ObjectDetectionThread(Process):
 
     def run(self):
 
+        self.object_detector = None
+        self.traffic_light_classifier = None
+
+        self.traffic_light_classifier_tflite = None
+        self.object_detector_tflite = None
+        self.stabilizer = ObjectStabilizer(3, 0.5)
+
+        self.init_models()
+
         (img_annotated, output, tl_info) = np.zeros([640, 640, 3]), {}, []
         while True:
 
