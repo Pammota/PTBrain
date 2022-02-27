@@ -80,7 +80,7 @@ class WriteThread(Thread):
         while True:
             allow = self.inP.recv()
             # Unpacking the dictionary into action and values
-            for i in range(10):
+            for i in range(5):
                 command_msg = self.messageConverter.get_command(**self.theta_command)
                 # print(command_msg)
                 self.serialCom.write(command_msg.encode('ascii'))
