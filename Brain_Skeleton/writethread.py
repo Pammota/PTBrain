@@ -47,6 +47,9 @@ class WriteThread(Thread):
             The log file handler to save the commands.
         """
         super(WriteThread, self).__init__()
+
+        self.daemon = True
+
         self.inP = inP
 
         devFile = '/dev/ttyACM0'

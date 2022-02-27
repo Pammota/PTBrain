@@ -29,6 +29,8 @@ class BrainThread(Process):
 
         self.baseSpeed = 17
 
+        self.daemon = True
+
         self.show_vid = show_vid
         self.show_lane = show_lane
         self.stop_car = stop_car

@@ -13,6 +13,9 @@ class LaneDetectionThread(Process):
         :param outP_lane: outputs the result of the detection through the pipe
         """
         super(LaneDetectionThread, self).__init__(args=(3, 4))
+
+        self.daemon = True
+
         self.inP_img = inP_img
         self.outP_lane = outP_lane
         self.show_lane = show_lane
