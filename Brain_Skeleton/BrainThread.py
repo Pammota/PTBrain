@@ -219,7 +219,7 @@ class BrainThread(Process):
                                             # in will  be received in writeThread
 
         if self.cameraSpoof is None:
-            self.writethread = (WriteThread(self.inP_com, zero_theta_command, zero_speed_command))
+            self.writethread = WriteThread(self.inP_com, zero_theta_command, zero_speed_command)
             self.writethread.start()
 
     def _kill_threads(self):
