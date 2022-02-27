@@ -69,7 +69,6 @@ class BrainThread(Process):
 
         while not self.stop_car:
 
-
             loop_start_time = time.time()
             # grabs an image from the camera (or from the video)
             grabbed, frame = self.camera.read()
@@ -105,9 +104,8 @@ class BrainThread(Process):
 
             crt_angle = float(self.controller.angle)
             command = self.controller.update_angle(lane_info)
-            if command['steerAngle'] != crt_angle:
-                if self.cameraSpoof is None:
-                    self.writethread.set_theta_command(command)
+            if self.cameraSpoof is None:
+                self.writethread.set_theta_command(command)
 
             time_elapsed = time.time() - time_startup
 
@@ -135,9 +133,8 @@ class BrainThread(Process):
 
             command, startup = self.controller.update_speed(speed, startup, time_elapsed=time_elapsed)
 
-            if command['speed'] != crt_speed:
-                if self.cameraSpoof is None:
-                    self.writethread.set_speed_command(command)
+            if self.cameraSpoof is None:
+                self.writethread.set_speed_command(command)
 
             if startup is True and ex_startup is False:
                 time_startup = time.time()
