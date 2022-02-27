@@ -25,6 +25,7 @@
 # CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
+import time
 
 import serial
 from threading import Thread
@@ -77,8 +78,8 @@ class WriteThread(Thread):
         """ Represents the thread activity to redirectionate the message.
         """
         while True:
-
-            allow = self.inP.recv()
+            time.sleep(0.01)
+            #allow = self.inP.recv()
             # Unpacking the dictionary into action and values
             command_msg = self.messageConverter.get_command(**self.theta_command)
             # print(command_msg)
