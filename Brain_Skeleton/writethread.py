@@ -72,6 +72,7 @@ class WriteThread(Thread):
 
     def set_speed_command(self, speed_command):
         self.speed_command = speed_command
+        print("changed speed to {}".format(self.speed_command))
 
     # ===================================== RUN ==========================================
     def run(self):
@@ -84,6 +85,6 @@ class WriteThread(Thread):
             #print(command_msg)
             self.serialCom.write(command_msg.encode('ascii'))
             command_msg = self.messageConverter.get_command(**self.speed_command)
-            print(command_msg)
+            #print(command_msg)
             self.serialCom.write(command_msg.encode('ascii'))
             #self.logFile.write(command_msg)
