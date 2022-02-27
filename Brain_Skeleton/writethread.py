@@ -72,7 +72,6 @@ class WriteThread(Thread):
 
     def set_speed_command(self, speed_command):
         self.speed_command = speed_command
-        print("changed speed to {}".format(self.speed_command))
 
     # ===================================== RUN ==========================================
     def run(self):
@@ -81,6 +80,7 @@ class WriteThread(Thread):
         while True:
             allow = self.inP.recv()
             # Unpacking the dictionary into action and values
+            print(self.speed_command)
             command_msg = self.messageConverter.get_command(**self.theta_command)
             #print(command_msg)
             self.serialCom.write(command_msg.encode('ascii'))
