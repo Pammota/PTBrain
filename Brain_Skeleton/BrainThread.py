@@ -156,16 +156,16 @@ class BrainThread(Process):
             and send through them a "stop" signal, which would make them break out
             of the infinite loops"""
 
-        command = self.controller.update_angle(0)
+        theta_command = self.controller.update_angle(0)
         if self.cameraSpoof is None:
-            self.writethread.set_speed_command(command)
+            self.writethread.set_speed_command(theta_command)
 
-        command, startup = self.controller.update_speed(0)
+        speed_command, startup = self.controller.update_speed(0)
         if self.cameraSpoof is None:
-            self.writethread.set_theta_command(command)
+            self.writethread.set_theta_command(speed_command)
 
         if self.cameraSpoof is None:
-            self.outP_com.send(True)
+            self.outP_com.send((theta_command, speed_command))
 
     def send_command(self, command):
         if self.cameraSpoof is None:
