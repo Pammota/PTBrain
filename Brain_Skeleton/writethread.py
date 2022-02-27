@@ -73,6 +73,12 @@ class WriteThread(Thread):
     def set_speed_command(self, speed_command):
         self.speed_command = speed_command
 
+    def get_theta_command(self, theta_command):
+        return self.theta_command
+
+    def get_speed_command(self):
+        return self.speed_command
+
     # ===================================== RUN ==========================================
     def run(self):
         """ Represents the thread activity to redirectionate the message.
@@ -81,10 +87,10 @@ class WriteThread(Thread):
             allow = self.inP.recv()
             # Unpacking the dictionary into action and values
             print(self.speed_command)
-            command_msg = self.messageConverter.get_command(**self.theta_command)
+            command_msg = self.messageConverter.get_command(**self.get_theta_command())
             #print(command_msg)
             self.serialCom.write(command_msg.encode('ascii'))
-            command_msg = self.messageConverter.get_command(**self.speed_command)
-            #print(command_msg)
+            command_msg = self.messageConverter.get_command(**self.get_speed_command())
+            print(command_msg)
             self.serialCom.write(command_msg.encode('ascii'))
             #self.logFile.write(command_msg)
