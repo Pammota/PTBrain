@@ -63,10 +63,15 @@ class BrainThread(Thread):
         startup, ex_startup = False, False
         time_startup = 0
 
-        print(self.stop_car)
+        command = self.controller.update_angle(0)
+        if self.cameraSpoof is None:
+            self.writethread.set_speed_command(command)
+
+        command, startup = self.controller.update_speed(0)
+        if self.cameraSpoof is None:
+            self.writethread.set_theta_command(command)
 
         while not self.stop_car:
-
 
             loop_start_time = time.time()
             # grabs an image from the camera (or from the video)
@@ -85,18 +90,21 @@ class BrainThread(Thread):
             current_time = time.time()
             print("Sent detection info after {}".format(current_time - loop_start_time))
 
+            if self.cameraSpoof is None:
+                self.outP_com.send(True)
+
             # waits for the outputs of the other threads and gets them
             time_start, lane_info = self.inP_lane.recv()
 
             current_time = time.time()
-            print("grabbed lane detection info after {}".format(current_time - loop_start_time))
-            print("grabbed lane detection info after {}".format(current_time - time_start))
+            print("Grabbed lane detection info after {}".format(current_time - loop_start_time))
+            print("Lane detection pipe delay {}".format(current_time - time_start))
 
             time_start, annotated_image, obj_info, traffic_lights_info = self.inP_obj.recv()
 
             current_time = time.time()
             print("Grabbed object detection info after {}".format(current_time - loop_start_time))
-            print("Grabbed object detection info after {}".format(current_time - time_start))
+            print("Object detection pipe delay {}".format(current_time - time_start))
 
             #print(traffic_lights_info)
 
@@ -143,8 +151,7 @@ class BrainThread(Thread):
 
             ex_startup = startup
 
-            if self.cameraSpoof is None:
-                self.outP_com.send(True)
+
 
             end = time.time()
             print("Ended brain loop after {}".format(end - loop_start_time))
