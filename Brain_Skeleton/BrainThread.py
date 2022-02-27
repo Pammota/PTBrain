@@ -103,9 +103,9 @@ class BrainThread(Process):
             ############### here takes place the processing of the info #############
 
             crt_angle = float(self.controller.angle)
-            command = self.controller.update_angle(lane_info)
+            theta_command = self.controller.update_angle(lane_info)
             if self.cameraSpoof is None:
-                self.writethread.set_theta_command(command)
+                self.writethread.set_theta_command(theta_command)
 
             time_elapsed = time.time() - time_startup
 
@@ -131,10 +131,10 @@ class BrainThread(Process):
 
             #print(speed)
 
-            command, startup = self.controller.update_speed(speed, startup, time_elapsed=time_elapsed)
+            speed_command, startup = self.controller.update_speed(speed, startup, time_elapsed=time_elapsed)
 
             if self.cameraSpoof is None:
-                self.writethread.set_speed_command(command)
+                self.writethread.set_speed_command(speed_command)
 
             if startup is True and ex_startup is False:
                 time_startup = time.time()
@@ -142,7 +142,7 @@ class BrainThread(Process):
             ex_startup = startup
 
             if self.cameraSpoof is None:
-                self.outP_com.send(True)
+                self.outP_com.send((theta_command, speed_command))
 
             end = time.time()
             print("Ended brain loop after {}".format(end - loop_start_time))

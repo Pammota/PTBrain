@@ -84,13 +84,12 @@ class WriteThread(Thread):
         """ Represents the thread activity to redirectionate the message.
         """
         while True:
-            allow = self.inP.recv()
+            theta_command, speed_command = self.inP.recv()
             # Unpacking the dictionary into action and values
-            print(self.speed_command)
             command_msg = self.messageConverter.get_command(**self.get_theta_command())
             #print(command_msg)
             self.serialCom.write(command_msg.encode('ascii'))
             command_msg = self.messageConverter.get_command(**self.get_speed_command())
-            print("COMMAND MESSAGE: " + command_msg)
+            print(command_msg)
             self.serialCom.write(command_msg.encode('ascii'))
             #self.logFile.write(command_msg)
