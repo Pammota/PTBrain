@@ -55,11 +55,8 @@ class BrainThread(Thread):
 
         # grabs the first image from the camera so it can be preprocessed before
         # anything else is processed
-        grabbed, frame = self.camera.read()
 
         # sends the image through the pipe if it exists
-        if grabbed is True:
-            self.outP_img.send(frame)
 
         start = time.time()
 
@@ -80,7 +77,8 @@ class BrainThread(Thread):
 
             # sends the image through the pipe if it exists
             if grabbed is True:
-                self.outP_img.send(frame)
+                for outP in self.outPs:
+                    outP.send(frame)
             else:
                 break
 
@@ -218,14 +216,16 @@ class BrainThread(Thread):
         zero_theta_command = self.controller.update_angle(0)
         zero_speed_command, _ = self.controller.update_speed(0)
 
-        self.outP_img, inP_img = Pipe()  # out will be sent from BrainThread (here),
+        #self.outP_img, inP_img = Pipe()  # out will be sent from BrainThread (here),
                                    # in will be recieved in ImageProcessingThread
 
-        outP_imgProc_lane, inP_imgProc_lane = Pipe()  # out will be sent from ImageProcessingThread
+        outP_brain_lane, inP_brain_lane = Pipe()  # out will be sent from BrainThread
                                                      # in will be recieved in LaneDetectionThread
 
-        outP_imgProc_obj, inP_imgProc_obj = Pipe()  # out will be sent from ImageProcessingThread
+        outP_brain_obj, inP_brain_obj = Pipe()  # out will be sent from BrainThread
                                                    # in will be recieved in ObjectDetectionThread
+
+        self.outPs = [outP_brain_lane, outP_brain_obj]
 
         outP_lane, self.inP_lane = Pipe()  # out will be sent from LaneDetectionThread
                                      # in will be recieved in BrainThread (here)
@@ -238,10 +238,10 @@ class BrainThread(Thread):
                                             # in will  be received in writeThread
 
         # adds threads
-        self.threads.append(ImageProcessingThread(inP_img, [outP_imgProc_lane, outP_imgProc_obj]))
-        self.threads.append(LaneDetectionThread(inP_imgProc_lane, outP_lane, show_lane=self.show_lane))
+        #self.threads.append(ImageProcessingThread(inP_img, [outP_imgProc_lane, outP_imgProc_obj]))
+        self.threads.append(LaneDetectionThread(inP_brain_lane, outP_lane, show_lane=self.show_lane))
         self.lanedetectionthread = self.threads[-1]
-        self.threads.append(ObjectDetectionThread(inP_imgProc_obj, outP_obj))
+        self.threads.append(ObjectDetectionThread(inP_brain_obj, outP_obj))
         if self.cameraSpoof is None:
             self.threads.append(WriteThread(self.inP_com, zero_theta_command, zero_speed_command))
             self.writethread = self.threads[-1]
