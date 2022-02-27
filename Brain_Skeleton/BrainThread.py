@@ -20,7 +20,7 @@ class BrainThread(Process):
                             if inexistent, the video feed will be taken from the actual camera
                             default - None
         """
-        super(BrainThread, self).__init__()
+        super(BrainThread, self).__init__(args=(1, 2))
 
         self.writethread = None
 

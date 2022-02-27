@@ -12,7 +12,7 @@ class LaneDetectionThread(Process):
         :param inP_img: receives a preprocessed image from a pipe
         :param outP_lane: outputs the result of the detection through the pipe
         """
-        super(LaneDetectionThread, self).__init__()
+        super(LaneDetectionThread, self).__init__(args=(3, 4))
         self.inP_img = inP_img
         self.outP_lane = outP_lane
         self.show_lane = show_lane
