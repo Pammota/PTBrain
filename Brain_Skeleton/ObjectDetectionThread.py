@@ -23,16 +23,6 @@ class ObjectDetectionThread(Process):
         self.inP_img = inP_img
         self.outP_obj = outP_obj
 
-        self.object_detector = None
-        self.traffic_light_classifier = None
-
-        self.traffic_light_classifier_tflite = None
-        self.object_detector_tflite = None
-        self.stabilizer = ObjectStabilizer(3, 0.5)
-
-        self.init_models()
-
-
     def perform_object_detection(self, image):
 
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
@@ -170,7 +160,7 @@ class ObjectDetectionThread(Process):
         ###################### tflite models (interpreters) ###################################
         if config.RUN_MODE == "TFLITE":
             self.traffic_light_classifier_tflite = TFLiteModel("models/model_mobilenet_v3_static_input_edgetpu.tflite",
-                                                         input_shape=config.CLASSIFIER_INPUT_SHAPE,
+                                                        input_shape=config.CLASSIFIER_INPUT_SHAPE,
                                                          quantized_input=True, quantized_output=True)
             self.object_detector_tflite = TFLiteModel("models/tf2_ssd_mobilenet_v2_coco17_ptq_edgetpu.tflite",
                                                        input_shape=config.DETECTOR_INPUT_SHAPE,
