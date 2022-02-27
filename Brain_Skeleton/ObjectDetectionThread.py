@@ -142,7 +142,7 @@ class ObjectDetectionThread(Thread):
                 (img_annotated, output, tl_info) = np.zeros([640, 640, 3]), {}, []
 
             end = time.time()
-            print(end - start)
+            print("Object detection time: {}".format(end - start))
 
             ######### here the object detection ends ###########
 
