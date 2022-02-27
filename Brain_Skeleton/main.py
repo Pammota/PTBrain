@@ -38,7 +38,7 @@ def main():
     processes.append(LaneDetectionThread(inP_brain_lane, outP_lane, show_lane=args['show_lane']))
     processes.append(ObjectDetectionThread(inP_brain_obj, outP_obj))
 
-    outPs_brain = [outP_brain_lane, outP_brain_obj]
+    outPs_brain = [outP_brain_obj, outP_brain_lane]
     inPs_brain = [inP_lane, inP_obj]
 
     for process in processes:
