@@ -63,15 +63,10 @@ class BrainThread(Thread):
         startup, ex_startup = False, False
         time_startup = 0
 
-        command = self.controller.update_angle(0)
-        if self.cameraSpoof is None:
-            self.writethread.set_speed_command(command)
-
-        command, startup = self.controller.update_speed(0)
-        if self.cameraSpoof is None:
-            self.writethread.set_theta_command(command)
+        print(self.stop_car)
 
         while not self.stop_car:
+
 
             loop_start_time = time.time()
             # grabs an image from the camera (or from the video)
@@ -89,9 +84,6 @@ class BrainThread(Thread):
 
             current_time = time.time()
             print("Sent detection info after {}".format(current_time - loop_start_time))
-
-            if self.cameraSpoof is None:
-                self.outP_com.send(True)
 
             # waits for the outputs of the other threads and gets them
             time_start, lane_info = self.inP_lane.recv()
@@ -151,7 +143,8 @@ class BrainThread(Thread):
 
             ex_startup = startup
 
-
+            if self.cameraSpoof is None:
+                self.outP_com.send(True)
 
             end = time.time()
             print("Ended brain loop after {}".format(end - loop_start_time))
