@@ -81,17 +81,17 @@ class BrainThread(Process):
             print("Sent detection info after {}".format(current_time - loop_start_time))
 
             # waits for the outputs of the other threads and gets them
-            time_sent, annotated_image, obj_info, traffic_lights_info = self.inP_obj.recv()
-
-            current_time = time.time()
-            print("pipe communication delay in object detection: {}".format(current_time - time_sent))
-            print("Grabbed object detection info after {}".format(current_time - loop_start_time))
-
             time_sent, lane_info = self.inP_lane.recv()
 
             current_time = time.time()
             print("pipe communication delay in lane detection: {}".format(current_time - time_sent))
             print("grabbed lane detection info after {}".format(current_time - loop_start_time))
+
+            time_sent, annotated_image, obj_info, traffic_lights_info = self.inP_obj.recv()
+
+            current_time = time.time()
+            print("pipe communication delay in object detection: {}".format(current_time - time_sent))
+            print("Grabbed object detection info after {}".format(current_time - loop_start_time))
 
             #print(traffic_lights_info)
 
