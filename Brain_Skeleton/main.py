@@ -56,6 +56,9 @@ def main():
             brain = BrainThread(inPs_brain, outPs_brain, cameraSpoof=args['path_to_vid'], stop_car=args['stop_car'])
     brain.start()
 
+    processes.append(brain)
+    for process in processes:
+        process.join()
 
 if __name__ == '__main__':
     main()
