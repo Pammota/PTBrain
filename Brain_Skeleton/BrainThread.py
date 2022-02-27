@@ -141,8 +141,8 @@ class BrainThread(Process):
 
             ex_startup = startup
 
-            """if self.cameraSpoof is None:
-                self.outP_com.send(True)"""
+            if self.cameraSpoof is None:
+                self.outP_com.send(True)
 
             end = time.time()
             print("Ended brain loop after {}".format(end - loop_start_time))
@@ -164,8 +164,8 @@ class BrainThread(Process):
         if self.cameraSpoof is None:
             self.writethread.set_theta_command(command)
 
-        """if self.cameraSpoof is None:
-            self.outP_com.send(True)"""
+        if self.cameraSpoof is None:
+            self.outP_com.send(True)
 
     def send_command(self, command):
         if self.cameraSpoof is None:
