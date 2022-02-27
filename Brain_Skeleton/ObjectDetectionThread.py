@@ -147,7 +147,8 @@ class ObjectDetectionThread(Process):
 
             ######### here the object detection ends ###########
 
-            self.outP_obj.send((img_annotated, output, tl_info))  # sends the results of the detection back
+            time_sent = time.time()
+            self.outP_obj.send((time_sent, img_annotated, output, tl_info))  # sends the results of the detection back
 
     def init_models(self):
 
