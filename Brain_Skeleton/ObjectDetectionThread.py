@@ -19,7 +19,7 @@ class ObjectDetectionThread(Process):
         :param inP_img: receives the preprocessed image through a pipe
         :param outP_obj: outputs the result of the detection through the pipe
         """
-        super(ObjectDetectionThread, self).__init__(args=(2, 3))
+        super(ObjectDetectionThread, self).__init__()
         self.inP_img = inP_img
         self.outP_obj = outP_obj
 
