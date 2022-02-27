@@ -91,6 +91,6 @@ class WriteThread(Thread):
             #print(command_msg)
             self.serialCom.write(command_msg.encode('ascii'))
             command_msg = self.messageConverter.get_command(**self.get_speed_command())
-            print(command_msg)
+            print("COMMAND MESSAGE: " + command_msg)
             self.serialCom.write(command_msg.encode('ascii'))
             #self.logFile.write(command_msg)
