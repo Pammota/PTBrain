@@ -81,7 +81,7 @@ class WriteThread(Thread):
             #allow = self.inP.recv()
             # Unpacking the dictionary into action and values
             command_msg = self.messageConverter.get_command(**self.theta_command)
-            # print(command_msg)
+            print(command_msg)
             self.serialCom.write(command_msg.encode('ascii'))
             command_msg = self.messageConverter.get_command(**self.speed_command)
             # print(command_msg)
