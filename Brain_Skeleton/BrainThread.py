@@ -144,8 +144,8 @@ class BrainThread(Process):
 
             ex_startup = startup
 
-            if self.cameraSpoof is None:
-                self.outP_com.send(True)
+            """if self.cameraSpoof is None:
+                self.outP_com.send(True)"""
 
             end = time.time()
             print("Ended brain loop after {}".format(end - loop_start_time))
