@@ -19,13 +19,11 @@ ag.add_argument('-s', '--stop_car', required=False)
 args = vars(ag.parse_args())
 
 def main():
-    outP_img, inP_img = Pipe()  # out will be sent from BrainThread,
-                                     # in will be recieved in ImageProcessingThread
 
-    outP_imgProc_lane, inP_imgProc_lane = Pipe()  # out will be sent from ImageProcessingThread
+    outP_brain_lane, inP_brain_lane = Pipe()  # out will be sent from BrainThread
                                                   # in will be recieved in LaneDetectionThread
 
-    outP_imgProc_obj, inP_imgProc_obj = Pipe()  # out will be sent from ImageProcessingThread
+    outP_brain_obj, inP_brain_obj = Pipe()  # out will be sent from BrainThread
                                                 # in will be recieved in ObjectDetectionThread
 
     outP_lane, inP_lane = Pipe()  # out will be sent from LaneDetectionThread
@@ -36,11 +34,11 @@ def main():
 
     # adds threads
     processes = []
-    processes.append(ImageProcessingThread(inP_img, [outP_imgProc_lane, outP_imgProc_obj]))
-    processes.append(LaneDetectionThread(inP_imgProc_lane, outP_lane, show_lane=args['show_lane']))
-    processes.append(ObjectDetectionThread(inP_imgProc_obj, outP_obj))
+    #processes.append(ImageProcessingThread(inP_img, [outP_imgProc_lane, outP_imgProc_obj]))
+    processes.append(LaneDetectionThread(inP_brain_lane, outP_lane, show_lane=args['show_lane']))
+    processes.append(ObjectDetectionThread(inP_brain_obj, outP_obj))
 
-    outPs_brain = [outP_img]
+    outPs_brain = [outP_brain_lane, outP_brain_obj]
     inPs_brain = [inP_lane, inP_obj]
 
     for process in processes:

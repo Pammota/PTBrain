@@ -34,7 +34,7 @@ class BrainThread(Process):
         self.stop_car = stop_car
 
         #  holds pipes managed by this object
-        self.outP_img = outPs[0]
+        self.outPs = outPs
         self.inP_lane = inPs[0]
         self.inP_obj = inPs[1]
         self.outP_com = None
@@ -51,14 +51,6 @@ class BrainThread(Process):
 
     def run(self):
         self.camera = cv2.VideoCapture(0 if self.cameraSpoof is None else self.cameraSpoof)
-
-        # grabs the first image from the camera so it can be preprocessed before
-        # anything else is processed
-        grabbed, frame = self.camera.read()
-
-        # sends the image through the pipe if it exists
-        if grabbed is True:
-            self.outP_img.send(frame)
 
         start = time.time()
 
@@ -78,7 +70,8 @@ class BrainThread(Process):
 
             # sends the image through the pipe if it exists
             if grabbed is True:
-                self.outP_img.send(frame)
+                for outP in self.outPs:
+                    outP.send(frame)
             else:
                 break
 
