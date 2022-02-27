@@ -167,8 +167,8 @@ class BrainThread(Process):
         if self.cameraSpoof is None:
             self.writethread.set_theta_command(command)
 
-        if self.cameraSpoof is None:
-            self.outP_com.send(True)
+        """if self.cameraSpoof is None:
+            self.outP_com.send(True)"""
 
     def send_command(self, command):
         if self.cameraSpoof is None:
@@ -217,8 +217,6 @@ class BrainThread(Process):
         if self.cameraSpoof is None:
             self.outP_com, self.inP_com = Pipe()  # out will be sent from BrainThread (here)
                                             # in will  be received in writeThread
-
-        if self.cameraSpoof is None:
             self.writethread = WriteThread(self.inP_com, zero_theta_command, zero_speed_command)
             self.writethread.start()
 
