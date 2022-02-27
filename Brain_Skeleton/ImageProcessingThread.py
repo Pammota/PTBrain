@@ -1,11 +1,12 @@
 from threading import Thread, Event
+from multiprocessing import Process
 import copy
 import time
 import random
 import cv2
 import os
 
-class ImageProcessingThread(Thread):
+class ImageProcessingThread(Process):
     def __init__(self, inP_img, outPs_img):
         """
 

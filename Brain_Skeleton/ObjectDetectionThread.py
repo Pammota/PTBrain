@@ -1,4 +1,5 @@
-from threading import Thread, Event
+from threading import Thread
+from multiprocessing import Process
 import time
 import random
 import os
@@ -11,7 +12,7 @@ from TFLiteModel import TFLiteModel
 import object_detection as od
 from ObjectStabilizer import ObjectStabilizer
 
-class ObjectDetectionThread(Thread):
+class ObjectDetectionThread(Process):
     def __init__(self, inP_img, outP_obj):
         """
 

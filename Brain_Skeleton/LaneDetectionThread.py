@@ -1,10 +1,11 @@
 from threading import Thread
+from multiprocessing import Process
 import time
 import math
 import numpy as np
 import cv2
 
-class LaneDetectionThread(Thread):
+class LaneDetectionThread(Process):
     def __init__(self, inP_img, outP_lane, show_lane=False):
         """
 
@@ -15,7 +16,6 @@ class LaneDetectionThread(Thread):
         self.inP_img = inP_img
         self.outP_lane = outP_lane
         self.show_lane = show_lane
-        self.writer = cv2.VideoWriter('PHT_Video.avi', cv2.VideoWriter_fourcc(*'DIVX'), 15, (640, 480))
         self.list_of_frames = []
 
         self.width = 640

@@ -5,14 +5,15 @@ from LaneDetectionThread import LaneDetectionThread
 from ObjectDetectionThread import ObjectDetectionThread
 from writethread import WriteThread
 from Controller import Controller
+from multiprocessing import Process
 import time
 import cv2
 import numpy as np
 import json
 import os
 
-class BrainThread(Thread):
-    def __init__(self, cameraSpoof=None, show_vid=False, show_lane=False, stop_car=False):
+class BrainThread(Process):
+    def __init__(self, inPs, outPs, cameraSpoof=None, show_vid=False, show_lane=False, stop_car=False):
         """
 
         :param cameraSpoof: holds a path to a video file for the environment to be "simulated"
@@ -21,13 +22,10 @@ class BrainThread(Thread):
         """
         super(BrainThread, self).__init__()
 
-        self.threads = []  # holds the threads managed by this object
         self.writethread = None
-        self.lanedetectionthread = None
 
         # constructs the video feed (from file if cameraSpoof exists, otherwise from camera
         self.cameraSpoof = cameraSpoof
-        self.camera = cv2.VideoCapture(0 if cameraSpoof is None else cameraSpoof)
 
         self.baseSpeed = 17
 
@@ -36,9 +34,9 @@ class BrainThread(Thread):
         self.stop_car = stop_car
 
         #  holds pipes managed by this object
-        self.outP_img = None
-        self.inP_lane = None
-        self.inP_obj = None
+        self.outP_img = outPs[0]
+        self.inP_lane = inPs[0]
+        self.inP_obj = inPs[1]
         self.outP_com = None
         self.inP_com = None
 
@@ -52,6 +50,7 @@ class BrainThread(Thread):
         self.traffic_light_history = []
 
     def run(self):
+        self.camera = cv2.VideoCapture(0 if self.cameraSpoof is None else self.cameraSpoof)
 
         # grabs the first image from the camera so it can be preprocessed before
         # anything else is processed
@@ -80,6 +79,7 @@ class BrainThread(Thread):
 
             # sends the image through the pipe if it exists
             if grabbed is True:
+                frame = cv2.resize(frame, (640, 480))
                 self.outP_img.send(frame)
             else:
                 break
@@ -158,11 +158,6 @@ class BrainThread(Thread):
             and send through them a "stop" signal, which would make them break out
             of the infinite loops"""
 
-        for frame in self.lanedetectionthread.list_of_frames:
-            frame = cv2.resize(frame, (640, 480))
-            self.lanedetectionthread.writer.write(frame)
-
-        self.lanedetectionthread.writer.release()
         command = self.controller.update_angle(0)
         if self.cameraSpoof is None:
             self.writethread.set_speed_command(command)
@@ -218,37 +213,13 @@ class BrainThread(Thread):
         zero_theta_command = self.controller.update_angle(0)
         zero_speed_command, _ = self.controller.update_speed(0)
 
-        self.outP_img, inP_img = Pipe()  # out will be sent from BrainThread (here),
-                                   # in will be recieved in ImageProcessingThread
-
-        outP_imgProc_lane, inP_imgProc_lane = Pipe()  # out will be sent from ImageProcessingThread
-                                                     # in will be recieved in LaneDetectionThread
-
-        outP_imgProc_obj, inP_imgProc_obj = Pipe()  # out will be sent from ImageProcessingThread
-                                                   # in will be recieved in ObjectDetectionThread
-
-        outP_lane, self.inP_lane = Pipe()  # out will be sent from LaneDetectionThread
-                                     # in will be recieved in BrainThread (here)
-
-        outP_obj, self.inP_obj = Pipe()  # out will be sent from ObjectDetectionThread
-                                   # in will be recieved in BrainThread (here)
-
         if self.cameraSpoof is None:
             self.outP_com, self.inP_com = Pipe()  # out will be sent from BrainThread (here)
                                             # in will  be received in writeThread
 
-        # adds threads
-        self.threads.append(ImageProcessingThread(inP_img, [outP_imgProc_lane, outP_imgProc_obj]))
-        self.threads.append(LaneDetectionThread(inP_imgProc_lane, outP_lane, show_lane=self.show_lane))
-        self.lanedetectionthread = self.threads[-1]
-        self.threads.append(ObjectDetectionThread(inP_imgProc_obj, outP_obj))
         if self.cameraSpoof is None:
-            self.threads.append(WriteThread(self.inP_com, zero_theta_command, zero_speed_command))
-            self.writethread = self.threads[-1]
-
-        # starts all threads
-        for thread in self.threads:
-            thread.start()
+            self.writethread = (WriteThread(self.inP_com, zero_theta_command, zero_speed_command))
+            self.writethread.start()
 
     def _kill_threads(self):
         raise NotImplementedError
