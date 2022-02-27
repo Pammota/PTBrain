@@ -164,8 +164,9 @@ class BrainThread(Process):
         if self.cameraSpoof is None:
             self.writethread.set_theta_command(speed_command)
 
-        if self.cameraSpoof is None:
-            self.outP_com.send((theta_command, speed_command))
+        for i in range(10):
+            if self.cameraSpoof is None:
+                self.outP_com.send((theta_command, speed_command))
 
     def send_command(self, command):
         if self.cameraSpoof is None:
