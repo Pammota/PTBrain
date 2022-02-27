@@ -78,11 +78,14 @@ class BrainThread(Thread):
             if grabbed is True:
                 for outP in self.outPs:
                     outP.send(frame)
+
+                    current_time = time.time()
+                    print("Sent first image to detection after {}".format(current_time - loop_start_time))
             else:
                 break
 
-            current_time = time.time()
-            print("Sent detection info after {}".format(current_time - loop_start_time))
+            """current_time = time.time()
+            print("Sent detection info after {}".format(current_time - loop_start_time))"""
 
             # waits for the outputs of the other threads and gets them
             time_start, lane_info = self.inP_lane.recv()
