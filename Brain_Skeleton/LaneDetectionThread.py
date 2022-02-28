@@ -267,10 +267,10 @@ class LaneDetectionThread(Thread):
             theta = self.get_theta(frame_ROI_preprocessed, frame_ROI)
             if theta != -1000:  # we didn't detect any line
                 theta_average = (0.6 * theta_average + 0.4 * theta) * 0.7
-            if theta_average > 23:
-                theta_average = 23
-            if theta_average < -23:
-                theta_average = -23
+            if theta_average > 22:
+                theta_average = 22
+            if theta_average < -22:
+                theta_average = -22
             print("theta_average = {}".format(theta_average))
 
             """cv2.imshow("ROI", frame_ROI)"""
