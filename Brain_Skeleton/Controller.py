@@ -3,7 +3,7 @@ class Controller:
     def __init__(self, time_threshold=0.15):
         self.speed = 0
         self.angle = 0
-        self.p = 0.5
+        self.p = 0.1
         self.d = 0.0001
         self.last_error = 0
         self.time_threshold = time_threshold
