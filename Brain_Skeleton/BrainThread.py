@@ -59,9 +59,6 @@ class BrainThread(Thread):
 
         # sends the image through the pipe if it exists
 
-        listener = keyboard.Listener(on_press=self.keyPress)
-        listener.start()
-
         start = time.time()
 
         startup, ex_startup = False, False
@@ -157,11 +154,7 @@ class BrainThread(Thread):
             and send through them a "stop" signal, which would make them break out
             of the infinite loops"""
 
-        for frame in self.lanedetectionthread.list_of_frames:
-            frame = cv2.resize(frame, (640, 480))
-            self.lanedetectionthread.writer.write(frame)
 
-        self.lanedetectionthread.writer.release()
         theta_command = self.controller.update_angle(0)
 
         speed_command, startup = self.controller.update_speed(0)
