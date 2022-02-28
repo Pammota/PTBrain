@@ -12,7 +12,7 @@ class Controller:
         #error = theta-1.5
         #self.angle = theta - error * self.p - (error-self.last_error)*self.d
         #self.last_error = error
-        self.angle = theta 
+        self.angle = theta
         return {'action': '2', 'steerAngle': float(self.angle)}
 
     @staticmethod
