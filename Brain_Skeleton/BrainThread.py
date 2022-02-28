@@ -29,7 +29,7 @@ class BrainThread(Thread):
         self.cameraSpoof = cameraSpoof
         self.camera = cv2.VideoCapture(0 if cameraSpoof is None else cameraSpoof)
 
-        self.baseSpeed = 17
+        self.baseSpeed = 21
 
         self.show_vid = show_vid
         self.show_lane = show_lane
@@ -146,8 +146,8 @@ class BrainThread(Thread):
             print("---------------------------------------------------------------------\n\n")
             ############### here processing of info ends ############
 
-            cv2.imshow("video", annotated_image)
-            cv2.waitKey(1)
+            """cv2.imshow("video", annotated_image)
+            cv2.waitKey(1)"""
 
         """If we want to stop the threads, we exit from the Brain thread, flush pipes, 
             and send through them a "stop" signal, which would make them break out
