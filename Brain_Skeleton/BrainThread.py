@@ -5,6 +5,7 @@ from LaneDetectionThread import LaneDetectionThread
 from ObjectDetectionThread import ObjectDetectionThread
 from writethread import WriteThread
 from Controller import Controller
+from pynput import keyboard
 import time
 import cv2
 import numpy as np
@@ -29,7 +30,7 @@ class BrainThread(Thread):
         self.cameraSpoof = cameraSpoof
         self.camera = cv2.VideoCapture(0 if cameraSpoof is None else cameraSpoof)
 
-        self.baseSpeed = 15
+        self.baseSpeed = 17
 
         self.show_vid = show_vid
         self.show_lane = show_lane
@@ -57,6 +58,9 @@ class BrainThread(Thread):
         # anything else is processed
 
         # sends the image through the pipe if it exists
+
+        listener = keyboard.Listener(on_press=self.keyPress)
+        listener.start()
 
         start = time.time()
 
@@ -153,17 +157,17 @@ class BrainThread(Thread):
             and send through them a "stop" signal, which would make them break out
             of the infinite loops"""
 
-        for frame in self.lanedetectionthread.list_of_frames:
-            frame = cv2.resize(frame, (640, 480))
-            self.lanedetectionthread.writer.write(frame)
 
-        self.lanedetectionthread.writer.release()
         theta_command = self.controller.update_angle(0)
 
         speed_command, startup = self.controller.update_speed(0)
 
         if self.cameraSpoof is None:
             self.outP_com.send((theta_command, speed_command))
+
+    def keyPress(self, key):
+        if key.char == 's':
+            self.stop_car = True
 
     def send_command(self, command):
         if self.cameraSpoof is None:
