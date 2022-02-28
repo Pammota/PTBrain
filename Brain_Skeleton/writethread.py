@@ -25,6 +25,7 @@
 # CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
+import time
 
 import serial
 from threading import Thread
@@ -63,27 +64,18 @@ class WriteThread(Thread):
         #self.logFile = logFile
         self.messageConverter = MessageConverter()
 
-        self.theta_command = theta_command
-        self.speed_command = speed_command
-
-    def set_theta_command(self, theta_command):
-        self.theta_command = theta_command
-
-    def set_speed_command(self, speed_command):
-        self.speed_command = speed_command
-
     # ===================================== RUN ==========================================
     def run(self):
         """ Represents the thread activity to redirectionate the message.
         """
         while True:
-
-            allow = self.inP.recv()
+            theta_command, speed_command = self.inP.recv()
             # Unpacking the dictionary into action and values
-            command_msg = self.messageConverter.get_command(**self.theta_command)
-            # print(command_msg)
-            self.serialCom.write(command_msg.encode('ascii'))
-            command_msg = self.messageConverter.get_command(**self.speed_command)
-            # print(command_msg)
-            self.serialCom.write(command_msg.encode('ascii'))
-            #self.logFile.write(command_msg)
+            for i in range(10):
+                command_msg = self.messageConverter.get_command(**theta_command)
+                # print(command_msg)
+                self.serialCom.write(command_msg.encode('ascii'))
+                command_msg = self.messageConverter.get_command(**speed_command)
+                # print(command_msg)
+                self.serialCom.write(command_msg.encode('ascii'))
+                #self.logFile.write(command_msg)
