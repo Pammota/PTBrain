@@ -5,6 +5,7 @@ from LaneDetectionThread import LaneDetectionThread
 from ObjectDetectionThread import ObjectDetectionThread
 from writethread import WriteThread
 from Controller import Controller
+from pynput import keyboard
 import time
 import cv2
 import numpy as np
@@ -57,6 +58,9 @@ class BrainThread(Thread):
         # anything else is processed
 
         # sends the image through the pipe if it exists
+
+        listener = keyboard.Listener(on_press=self.keyPress)
+        listener.start()
 
         start = time.time()
 
@@ -164,6 +168,10 @@ class BrainThread(Thread):
 
         if self.cameraSpoof is None:
             self.outP_com.send((theta_command, speed_command))
+
+    def keyPress(self, key):
+        if key.char == 's':
+            self.stop_car = True
 
     def send_command(self, command):
         if self.cameraSpoof is None:
