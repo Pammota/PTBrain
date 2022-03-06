@@ -64,18 +64,22 @@ class WriteThread(Thread):
         #self.logFile = logFile
         self.messageConverter = MessageConverter()
 
+
     # ===================================== RUN ==========================================
     def run(self):
         """ Represents the thread activity to redirectionate the message.
         """
+
+        command_msg = self.messageConverter.get_command(**{'action': '4', 'activate': 'True'})
+        self.serialCom.write(command_msg.encode('ascii'))
+
         while True:
             theta_command, speed_command = self.inP.recv()
             # Unpacking the dictionary into action and values
-            for i in range(10):
-                command_msg = self.messageConverter.get_command(**theta_command)
-                # print(command_msg)
-                self.serialCom.write(command_msg.encode('ascii'))
-                command_msg = self.messageConverter.get_command(**speed_command)
-                # print(command_msg)
-                self.serialCom.write(command_msg.encode('ascii'))
-                #self.logFile.write(command_msg)
+            command_msg = self.messageConverter.get_command(**theta_command)
+            # print(command_msg)
+            self.serialCom.write(command_msg.encode('ascii'))
+            command_msg = self.messageConverter.get_command(**speed_command)
+            # print(command_msg)
+            self.serialCom.write(command_msg.encode('ascii'))
+            #self.logFile.write(command_msg)
