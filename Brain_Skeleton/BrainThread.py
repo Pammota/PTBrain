@@ -114,10 +114,10 @@ class BrainThread(Thread):
             time_elapsed = time.time() - time_startup
 
             crt_speed = float(self.controller.speed/100.0)
-            if abs(self.controller.angle) > 15:
+            """if abs(self.controller.angle) > 15:
                 speed = self.baseSpeed + 3
             else:
-                speed = self.baseSpeed
+                speed = self.baseSpeed"""
 
             must_stop = Controller.must_stop(traffic_lights_info)
             if must_stop:
