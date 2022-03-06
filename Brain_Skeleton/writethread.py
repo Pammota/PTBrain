@@ -73,6 +73,8 @@ class WriteThread(Thread):
         command_msg = self.messageConverter.get_command(**{'action': '4', 'activate': 'True'})
         self.serialCom.write(command_msg.encode('ascii'))
 
+        print("activated pid")
+
         while True:
             theta_command, speed_command = self.inP.recv()
             # Unpacking the dictionary into action and values
