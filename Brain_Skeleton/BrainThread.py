@@ -59,9 +59,6 @@ class BrainThread(Thread):
 
         # sends the image through the pipe if it exists
 
-        listener = keyboard.Listener(on_press=self.keyPress)
-        listener.start()
-
         start = time.time()
 
         startup, ex_startup = False, False
