@@ -70,14 +70,14 @@ class WriteThread(Thread):
         """ Represents the thread activity to redirectionate the message.
         """
 
-        """command_msg = self.messageConverter.get_command(**{'action': '4', 'activate': 'True'})
-        self.serialCom.write(command_msg.encode('ascii'))"""
+        command_msg = self.messageConverter.get_command(**{'action': '4', 'activate': 'True'})
+        self.serialCom.write(command_msg.encode('ascii'))
 
         while True:
             theta_command, speed_command = self.inP.recv()
             # Unpacking the dictionary into action and values
             command_msg = self.messageConverter.get_command(**theta_command)
-            # print(command_msg)
+            print(command_msg)
             self.serialCom.write(command_msg.encode('ascii'))
             command_msg = self.messageConverter.get_command(**speed_command)
             # print(command_msg)
