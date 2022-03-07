@@ -141,6 +141,7 @@ class ObjectDetectionThread(Thread):
             if config.RUN_MODE == "NO_DETECTION":
                 (img_annotated, output, tl_info) = np.zeros([640, 640, 3]), {}, []
 
+            dummy_variable = 0
             end = time.time()
             print("Object detection time: {}".format(end - start))
 
