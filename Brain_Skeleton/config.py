@@ -1,5 +1,4 @@
 
-
 RUN_MODE = "TFLITE"
 
 LABEL_PERSON = 1

@@ -1,23 +1,13 @@
-from threading import Thread
-import time
 import math
-import numpy as np
+
 import cv2
+import numpy as np
+import time
 
-class LaneDetectionThread(Thread):
-    def __init__(self, inP_img, outP_lane, show_lane=False):
-        """
+class LaneDetection:
 
-        :param inP_img: receives a preprocessed image from a pipe
-        :param outP_lane: outputs the result of the detection through the pipe
-        """
-        super(LaneDetectionThread, self).__init__()
-        self.inP_img = inP_img
-        self.outP_lane = outP_lane
-        self.show_lane = show_lane
-        self.writer = cv2.VideoWriter('PHT_Video.avi', cv2.VideoWriter_fourcc(*'DIVX'), 15, (640, 480))
-        self.list_of_frames = []
-
+    def __init__(self):
+        ''' Matrix used for IPM '''
         self.width = 640
         self.height = 480
         self.x_top = 270  # Coordinates of the polygon we use for creating the Homography matrix
@@ -30,6 +20,8 @@ class LaneDetectionThread(Thread):
         self.matrix_IPM = cv2.getPerspectiveTransform(self.input_coordinates_IPM, self.output_coordinates_IPM)
         ''' ================================================================================================================================ '''
 
+        time.sleep(1)
+        self.cap = cv2.VideoCapture(0)
 
     # preprocess our frame_ROI
     def preProcess(self, frame_ROI):
@@ -61,10 +53,7 @@ class LaneDetectionThread(Thread):
             # coefficients[0] = intercept_oY
             theta = math.degrees(math.atan(coefficients[1]))
             # get intercept_oX  -> when y = 0;
-            try:
-                intercept_oX = int((-coefficients[0]) / coefficients[1])
-            except OverflowError:
-                intercept_oX = 30000
+            intercept_oX = int((-coefficients[0]) / coefficients[1])
             # print("theta = " + str(theta) + ";   intercept_oX = " + str(intercept_oX))
             return theta, intercept_oX
 
@@ -178,7 +167,7 @@ class LaneDetectionThread(Thread):
 
         y_cv_vanishing_point = int((y_cv_right_line + y_cv_left_line) / 2)
         # print(y_cv_vanishing_point - y_cv_right_line)
-        cv2.line(frame_ROI, (int(frame_ROI.shape[1] / 2), frame_ROI.shape[0]), (y_cv_vanishing_point, x_cv_theta), (232, 32, 1), 5)
+        cv2.line(frame_ROI, (int(frame_ROI.shape[1] / 2) - 25, frame_ROI.shape[0]), (y_cv_vanishing_point, x_cv_theta), (232, 32, 1), 5)
 
         return y_cv_vanishing_point, x_cv_theta
 
@@ -200,7 +189,7 @@ class LaneDetectionThread(Thread):
             y_cv_vanishing_point -= offset_center_road
 
         cv2.line(frame_ROI, (y_cv_vanishing_point, x_cv_theta), (y_cv_line, x_cv_theta), (200, 200, 200), 2)
-        cv2.line(frame_ROI, (int(frame_ROI.shape[1] / 2), frame_ROI.shape[0]), (y_cv_vanishing_point, x_cv_theta),
+        cv2.line(frame_ROI, (int(frame_ROI.shape[1] / 2) - 25, frame_ROI.shape[0]), (y_cv_vanishing_point, x_cv_theta),
                  (232, 32, 1), 5)
 
         return y_cv_vanishing_point, x_cv_theta
@@ -230,7 +219,7 @@ class LaneDetectionThread(Thread):
 
         if found_line:
             x_cv_center = frame_ROI.shape[0]
-            y_cv_center = int(frame_ROI.shape[1] / 2)  # camera lasata in partea stanga
+            y_cv_center = int(frame_ROI.shape[1] / 2) - 25  # camera lasata in partea stanga
 
             theta = math.degrees(math.atan((y_cv_center - y_cv_vanishing_point) / (x_cv_center - x_cv_theta)))
             return theta
@@ -246,16 +235,12 @@ class LaneDetectionThread(Thread):
         cv2.circle(image, (y2, x2), radius, color_right_most_point, 1)
         cv2.line(image, (y1, x1), (y2, x2), color_line, 2)
 
-
     def run(self):
 
+        ret, frame = self.cap.read()
         theta_average = 0
 
         while True:
-
-            # waits for the preprocessed image and gets it
-            frame = self.inP_img.recv()
-
             start = time.time()
 
             # choosing our ROI
@@ -266,20 +251,18 @@ class LaneDetectionThread(Thread):
             frame_ROI_preprocessed = self.preProcess(frame_ROI)
             theta = self.get_theta(frame_ROI_preprocessed, frame_ROI)
             if theta != -1000:  # we didn't detect any line
-                theta_average = (0.6 * theta_average + 0.4 * theta) * 0.7
-            if theta_average > 22:
-                theta_average = 22
-            if theta_average < -22:
-                theta_average = -22
-            print("theta_average = {}".format(theta_average))
+                theta_average = 0.6 * theta_average + 0.4 * theta
+            print(theta_average)
 
-            """cv2.imshow("ROI", frame_ROI)"""
+
+            cv2.imshow("ROI", frame_ROI)
             cv2.imshow("Frame", frame)
             cv2.waitKey(1)
 
             end = time.time()
-            print("Lane detection time: {}".format(end - start))
+            # print(end - start)
+            ret, frame = self.cap.read()
 
-            ######### here the lane detection ends ###########
+LD = LaneDetection()
 
-            self.outP_lane.send((end, -theta_average))   # sends the results of the detection back
+LD.run()
