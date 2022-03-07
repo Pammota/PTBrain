@@ -220,7 +220,7 @@ class BrainThread(Thread):
         outP_brain_obj, inP_brain_obj = Pipe()  # out will be sent from BrainThread
                                                    # in will be recieved in ObjectDetectionThread
 
-        self.outPs = [outP_brain_lane, outP_brain_obj]
+        self.outPs = [outP_brain_obj, outP_brain_lane]
 
         outP_lane, self.inP_lane = Pipe()  # out will be sent from LaneDetectionThread
                                      # in will be recieved in BrainThread (here)
