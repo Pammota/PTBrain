@@ -97,8 +97,8 @@ class BrainThread(Thread):
 
             lane_info = 0
 
-            time_start, annotated_image, obj_info, traffic_lights_info = self.inP_obj.recv()  #self.inP_obj.recv()
-
+            time_start = self.inP_obj.recv()  #self.inP_obj.recv()
+            traffic_lights_info = {}
             current_time = time.time()
             print("Grabbed object detection info after {}".format(current_time - loop_start_time))
             print("Object detection pipe delay {}".format(current_time - time_start))
