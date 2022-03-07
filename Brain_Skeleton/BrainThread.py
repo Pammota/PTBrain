@@ -77,7 +77,7 @@ class BrainThread(Thread):
 
             # sends the image through the pipe if it exists
             if grabbed is True:
-                for outP in self.outPs[-1:]:
+                for outP in self.outPs:
                     outP.send(frame)
 
                     current_time = time.time()
@@ -96,10 +96,10 @@ class BrainThread(Thread):
             print("Lane detection pipe delay {}".format(current_time - time_start))
 
 
-            """time_start = self.inP_obj.recv() 
+            time_start = self.inP_obj.recv()
             current_time = time.time()
             print("Grabbed object detection info after {}".format(current_time - loop_start_time))
-            print("Object detection pipe delay {}".format(current_time - time_start))"""
+            print("Object detection pipe delay {}".format(current_time - time_start))
 
             traffic_lights_info = {}
             #print(traffic_lights_info)
