@@ -44,7 +44,7 @@ class ObjectDetectionThread(Thread):
         #boxes, labels, scores, num_predictions = prediction #t1 mobilenet
         #_, _, _, _, boxes, labels, scores, _ = prediction  # non edgetpu
 
-        last_idx = 0
+        """last_idx = 0
         while last_idx < num_detections and scores[0][last_idx] > config.DETECTION_SCORE_THRESHOLD:
             last_idx += 1
         scores = scores[0][:last_idx]
@@ -74,12 +74,12 @@ class ObjectDetectionThread(Thread):
             color_label_text = ""
 
             # set the color of the bounding box and the text according to the object_label
-            """if object_label == config.LABEL_PERSON:
+            if object_label == config.LABEL_PERSON:
                 color = (0, 255, 255)
                 label_text = "Person " + str(score)
             if object_label == config.LABEL_CAR:
                 color = (255, 255, 0)
-                label_text = "Car " + str(score)"""
+                label_text = "Car " + str(score)
             if object_label == config.LABEL_STOP_SIGN:
                 color = (128, 0, 0)
                 label_text = "Stop Sign " + str(score)
@@ -113,9 +113,9 @@ class ObjectDetectionThread(Thread):
                 cv2.putText(image, color_label_text, (x1, y2+13), cv2.FONT_HERSHEY_SIMPLEX, 0.55, color, 2)
 
         output_frame = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-        detection_output = {"num_detections": len(boxes), "boxes": boxes, "labels:": labels}
+        detection_output = {"num_detections": len(boxes), "boxes": boxes, "labels:": labels}"""
 
-        return output_frame, detection_output, traffic_lights_info
+        return np.zeros([640, 640, 3]), {}, []#output_frame, detection_output, traffic_lights_info
 
     def run(self):
 
@@ -158,9 +158,9 @@ class ObjectDetectionThread(Thread):
 
         ###################### tflite models (interpreters) ###################################
         if config.RUN_MODE == "TFLITE":
-            self.traffic_light_classifier_tflite = TFLiteModel("models/model_mobilenet_v3_static_input_edgetpu.tflite",
+            """self.traffic_light_classifier_tflite = TFLiteModel("models/model_mobilenet_v3_static_input_edgetpu.tflite",
                                                          input_shape=config.CLASSIFIER_INPUT_SHAPE,
-                                                         quantized_input=True, quantized_output=True)
+                                                         quantized_input=True, quantized_output=True)"""
             self.object_detector_tflite = TFLiteModel("models/tf2_ssd_mobilenet_v2_coco17_ptq_edgetpu.tflite",
                                                        input_shape=config.DETECTOR_INPUT_SHAPE,
                                                        quantized_input=False, quantized_output=False)

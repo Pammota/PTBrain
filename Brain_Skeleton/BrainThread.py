@@ -95,11 +95,11 @@ class BrainThread(Thread):
             print("Grabbed lane detection info after {}".format(current_time - loop_start_time))
             print("Lane detection pipe delay {}".format(current_time - time_start))
 
-            annotated_image, obj_info, traffic_lights_info = np.zeros([640, 640, 3]), {}, []  #self.inP_obj.recv()
+            time_start, annotated_image, obj_info, traffic_lights_info = self.inP_obj.recv()  #self.inP_obj.recv()
 
-            """current_time = time.time()
+            current_time = time.time()
             print("Grabbed object detection info after {}".format(current_time - loop_start_time))
-            print("Object detection pipe delay {}".format(current_time - time_start))"""
+            print("Object detection pipe delay {}".format(current_time - time_start))
 
             #print(traffic_lights_info)
 
@@ -216,7 +216,7 @@ class BrainThread(Thread):
         outP_brain_lane, inP_brain_lane = Pipe()  # out will be sent from BrainThread
                                                      # in will be recieved in LaneDetectionThread
 
-        #outP_brain_obj, inP_brain_obj = Pipe()  # out will be sent from BrainThread
+        outP_brain_obj, inP_brain_obj = Pipe()  # out will be sent from BrainThread
                                                    # in will be recieved in ObjectDetectionThread
 
         self.outPs = [outP_brain_lane] #[outP_brain_obj, outP_brain_lane]
@@ -235,7 +235,7 @@ class BrainThread(Thread):
         #self.threads.append(ImageProcessingThread(inP_img, [outP_imgProc_lane, outP_imgProc_obj]))
         self.threads.append(LaneDetectionThread(inP_brain_lane, outP_lane, show_lane=self.show_lane))
         self.lanedetectionthread = self.threads[-1]
-        #self.threads.append(ObjectDetectionThread(inP_brain_obj, outP_obj))
+        self.threads.append(ObjectDetectionThread(inP_brain_obj, outP_obj))
         if self.cameraSpoof is None:
             self.threads.append(WriteThread(self.inP_com, zero_theta_command, zero_speed_command))
             self.writethread = self.threads[-1]
