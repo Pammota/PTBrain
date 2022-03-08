@@ -171,7 +171,7 @@ class BrainThread(Thread):
         theta_command = self.controller.update_speed(theta)
         speed_command, startup = self.controller.update_speed(speed, False, time_elapsed=100)
         for i in range(10):
-            self.outP_com.send(theta_command, speed_command)
+            self.outP_com.send((theta_command, speed_command))
             time.sleep(0.03)
 
         theta = 21
