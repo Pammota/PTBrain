@@ -166,8 +166,10 @@ class BrainThread(Thread):
             self.outP_com.send((theta_command, speed_command))
 
     def right_maneuver_routine(self):
-        theta_command = self.controller.update_speed(0)
-        speed_command, startup = self.controller.update_speed(23, False, time_elapsed=100)
+        theta = 0
+        speed = 23
+        theta_command = self.controller.update_speed(theta)
+        speed_command, startup = self.controller.update_speed(speed, False, time_elapsed=100)
         for i in range(10):
             self.outP_com.send(theta_command, speed_command)
             time.sleep(0.03)
