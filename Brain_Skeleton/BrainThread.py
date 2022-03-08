@@ -166,17 +166,29 @@ class BrainThread(Thread):
             self.outP_com.send((theta_command, speed_command))
 
     def right_maneuver_routine(self):
+        theta = 0
+        speed = 27
+        theta_command = self.controller.update_angle(0)
+        speed_command = self.controller.update_speed(27)
         for lm in range(10):
-            self.outP_com.send((self.controller.update_angle(0), self.controller.update_speed(27)))
+            self.outP_com.send((theta_command,speed_command))
             time.sleep(0.04)
         time.sleep(0.05)
+        theta = 18
+        speed = 20
+        theta_command = self.controller.update_angle(18)
+        speed_command = self.controller.update_speed(20)
         for r in range(300):
-            self.outP_com.send((self.controller.update_angle(18), self.controller.update_speed(20)))
+            self.outP_com.send((theta_command, speed_command))
             time.sleep(0.01)
 
         time.sleep(0.05)
         print("am ajuns aici")
-        self.outP_com.send((self.controller.update_angle(0), self.controller.update_speed(0)))
+        theta = 0
+        speed = 0
+        theta_command = self.controller.update_angle(18)
+        speed_command = self.controller.update_speed(20)
+        self.outP_com.send((theta_command, speed_command))
         print("si aici")
 
     def keyPress(self, key):
