@@ -168,16 +168,16 @@ class BrainThread(Thread):
     def right_maneuver_routine(self):
         theta = 0
         speed = 23
-        theta_command = self.controller.update_angle(0)
-        speed_command = self.controller.update_speed(23)
+        theta_command = self.controller.update_angle(theta)
+        speed_command = self.controller.update_speed(speed)
         for lm in range(10):
-            self.outP_com.send((self.controller.update_angle(0),speed_command))
+            self.outP_com.send((theta_command,speed_command))
             time.sleep(0.04)
         time.sleep(0.05)
         theta = 18
         speed = 20
-        theta_command = self.controller.update_angle(18)
-        speed_command = self.controller.update_speed(20)
+        theta_command = self.controller.update_angle(theta)
+        speed_command = self.controller.update_speed(speed)
         for r in range(300):
             self.outP_com.send((theta_command, speed_command))
             time.sleep(0.01)
@@ -186,8 +186,8 @@ class BrainThread(Thread):
         print("am ajuns aici")
         theta = 0
         speed = 0
-        theta_command = self.controller.update_angle(18)
-        speed_command = self.controller.update_speed(20)
+        theta_command = self.controller.update_angle(theta)
+        speed_command = self.controller.update_speed(speed)
         self.outP_com.send((theta_command, speed_command))
         print("si aici")
 
