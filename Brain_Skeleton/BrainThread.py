@@ -66,7 +66,7 @@ class BrainThread(Thread):
         print(self.stop_car)
 
         #self.right_maneuver_routine()
-        self.stop_car = True
+        #self.stop_car = True
 
         while not self.stop_car:
 
@@ -182,6 +182,7 @@ class BrainThread(Thread):
             self.outP_com.send((theta_command, speed_command))
             time.sleep(0.001)
 
+        time.sleep(0.05)
         print("am ajuns aici")
         theta = 0
         speed = 0
