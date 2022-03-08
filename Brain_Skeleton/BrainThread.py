@@ -174,13 +174,13 @@ class BrainThread(Thread):
             self.outP_com.send((theta_command,speed_command))
             time.sleep(0.04)
         time.sleep(0.05)
-        theta = 17
+        theta = 16
         speed = 20
         theta_command = self.controller.update_angle(theta)
         speed_command, startup = self.controller.update_speed(speed)
-        for r in range(500):
+        for r in range(90):
             self.outP_com.send((theta_command, speed_command))
-            time.sleep(0.01)
+            time.sleep(0.05)
 
         time.sleep(0.05)
         print("am ajuns aici")
