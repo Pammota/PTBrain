@@ -1,14 +1,21 @@
 
 RUN_MODE = "TFLITE"
 
-LABEL_PERSON = 1
-LABEL_CAR = 3
-LABEL_BUS = 6
-LABEL_TRUCK = 8
-LABEL_TRAFFIC_LIGHT = 10
-LABEL_STOP_SIGN = 13
+CLASSES = {
+    1: {"LABEL": "Forward", "COLOR": (0, 0, 255)},
+    2: {"LABEL": "Forbidden", "COLOR": (255, 0, 0)},
+    3: {"LABEL": "Parking", "COLOR": (0, 0, 255)},
+    4: {"LABEL": "Sem_Yellow", "COLOR": (255, 0, 0)},
+    5: {"LABEL": "Sem_Red", "COLOR": (255, 0, 0)},
+    6: {"LABEL": "Sem_No_Light", "COLOR": (255, 255, 255)},
+    7: {"LABEL": "Sem_Green", "COLOR": (0, 255, 0)},
+    8: {"LABEL": "Priority", "COLOR": (0, 255, 0)},
+    9: {"LABEL": "Crosswalk", "COLOR": (0, 0, 255)},
+    10: {"LABEL": "Stop", "COLOR": (255, 0, 0)},
 
-DETECTION_SCORE_THRESHOLD = 0.15
+}
+
+DETECTION_SCORE_THRESHOLD = 0.05
 IOU_THRESHOLD = 0.1
 
 CLASSIFIER_INPUT_SHAPE = (224, 224)

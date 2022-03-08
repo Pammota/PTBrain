@@ -5,7 +5,6 @@ from LaneDetectionThread import LaneDetectionThread
 from ObjectDetectionThread import ObjectDetectionThread
 from writethread import WriteThread
 from Controller import Controller
-from pynput import keyboard
 import time
 import cv2
 import numpy as np
@@ -96,7 +95,7 @@ class BrainThread(Thread):
             print("Lane detection pipe delay {}".format(current_time - time_start))
 
 
-            time_start = self.inP_obj.recv()
+            time_start, annotated_image = self.inP_obj.recv()
             current_time = time.time()
             print("Grabbed object detection info after {}".format(current_time - loop_start_time))
             print("Object detection pipe delay {}".format(current_time - time_start))
@@ -148,8 +147,8 @@ class BrainThread(Thread):
             print("---------------------------------------------------------------------\n\n")
             ############### here processing of info ends ############
 
-            """cv2.imshow("video", annotated_image)
-            cv2.waitKey(1)"""
+            cv2.imshow("video", annotated_image)
+            cv2.waitKey(1)
 
         """If we want to stop the threads, we exit from the Brain thread, flush pipes, 
             and send through them a "stop" signal, which would make them break out
