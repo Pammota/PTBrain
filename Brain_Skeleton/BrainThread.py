@@ -169,16 +169,16 @@ class BrainThread(Thread):
         theta = 0
         speed = 27
         theta_command = self.controller.update_angle(theta)
-        speed_command, startup = self.controller.update_speed(speed, False, time_elapsed=100)
+        speed_command, startup = self.controller.update_speed(speed)
         for lm in range(10):
             self.outP_com.send((theta_command, speed_command))
-            time.sleep(0.03)
-
-        #theta = 21
-        #speed = 20
-        theta_command = self.controller.update_angle(21)
-        speed_command, startup = self.controller.update_speed(20, False, time_elapsed=100)
-        for r in range(800):
+            time.sleep(0.04)
+        time.sleep(0.05)
+        theta = 21
+        speed = 20
+        theta_command = self.controller.update_angle(theta)
+        speed_command, startup = self.controller.update_speed(speed)
+        for r in range(1000):
             self.outP_com.send((theta_command, speed_command))
             time.sleep(0.001)
 
@@ -187,7 +187,7 @@ class BrainThread(Thread):
         theta = 0
         speed = 0
         theta_command = self.controller.update_angle(theta)
-        speed_command, startup = self.controller.update_speed(speed, False, time_elapsed=100)
+        speed_command, startup = self.controller.update_speed(speed)
         self.outP_com.send((theta_command, speed_command))
 
 
