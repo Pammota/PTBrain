@@ -232,7 +232,7 @@ class BrainThread(Thread):
         for lm in range(5):
             self.outP_com.send((theta_command, speed_command))
             time.sleep(0.05)
-        theta = 19
+        theta = 17
         speed = -23
         theta_command = self.controller.update_angle(theta)
         theta_command_after = self.controller.update_angle(-17)
