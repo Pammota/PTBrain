@@ -114,7 +114,7 @@ class ObjectDetectionThread(Thread):
 
             ######### here the object detection ends ###########
 
-            self.outP_obj.send((end, img_annotated))  # sends the results of the detection back
+            self.outP_obj.send(end)  # sends the results of the detection back
 
     def init_models(self):
 
