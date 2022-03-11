@@ -218,8 +218,8 @@ class BrainThread(Thread):
         theta_command = self.controller.update_angle(theta)
         speed_command, startup = self.controller.update_speed(speed)
         lm = 0
-        for lm in range(20):
-            self.outP_com((theta_command, speed_command))
+        for lm in range(10):
+            self.outP_com.send((theta_command, speed_command))
         time.sleep(0.05)
 
     def keyPress(self, key):
