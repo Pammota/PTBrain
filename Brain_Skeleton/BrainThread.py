@@ -235,10 +235,10 @@ class BrainThread(Thread):
         theta = 19
         speed = -23
         theta_command = self.controller.update_angle(theta)
-        theta_command_after = self.controller.update_angle(-19)
+        theta_command_after = self.controller.update_angle(-17)
         speed_command, startup = self.controller.update_speed(speed)
         lm = 0
-        for lm in range(200):
+        for lm in range(220):
             if lm < 130:
                 self.outP_com.send((theta_command, speed_command))
             else:
