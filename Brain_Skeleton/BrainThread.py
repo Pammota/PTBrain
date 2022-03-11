@@ -237,9 +237,9 @@ class BrainThread(Thread):
                 self.outP_com.send((theta_command_after, speed_command))
             time.sleep(0.02)
         time.sleep(0.05)
-        theta_command = self.controller.update_angle(theta-1)
-        theta_command_after = self.controller.update_angle(17 + 1)
-        speed_command, startup = self.controller.update_speed(-speed)
+        #theta_command = self.controller.update_angle(theta-1)
+        #theta_command_after = self.controller.update_angle(17 + 1)
+        #speed_command, startup = self.controller.update_speed(-speed)
         for lm in range(220):
             if lm < 176 - 104:
                 self.outP_com.send((theta_command_after, speed_command))
