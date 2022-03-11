@@ -224,36 +224,29 @@ class BrainThread(Thread):
         #time.sleep(0.05)
 
     def parking_maneuver(self):
-        # theta = 0
-        # speed = -23
-        # theta_command = self.controller.update_angle(theta)
-        # speed_command, startup = self.controller.update_speed(speed)
-        # lm = 0
-        # for lm in range(5):
-        #     self.outP_com.send((theta_command, speed_command))
-        #     time.sleep(0.05)
         theta = 17
         speed = -23
         theta_command = self.controller.update_angle(theta)
         theta_command_after = self.controller.update_angle(-17)
         speed_command, startup = self.controller.update_speed(speed)
         lm = 0
-        for lm in range(220):
-            if lm < 130:
+        for lm in range(176):
+            if lm < 104:
                 self.outP_com.send((theta_command, speed_command))
             else:
                 self.outP_com.send((theta_command_after, speed_command))
-            time.sleep(0.025)
+            time.sleep(0.02)
         time.sleep(0.05)
-       # theta_command = self.controller.update_angle(-theta)
-       # theta_command_after = self.controller.update_angle(17)
+        theta_command = self.controller.update_angle(theta-1)
+        theta_command_after = self.controller.update_angle(17 + 1)
         speed_command, startup = self.controller.update_speed(-speed)
         for lm in range(220):
-            if lm < 220 - 130:
+            if lm < 176 - 104:
                 self.outP_com.send((theta_command_after, speed_command))
             else:
                 self.outP_com.send((theta_command, speed_command))
             time.sleep(0.025)
+        time.sleep(0.07)
         lm = 0
         theta_command = self.controller.update_angle(0)
         speed_command, startup = self.controller.update_speed(0)
