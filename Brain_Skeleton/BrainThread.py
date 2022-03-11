@@ -65,8 +65,9 @@ class BrainThread(Thread):
 
         print(self.stop_car)
 
+
         ##self.right_maneuver_routine()
-        #self.left_maneuver_routine()
+        self.left_maneuver_routine()
         #self.stop_car = True
 
         while not self.stop_car:
@@ -203,7 +204,7 @@ class BrainThread(Thread):
             self.outP_com.send((theta_command, speed_command))
             time.sleep(0.05)
         time.sleep(0.05)
-        theta = -10.7
+        theta = -11.8
         speed = 20
         lm = 0
         theta_command = self.controller.update_angle(theta)
@@ -212,10 +213,12 @@ class BrainThread(Thread):
             self.outP_com.send((theta_command, speed_command))
             time.sleep(0.025)
         time.sleep(0.05)
-        theta_command = self.controller.update_angle(0)
-        speed_command, startup = self.controller.update_speed(0)
+        theta = 0
+        speed = 0
+        theta_command = self.controller.update_angle(theta)
+        speed_command, startup = self.controller.update_speed(speed)
         lm = 0
-        for lm in range(50):
+        for lm in range2(20):
             self.outP_com((theta_command, speed_command))
         time.sleep(0.05)
 
