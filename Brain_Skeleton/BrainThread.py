@@ -68,7 +68,7 @@ class BrainThread(Thread):
 
         ##self.right_maneuver_routine()
         #self.left_maneuver_routine()
-        #self.parking_maneuver()
+        self.parking_maneuver()
         self.stop_car = True
 
         while not self.stop_car:
@@ -245,14 +245,15 @@ class BrainThread(Thread):
                 self.outP_com.send((theta_command_after, speed_command))
             time.sleep(0.025)
         time.sleep(0.05)
-        theta_command = self.controller.update_angle(-theta)
-        theta_command_after = self.controller.update_angle(17)
+       # theta_command = self.controller.update_angle(-theta)
+       # theta_command_after = self.controller.update_angle(17)
         speed_command, startup = self.controller.update_speed(-speed)
         for lm in range(220):
             if lm < 220 - 130:
                 self.outP_com.send((theta_command_after, speed_command))
             else:
                 self.outP_com.send((theta_command, speed_command))
+            time.sleep(0.025)
         lm = 0
         theta_command = self.controller.update_angle(0)
         speed_command, startup = self.controller.update_speed(0)
