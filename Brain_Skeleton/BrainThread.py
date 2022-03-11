@@ -213,7 +213,7 @@ class BrainThread(Thread):
         theta_command = self.controller.update_angle(0)
         speed_command, startup = self.controller.update_speed(0)
         lm = 0
-        for lm in range(10)
+        for lm in range(10):
             self.outP_com((theta_command, speed_command))
         time.sleep(0.05)
 
