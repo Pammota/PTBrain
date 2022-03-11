@@ -67,7 +67,7 @@ class BrainThread(Thread):
 
 
         ##self.right_maneuver_routine()
-        #self.left_maneuver_routine()
+        self.left_maneuver_routine()
         #self.stop_car = True
 
         while not self.stop_car:
