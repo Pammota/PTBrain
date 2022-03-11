@@ -181,18 +181,41 @@ class BrainThread(Thread):
         for r in range(210):
             self.outP_com.send((theta_command, speed_command))
             time.sleep(0.025)
-
         time.sleep(0.05)
         print("am ajuns aici")
         theta = 0
         speed = 0
         theta_command = self.controller.update_angle(theta)
         speed_command, startup = self.controller.update_speed(speed)
-        self.outP_com.send((theta_command, speed_command))
         r = 0
-        for r in range(1000):
+        for r in range(10):
             self.outP_com.send((theta_command, speed_command))
         print("si aici")
+
+    def left_maneuver_routine(self):
+        theta = 0
+        speed = 23
+        theta_command = self.controller.update_angle(theta)
+        speed_command, startup = self.controller.update_speed(speed)
+        lm = 0
+        for lm in range(20):
+            self.outP_com.send((theta_command, speed_command))
+            time.sleep(0.05)
+        time.sleep(0.05)
+        theta = -13.5
+        speed = 20
+        lm = 0
+        theta_command = self.controller.update_angle(theta)
+        speed_command, startup = self.controller.update_speed(speed)
+        for lm in range(280):
+            self.outP_com.send((theta_command, speed_command))
+            time.sleep(0.025)
+        theta_command = self.controller.update_angle(0)
+        speed_command, startup = self.controller.update_speed(0)
+        lm = 0
+        for lm in range(10)
+            self.outP_com((theta_command, speed_command))
+        time.sleep(0.05)
 
     def keyPress(self, key):
         if key.char == 's':
