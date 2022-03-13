@@ -3,16 +3,24 @@ class Controller:
     def __init__(self, time_threshold=0.15):
         self.speed = 0
         self.angle = 0
-        self.p = 0.1
-        self.d = 0.0001
+        self.kp = 0.08
+        self.kd = 0.001
+        self.ki = 0.0001
         self.last_error = 0
+        self.error_sum = 0
         self.time_threshold = time_threshold
 
     def update_angle(self, theta):
-        #error = theta-1.5
-        #self.angle = theta - error * self.p - (error-self.last_error)*self.d
-        #self.last_error = error
-        self.angle = theta
+        error = theta
+        self.error_sum = self.error_sum + error
+        if abs(error) < 6:
+            self.error_sum = 0
+        self.angle = theta + self.kp * theta + self.kd * (error - last_error) + self.ki * self.error_sum
+        if self.angle > 23:
+            self.angle = 23
+        elif self.angle < -23:
+            self.angle = -23
+        self.last_error = error
         return {'action': '2', 'steerAngle': float(self.angle)}
 
     @staticmethod
