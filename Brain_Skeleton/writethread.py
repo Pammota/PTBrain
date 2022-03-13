@@ -64,6 +64,9 @@ class WriteThread(Thread):
         #self.logFile = logFile
         self.messageConverter = MessageConverter()
 
+        self.last_speed = 0
+        self.last_theta = 0
+
 
     # ===================================== RUN ==========================================
     def run(self):
@@ -78,10 +81,14 @@ class WriteThread(Thread):
         while True:
             theta_command, speed_command = self.inP.recv()
             # Unpacking the dictionary into action and values
-            command_msg = self.messageConverter.get_command(**theta_command)
-            #print(command_msg)
-            self.serialCom.write(command_msg.encode('ascii'))
-            command_msg = self.messageConverter.get_command(**speed_command)
-            # print(command_msg)
-            self.serialCom.write(command_msg.encode('ascii'))
+            if theta_command["steerAngle"] != self.last_theta:
+                self.last_theta = theta_command["steerAngle"]
+                command_msg = self.messageConverter.get_command(**theta_command)
+                #print(command_msg)
+                self.serialCom.write(command_msg.encode('ascii'))
+            if speed_command["speed"] != self.last_speed:
+                self.last_theta = speed_command["speed"]
+                command_msg = self.messageConverter.get_command(**speed_command)
+                # print(command_msg)
+                self.serialCom.write(command_msg.encode('ascii'))
             #self.logFile.write(command_msg)
