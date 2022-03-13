@@ -68,7 +68,7 @@ class BrainThread(Thread):
 
         #self.right_maneuver_routine()
         #self.left_maneuver_routine()
-        #self.parking_maneuver()
+        self.parking_maneuver()
         self.stop_car = True
         self.hardcoded_move(0, 0, 10, 0.001)
         while not self.stop_car:
@@ -185,8 +185,8 @@ class BrainThread(Thread):
     def parking_maneuver(self):
         # self.hardcoded_move(17.5, -23, 185, 0.02)
         # self.hardcoded_move(-17.5, -23, 315-185, 0.02)
-        self.hardcoded_move(20, -23, 11, 0.2)
-        self.hardcoded_move(-20, -23, 9.5, 0.2)
+        self.hardcoded_move(20, -23, 15, 0.2)
+        self.hardcoded_move(-20, -23, 10, 0.2)
         time.sleep(0.01)
         self.hardcoded_move(-17.5, 0, 20, 0.001)
         time.sleep(3)
