@@ -26,8 +26,8 @@ def center(box, coord_type):
 def get_IoU(a, b):
 
     try:
-        ay1, ax1, ay2, ax2 = a
-        by1, bx1, by2, bx2 = b
+        ax1, ay1, ax2, ay2 = a
+        bx1, by1, bx2, by2 = b
     except TypeError:
         return 0.0
 
@@ -43,7 +43,7 @@ def get_IoU(a, b):
 
 
 def area(box):
-    y1, x1, y2, x2 = box
+    x1, y1, x2, y2 = box
     return (y2 - y1 + 1) * (x2 - x1 + 1)
 
 

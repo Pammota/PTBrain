@@ -48,7 +48,7 @@ class TFLiteModel:
             input_data = input_data / self.input_scale + self.input_zero_point
             input_data = np.array(input_data, dtype=np.int8)
         else:
-            input_data = np.array(input_data, dtype=np.uint8)
+            input_data = np.array(input_data, dtype=np.float32)
         input_tensor = tf.convert_to_tensor(input_data)
 
         self.interpreter.set_tensor(self.input_details[0]['index'], input_data)

@@ -12,7 +12,7 @@ class Controller:
         #error = theta-1.5
         #self.angle = theta - error * self.p - (error-self.last_error)*self.d
         #self.last_error = error
-        self.angle = theta + self.p*theta
+        self.angle = theta
         return {'action': '2', 'steerAngle': float(self.angle)}
 
     @staticmethod
@@ -29,7 +29,6 @@ class Controller:
             return True
         if color == 2:
             return True
-
         return False
 
     def update_speed(self, speed, startup=False, time_elapsed=0):

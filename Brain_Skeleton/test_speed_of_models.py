@@ -4,10 +4,10 @@ import config
 import time
 import cv2
 
-model = TFLiteModel("models/efficientdet_lite3_512_ptq_edgetpu.tflite", input_shape=config.DETECTOR_INPUT_SHAPE,
+model = TFLiteModel("models/mobilenet_cityscapes_frozen_normalized.tflite", input_shape=config.DETECTOR_INPUT_SHAPE,
                     quantized_input=False, quantized_output=False)
 
-imagePaths = list(list_images("frameAnnotations-DataLog02142012_001_external_camera.avi_annotations"))[:50]
+imagePaths = list(list_images("jena"))[:50]
 median_time = 0
 
 for path in imagePaths:

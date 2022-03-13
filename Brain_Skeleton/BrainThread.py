@@ -5,7 +5,6 @@ from LaneDetectionThread import LaneDetectionThread
 from ObjectDetectionThread import ObjectDetectionThread
 from writethread import WriteThread
 from Controller import Controller
-from pynput import keyboard
 import time
 import cv2
 import numpy as np
@@ -30,7 +29,7 @@ class BrainThread(Thread):
         self.cameraSpoof = cameraSpoof
         self.camera = cv2.VideoCapture(0 if cameraSpoof is None else cameraSpoof)
 
-        self.baseSpeed = 22
+        self.baseSpeed = 20
 
         self.show_vid = show_vid
         self.show_lane = show_lane
@@ -66,6 +65,12 @@ class BrainThread(Thread):
 
         print(self.stop_car)
 
+
+        #self.right_maneuver_routine()
+        #self.left_maneuver_routine()
+        self.parking_maneuver()
+        self.stop_car = True
+        self.hardcoded_move(0, 0, 10, 0.001)
         while not self.stop_car:
 
             loop_start_time = time.time()
@@ -95,12 +100,12 @@ class BrainThread(Thread):
             print("Grabbed lane detection info after {}".format(current_time - loop_start_time))
             print("Lane detection pipe delay {}".format(current_time - time_start))
 
-            annotated_image, obj_info, traffic_lights_info = np.zeros([640, 640, 3]), {}, []  #self.inP_obj.recv()
-
-            """current_time = time.time()
+            time_start, annotated_image = self.inP_obj.recv()
+            current_time = time.time()
             print("Grabbed object detection info after {}".format(current_time - loop_start_time))
-            print("Object detection pipe delay {}".format(current_time - time_start))"""
+            print("Object detection pipe delay {}".format(current_time - time_start))
 
+            traffic_lights_info = {}
             #print(traffic_lights_info)
 
             ############### here takes place the processing of the info #############
@@ -147,8 +152,8 @@ class BrainThread(Thread):
             print("---------------------------------------------------------------------\n\n")
             ############### here processing of info ends ############
 
-            """cv2.imshow("video", annotated_image)
-            cv2.waitKey(1)"""
+            cv2.imshow("video", annotated_image)
+            cv2.waitKey(1)
 
         """If we want to stop the threads, we exit from the Brain thread, flush pipes, 
             and send through them a "stop" signal, which would make them break out
@@ -161,6 +166,46 @@ class BrainThread(Thread):
 
         if self.cameraSpoof is None:
             self.outP_com.send((theta_command, speed_command))
+
+    def right_maneuver_routine(self):
+        self.hardcoded_move(0, 23, 10, 0.04)
+        time.sleep(0.05)
+        self.hardcoded_move(17, 20, 210, 0.025)
+        time.sleep(0.05)
+        self.hardcoded_move(0, 0, 10, 0.001)
+
+    def left_maneuver_routine(self):
+        self.hardcoded_move(0, 23, 20, 0.05)
+        time.sleep(0.05)
+        self.hardcoded_move(-12.4, 20, 250, 0.025)
+        time.sleep(0.025)
+        self.hardcoded_move(0, 0,10, 0.001)
+
+    def parking_maneuver(self):
+        # self.hardcoded_move(17.5, -23, 185, 0.02)
+        # self.hardcoded_move(-17.5, -23, 315-185, 0.02)
+        self.hardcoded_move(0, -46, 10, 0.02)
+        self.hardcoded_move(22.9, -46, 57, 0.02)
+        time.sleep(0.02)
+        self.hardcoded_move(-22.9, -46, 65, 0.02)
+        time.sleep(0.02)
+        self.hardcoded_move(-22.9, 0, 20, 0.001)
+        time.sleep(2)
+        self.hardcoded_move(-22.9, 46, 73, 0.02)
+        self.hardcoded_move(22.9, 46, 50, 0.02)
+        self.hardcoded_move(0, 46, 25, 0.02)
+        # self.hardcoded_move(-17.5, 23, 80, 0.02)
+        # self.hardcoded_move(17.5, 23, 230-80, 0.02)
+        time.sleep(0.02)
+        self.hardcoded_move(0, 0, 10, 0.001)
+
+    def hardcoded_move(self, theta, speed, r_ange, s_leep):
+        index = 0
+        theta_command = self.controller.update_angle(theta)
+        speed_command, startup = self.controller.update_speed(speed)
+        for index in range(r_ange):
+            self.outP_com.send((theta_command, speed_command))
+            time.sleep(s_leep)
 
     def keyPress(self, key):
         if key.char == 's':
@@ -216,10 +261,10 @@ class BrainThread(Thread):
         outP_brain_lane, inP_brain_lane = Pipe()  # out will be sent from BrainThread
                                                      # in will be recieved in LaneDetectionThread
 
-        #outP_brain_obj, inP_brain_obj = Pipe()  # out will be sent from BrainThread
+        outP_brain_obj, inP_brain_obj = Pipe()  # out will be sent from BrainThread
                                                    # in will be recieved in ObjectDetectionThread
 
-        self.outPs = [outP_brain_lane] #[outP_brain_obj, outP_brain_lane]
+        self.outPs = [outP_brain_obj, outP_brain_lane]
 
         outP_lane, self.inP_lane = Pipe()  # out will be sent from LaneDetectionThread
                                      # in will be recieved in BrainThread (here)
@@ -235,7 +280,7 @@ class BrainThread(Thread):
         #self.threads.append(ImageProcessingThread(inP_img, [outP_imgProc_lane, outP_imgProc_obj]))
         self.threads.append(LaneDetectionThread(inP_brain_lane, outP_lane, show_lane=self.show_lane))
         self.lanedetectionthread = self.threads[-1]
-        #self.threads.append(ObjectDetectionThread(inP_brain_obj, outP_obj))
+        self.threads.append(ObjectDetectionThread(inP_brain_obj, outP_obj))
         if self.cameraSpoof is None:
             self.threads.append(WriteThread(self.inP_com, zero_theta_command, zero_speed_command))
             self.writethread = self.threads[-1]
