@@ -264,7 +264,7 @@ class LaneDetectionThread(Thread):
                 [y_cv_IPM_vp, x_cv_IPM_vp, int(self.width_ROI_IPM / 2 + self.offset_origin), self.height_ROI_IPM],
                 frame_ROI)
             self.draw_line(line_vp, (255, 255, 255), frame_ROI)
-            theta = round(math.degrees(math.atan((self.y_cv_IPM_center - y_cv_IPM_vp) / (self.height_ROI_IPM - x_cv_IPM_vp))))
+            theta = math.degrees(math.atan((self.y_cv_IPM_center - y_cv_IPM_vp) / (self.height_ROI_IPM - x_cv_IPM_vp)))
             if theta > 22:
                 theta = 22
             if theta < -22:
@@ -290,7 +290,8 @@ class LaneDetectionThread(Thread):
 
             theta = self.get_theta(frame_ROI, frame_ROI_IPM=None)
             if theta != - 10000:    # no line found
-                theta_average = theta * 0.6 + theta_average * 0.4
+                theta_average = round(theta * 0.6 + theta_average * 0.4)
+            print("theta = {}".format(theta_average))
             # print("time: {}".format(time.time() - start))
 
             # cv2.imshow("Frame", frame)
