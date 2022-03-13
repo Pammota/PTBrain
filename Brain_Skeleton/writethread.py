@@ -64,8 +64,8 @@ class WriteThread(Thread):
         #self.logFile = logFile
         self.messageConverter = MessageConverter()
 
-        self.last_speed = 0
-        self.last_theta = 0
+        self.last_speed = -100
+        self.last_theta = -100
 
 
     # ===================================== RUN ==========================================
