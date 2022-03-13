@@ -193,7 +193,7 @@ class BrainThread(Thread):
         time.sleep(2)
         self.hardcoded_move(-22.9, 46, 73, 0.02)
         self.hardcoded_move(22.9, 46, 46, 0.02)
-        self.hardcoded_move(0, 46, 33, 0.02)
+        self.hardcoded_move(0, 46, 25, 0.02)
         # self.hardcoded_move(-17.5, 23, 80, 0.02)
         # self.hardcoded_move(17.5, 23, 230-80, 0.02)
         time.sleep(0.02)
