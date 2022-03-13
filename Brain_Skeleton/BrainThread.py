@@ -67,8 +67,8 @@ class BrainThread(Thread):
 
 
         ##self.right_maneuver_routine()
-        #self.left_maneuver_routine()
-        self.parking_maneuver()
+        self.left_maneuver_routine()
+        #self.parking_maneuver()
         self.stop_car = True
         self.hardcoded_move(0, 0, 10, 0.001)
         while not self.stop_car:
@@ -233,42 +233,13 @@ class BrainThread(Thread):
     def parking_maneuver(self):
         self.hardcoded_move(17.5, -23, 185, 0.02)
         self.hardcoded_move(-17.5, -23, 315-185, 0.02)
-        # theta = 17.5
-        # speed = -23
-        # theta_command = self.controller.update_angle(theta)
-        # theta_command_after = self.controller.update_angle(-17.5)
-        # speed_command, startup = self.controller.update_speed(speed)
-        # lm = 0
-        # for lm in range(315):
-        #     if lm < 185:
-        #         self.outP_com.send((theta_command, speed_command))
-        #     else:
-        #         self.outP_com.send((theta_command_after, speed_command))
-        #     time.sleep(0.02)
         time.sleep(0.01)
         self.hardcoded_move(-17.5, 0, 20, 0.001)
-        # lm = 0
-        # speed_command_zero, startup = self.controller.update_speed(0)
-        # for lm in range(50):
-        #     self.outP_com.send((theta_command_after, speed_command_zero))
         time.sleep(3)
         self.hardcoded_move(-17.5, 23, 80, 0.02)
         self.hardcoded_move(17.5, 23, 230-80, 0.02)
-        # speed_command, startup = self.controller.update_speed(-speed)
-        # lm = 0
-        # for lm in range(230):
-        #     if lm < 80:
-        #         self.outP_com.send((theta_command_after, speed_command))
-        #     else:
-        #         self.outP_com.send((theta_command, speed_command))
-        #     time.sleep(0.02)
         time.sleep(0.01)
         self.hardcoded_move(0, 0, 10, 0.001)
-        # lm = 0
-        # theta_command = self.controller.update_angle(0)
-        # speed_command, startup = self.controller.update_speed(0)
-        # for lm in range(10):
-        #     self.outP_com.send((theta_command, speed_command))
 
     def hardcoded_move(self, theta, speed, r_ange, s_leep):
         index = 0
