@@ -68,7 +68,7 @@ class BrainThread(Thread):
 
         ##self.right_maneuver_routine()
         #self.left_maneuver_routine()
-        #self.parking_maneuver()
+        self.parking_maneuver()
         self.stop_car = True
         self.hardcoded_move(0, 0, 10, 0.001)
         while not self.stop_car:
