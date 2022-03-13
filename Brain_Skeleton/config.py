@@ -1,5 +1,5 @@
 
-RUN_MODE = "TFLITE"
+RUN_MODE = "NO_DETECTION"
 
 CLASSES = {
     1: {"LABEL": "Forward", "COLOR": (0, 0, 255)},

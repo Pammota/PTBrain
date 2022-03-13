@@ -29,7 +29,7 @@ class BrainThread(Thread):
         self.cameraSpoof = cameraSpoof
         self.camera = cv2.VideoCapture(0 if cameraSpoof is None else cameraSpoof)
 
-        self.baseSpeed = 22
+        self.baseSpeed = 20
 
         self.show_vid = show_vid
         self.show_lane = show_lane
@@ -65,6 +65,12 @@ class BrainThread(Thread):
 
         print(self.stop_car)
 
+
+        ##self.right_maneuver_routine()
+        #self.left_maneuver_routine()
+        self.parking_maneuver()
+        self.stop_car = True
+
         while not self.stop_car:
 
             loop_start_time = time.time()
@@ -95,7 +101,7 @@ class BrainThread(Thread):
             print("Lane detection pipe delay {}".format(current_time - time_start))
 
 
-            time_start, annotated_image = self.inP_obj.recv()
+            time_start = self.inP_obj.recv()
             current_time = time.time()
             print("Grabbed object detection info after {}".format(current_time - loop_start_time))
             print("Object detection pipe delay {}".format(current_time - time_start))
@@ -147,8 +153,8 @@ class BrainThread(Thread):
             print("---------------------------------------------------------------------\n\n")
             ############### here processing of info ends ############
 
-            cv2.imshow("video", annotated_image)
-            cv2.waitKey(1)
+            #cv2.imshow("video", annotated_image)
+            #cv2.waitKey(1)
 
         """If we want to stop the threads, we exit from the Brain thread, flush pipes, 
             and send through them a "stop" signal, which would make them break out
@@ -161,6 +167,98 @@ class BrainThread(Thread):
 
         if self.cameraSpoof is None:
             self.outP_com.send((theta_command, speed_command))
+
+    def right_maneuver_routine(self):
+        theta = 0
+        speed = 23
+        theta_command = self.controller.update_angle(theta)
+        speed_command, startup = self.controller.update_speed(speed)
+        for lm in range(10):
+            self.outP_com.send((theta_command,speed_command))
+            time.sleep(0.04)
+        time.sleep(0.05)
+        theta = 17
+        speed = 20
+        theta_command = self.controller.update_angle(theta)
+        speed_command, startup = self.controller.update_speed(speed)
+        for r in range(210):
+            self.outP_com.send((theta_command, speed_command))
+            time.sleep(0.025)
+        time.sleep(0.05)
+        print("am ajuns aici")
+        theta = 0
+        speed = 0
+        theta_command = self.controller.update_angle(theta)
+        speed_command, startup = self.controller.update_speed(speed)
+        r = 0
+        for r in range(10):
+            self.outP_com.send((theta_command, speed_command))
+        print("si aici")
+
+    def left_maneuver_routine(self):
+        theta = 0
+        speed = 23
+        theta_command = self.controller.update_angle(theta)
+        speed_command, startup = self.controller.update_speed(speed)
+        lm = 0
+        for lm in range(20):
+            self.outP_com.send((theta_command, speed_command))
+            time.sleep(0.05)
+        time.sleep(0.05)
+        theta = -12.4
+        speed = 20
+        lm = 0
+        theta_command = self.controller.update_angle(theta)
+        speed_command, startup = self.controller.update_speed(speed)
+        for lm in range(250):
+            self.outP_com.send((theta_command, speed_command))
+            if lm !=249:
+                time.sleep(0.025)
+        # theta = 0
+        # speed = 0
+        # theta_command = self.controller.update_angle(theta)
+        # speed_command, startup = self.controller.update_speed(speed)
+        # lm = 0
+        # for lm in range(10):
+        #     self.outP_com.send((theta_command, speed_command))
+        #time.sleep(0.05)
+
+    def parking_maneuver(self):
+        theta = 17.5
+        speed = -23
+        theta_command = self.controller.update_angle(theta)
+        theta_command_after = self.controller.update_angle(-17.5)
+        speed_command, startup = self.controller.update_speed(speed)
+        lm = 0
+        for lm in range(315):
+            if lm < 185:
+                self.outP_com.send((theta_command, speed_command))
+            else:
+                self.outP_com.send((theta_command_after, speed_command))
+            time.sleep(0.02)
+        time.sleep(0.01)
+        lm = 0
+        speed_command_zero, startup = self.controller.update_speed(0)
+        for lm in range(50):
+            self.outP_com.send((theta_command_after, speed_command_zero))
+        time.sleep(3)
+        #theta_command = self.controller.update_angle(theta-1)
+        #theta_command_after = self.controller.update_angle(17 + 1)
+        speed_command, startup = self.controller.update_speed(-speed)
+        lm = 0
+        for lm in range(230):
+            if lm < 80:
+                self.outP_com.send((theta_command_after, speed_command))
+            else:
+                self.outP_com.send((theta_command, speed_command))
+            time.sleep(0.02)
+        time.sleep(0.01)
+        lm = 0
+        theta_command = self.controller.update_angle(0)
+        speed_command, startup = self.controller.update_speed(0)
+        for lm in range(10):
+            self.outP_com.send((theta_command, speed_command))
+
 
     def keyPress(self, key):
         if key.char == 's':
