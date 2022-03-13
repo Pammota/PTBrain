@@ -243,9 +243,8 @@ class LaneDetection:
         else:
             theta = -10000
 
-
-
         return theta
+
 
     def run(self):
         ret, frame = self.cap.read()
