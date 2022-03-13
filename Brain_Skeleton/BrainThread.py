@@ -66,9 +66,9 @@ class BrainThread(Thread):
         print(self.stop_car)
 
 
-        ##self.right_maneuver_routine()
-        self.left_maneuver_routine()
-        #self.parking_maneuver()
+        #self.right_maneuver_routine()
+        #self.left_maneuver_routine()
+        self.parking_maneuver()
         self.stop_car = True
         self.hardcoded_move(0, 0, 10, 0.001)
         while not self.stop_car:
@@ -169,75 +169,29 @@ class BrainThread(Thread):
 
     def right_maneuver_routine(self):
         self.hardcoded_move(0, 23, 10, 0.04)
-        # theta = 0
-        # speed = 23
-        # theta_command = self.controller.update_angle(theta)
-        # speed_command, startup = self.controller.update_speed(speed)
-        # for lm in range(10):
-        #     self.outP_com.send((theta_command,speed_command))
-        #     time.sleep(0.04)
         time.sleep(0.05)
         self.hardcoded_move(17, 20, 210, 0.025)
-        # theta = 17
-        # speed = 20
-        # theta_command = self.controller.update_angle(theta)
-        # speed_command, startup = self.controller.update_speed(speed)
-        # for r in range(210):
-        #     self.outP_com.send((theta_command, speed_command))
-        #     time.sleep(0.025)
-        # time.sleep(0.05)
         time.sleep(0.05)
         self.hardcoded_move(0, 0, 10, 0.001)
-        # print("am ajuns aici")
-        # theta = 0
-        # speed = 0
-        # theta_command = self.controller.update_angle(theta)
-        # speed_command, startup = self.controller.update_speed(speed)
-        # r = 0
-        # for r in range(10):
-        #     self.outP_com.send((theta_command, speed_command))
-        # print("si aici")
+
 
     def left_maneuver_routine(self):
-        self.hardcoded_move(0, 23, 20, 0.05)
-        # theta = 0
-        # speed = 23
-        # theta_command = self.controller.update_angle(theta)
-        # speed_command, startup = self.controller.update_speed(speed)
-        # lm = 0
-        # for lm in range(20):
-        #     self.outP_com.send((theta_command, speed_command))
-        #     time.sleep(0.05)
+        self.hardcoded_move(0, 23, 20, 0.05))
         time.sleep(0.05)
         self.hardcoded_move(-12.4, 20, 250, 0.025)
-        # theta = -12.4
-        # speed = 20
-        # lm = 0
-        # theta_command = self.controller.update_angle(theta)
-        # speed_command, startup = self.controller.update_speed(speed)
-        # for lm in range(250):
-        #     self.outP_com.send((theta_command, speed_command))
-        #     if lm !=249:
-        #         time.sleep(0.025)
         time.sleep(0.025)
         self.hardcoded_move(0, 0,10, 0.001)
-        # theta = 0
-        # speed = 0
-        # theta_command = self.controller.update_angle(theta)
-        # speed_command, startup = self.controller.update_speed(speed)
-        # lm = 0
-        # for lm in range(10):
-        #     self.outP_com.send((theta_command, speed_command))
-        #time.sleep(0.05)
 
     def parking_maneuver(self):
-        self.hardcoded_move(17.5, -23, 185, 0.02)
-        self.hardcoded_move(-17.5, -23, 315-185, 0.02)
+        # self.hardcoded_move(17.5, -23, 185, 0.02)
+        # self.hardcoded_move(-17.5, -23, 315-185, 0.02)
+        self.hardcoded_move(19, -23, 145, 0.02)
+        self.hardcoded_move(-19, -23, 95, 0.02)
         time.sleep(0.01)
         self.hardcoded_move(-17.5, 0, 20, 0.001)
         time.sleep(3)
-        self.hardcoded_move(-17.5, 23, 80, 0.02)
-        self.hardcoded_move(17.5, 23, 230-80, 0.02)
+        # self.hardcoded_move(-17.5, 23, 80, 0.02)
+        # self.hardcoded_move(17.5, 23, 230-80, 0.02)
         time.sleep(0.01)
         self.hardcoded_move(0, 0, 10, 0.001)
 
