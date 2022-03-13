@@ -232,7 +232,7 @@ class BrainThread(Thread):
 
     def parking_maneuver(self):
         self.hardcoded_move(17.5, -23, 185, 0.02)
-        self.hardcoded_move(-17.5, -23, 315-185)
+        self.hardcoded_move(-17.5, -23, 315-185, 0.02)
         # theta = 17.5
         # speed = -23
         # theta_command = self.controller.update_angle(theta)
