@@ -29,7 +29,6 @@ class Controller:
             return True
         if color == 2:
             return True
-
         return False
 
     def update_speed(self, speed, startup=False, time_elapsed=0):
