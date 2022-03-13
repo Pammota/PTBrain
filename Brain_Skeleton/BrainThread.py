@@ -276,6 +276,7 @@ class BrainThread(Thread):
         speed_command, startup = self.controller.update_speed(speed)
         for index in range(r_ange):
             self.outP_com.send((theta_command, speed_command))
+            time.sleep(s_leep)
 
     def keyPress(self, key):
         if key.char == 's':
