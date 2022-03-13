@@ -108,13 +108,12 @@ class ObjectDetectionThread(Thread):
             if config.RUN_MODE == "NO_DETECTION":
                 (img_annotated, output, tl_info) = np.zeros([640, 640, 3]), {}, []
 
-            dummy_variable = 0
             end = time.time()
             print("Object detection time: {}".format(end - start))
 
             ######### here the object detection ends ###########
 
-            self.outP_obj.send(end)  # sends the results of the detection back
+            self.outP_obj.send((end, img_annotated))  # sends the results of the detection back
 
     def init_models(self):
 

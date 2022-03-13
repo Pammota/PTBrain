@@ -10,11 +10,10 @@ CLASSES = {
     6: {"LABEL": "Sem_Green", "COLOR": (0, 255, 0)},
     7: {"LABEL": "Priority", "COLOR": (0, 255, 0)},
     8: {"LABEL": "Crosswalk", "COLOR": (0, 0, 255)},
-    9: {"LABEL": "Stop", "COLOR": (255, 0, 0)},
-
+    9: {"LABEL": "Stop", "COLOR": (255, 0, 0)}
 }
 
-DETECTION_SCORE_THRESHOLD = 0.1
+DETECTION_SCORE_THRESHOLD = 0.001
 IOU_THRESHOLD = 0.1
 
 CLASSIFIER_INPUT_SHAPE = (224, 224)

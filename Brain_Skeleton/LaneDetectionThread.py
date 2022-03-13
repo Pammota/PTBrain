@@ -273,9 +273,9 @@ class LaneDetectionThread(Thread):
                 theta_average = -22
             print("theta_average = {}".format(theta_average))
 
-            """cv2.imshow("ROI", frame_ROI)"""
+            """cv2.imshow("ROI", frame_ROI)
             cv2.imshow("Frame", frame)
-            cv2.waitKey(1)
+            cv2.waitKey(1)"""
 
             end = time.time()
             print("Lane detection time: {}".format(end - start))
