@@ -15,7 +15,7 @@ class Controller:
         self.error_sum = self.error_sum + error
         if abs(error) < 6:
             self.error_sum = 0
-        self.angle = theta + self.kp * theta + self.kd * (error - last_error) + self.ki * self.error_sum
+        self.angle = theta + self.kp * theta + self.kd * (error - self.last_error) + self.ki * self.error_sum
         if self.angle > 23:
             self.angle = 23
         elif self.angle < -23:
