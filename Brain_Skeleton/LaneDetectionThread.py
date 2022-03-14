@@ -264,7 +264,7 @@ class LaneDetectionThread(Thread):
                 [y_cv_IPM_vp, x_cv_IPM_vp, int(self.width_ROI_IPM / 2 + self.offset_origin), self.height_ROI_IPM],
                 frame_ROI)
             self.draw_line(line_vp, (255, 255, 255), frame_ROI)
-            theta = math.degrees(math.atan((self.y_cv_IPM_center - y_cv_IPM_vp) / (self.height_ROI_IPM - x_cv_IPM_vp)))
+            theta = round(math.degrees(math.atan((self.y_cv_IPM_center - y_cv_IPM_vp) / (self.height_ROI_IPM - x_cv_IPM_vp))))
             if theta > 22:
                 theta = 22
             if theta < -22:
