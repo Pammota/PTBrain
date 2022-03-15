@@ -142,7 +142,7 @@ class BrainThread(Thread):
 
 
     def intersection_maneuver_routine(self, stop=False, sem_red=False, direction="forward"):
-        if stop is True:
+        if stop == 1:
             if self.cameraSpoof is None:
                 theta_command = Controller.getAngleCommand(0)
                 speed_command = Controller.getSpeedCommand(0)
@@ -150,7 +150,7 @@ class BrainThread(Thread):
             print("Stopped at the STOP sign at intersection.BRB")
             time.sleep(2)
 
-        if sem_red is True:
+        if sem_red == 1:
             if self.cameraSpoof is None:
                 theta_command = Controller.getAngleCommand(0)
                 speed_command = Controller.getSpeedCommand(0)
