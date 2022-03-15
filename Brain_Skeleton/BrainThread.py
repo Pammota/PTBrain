@@ -107,7 +107,7 @@ class BrainThread(Thread):
 
             if found_horizontal_line:
                 break
-            
+
             traffic_lights_info = {}
             #print(traffic_lights_info)
 
