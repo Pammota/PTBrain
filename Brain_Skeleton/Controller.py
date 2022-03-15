@@ -50,11 +50,13 @@ class Controller():
 
         if self.state == "Intersection":
             if self.flags["stop"] is True:
+                self.ongoing_intersection = False
                 return [0, 0, 1, 0, self.directions[self.dir_idx], 0, 0]
             else:
                 if self.flags["sem_red"]:
                     return [0, 0, 0, 1, self.directions[self.dir_idx], 0, 0]
                 else:
+                    self.ongoing_intersection = False
                     return [0, 0, 0, 0, self.directions[self.dir_idx], 0, 0]
 
         return [0, 0, 0, 0, "forward", 0, 0]

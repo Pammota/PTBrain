@@ -161,6 +161,8 @@ class BrainThread(Thread):
         else:
             print("Executing a forward maneuver")
 
+        self.controller.ongoing_intersection = False
+
 
     def crosswalk_maneuver_routine(self):
         print("Executing Crosswalk routine")
