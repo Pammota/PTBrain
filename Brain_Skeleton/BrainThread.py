@@ -100,13 +100,14 @@ class BrainThread(Thread):
             print("Grabbed lane detection info after {}".format(current_time - loop_start_time))
             print("Lane detection pipe delay {}".format(current_time - time_start))
 
+            if found_horizontal_line:
+                break
+
             time_start = self.inP_obj.recv()
             current_time = time.time()
             print("Grabbed object detection info after {}".format(current_time - loop_start_time))
             print("Object detection pipe delay {}".format(current_time - time_start))
 
-            if found_horizontal_line:
-                break
 
             traffic_lights_info = {}
             #print(traffic_lights_info)
