@@ -112,8 +112,8 @@ class BrainThread(Thread):
                     self.parking_maneuver()"""
                 print("Performing parking routine.BRB")
                 time.sleep(2)
-            elif action[ACTION_DIRECTION] != 0:
-                self.intersection_maneuver_routine(action[ACTION_STOP], action[ACTION_RED], action[ACTION_DIRECTION])
+                #elif action[ACTION_DIRECTION] != 0:
+                #self.intersection_maneuver_routine(action[ACTION_STOP], action[ACTION_RED], action[ACTION_DIRECTION])
             else:
                 theta_command = Controller.getAngleCommand(action[ACTION_ANGLE])
                 speed_command = Controller.getSpeedCommand(action[ACTION_SPEED])
