@@ -162,6 +162,7 @@ class BrainThread(Thread):
 
 
     def crosswalk_maneuver_routine(self):
+        print("Executing Crosswalk routine")
         self.hardcoded_move(0, 0, 10, 0.2)
         time.sleep(0.05)
         self.hardcoded_move(0, 20, 10, 0.1)
@@ -184,6 +185,7 @@ class BrainThread(Thread):
 
 
     def parking_maneuver(self):
+        print("Executing parking routine")
         self.hardcoded_move(0, -46, 10, 0.02)
         self.hardcoded_move(22.9, -46, 57, 0.02)
         time.sleep(0.02)
