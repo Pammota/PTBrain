@@ -319,7 +319,7 @@ class LaneDetectionThread(Thread):
         else:
             theta = -10000
         found_horizontal_line = False
-        if sum_h > 200:
+        if sum_h > 70:
             found_horizontal_line = True
         return theta, found_horizontal_line
 
