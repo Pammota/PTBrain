@@ -234,7 +234,7 @@ class LaneDetectionThread(Thread):
         cv2.line(frame_ROI_IPM, (margin_y_left_IPM, self.x_cv_IPM_horizontal_ROI), (margin_y_right_IPM, self.x_cv_IPM_horizontal_ROI), (123, 22, 23), 2)
 
         # filter horizontal lines which do not belong to our region
-        filtered_horizontal_lines = []
+        # filtered_horizontal_lines = []
         sum = 0
         margin_error = 50
         for line in horizontal_lines:
@@ -248,7 +248,7 @@ class LaneDetectionThread(Thread):
                 x_top_cv_h_line = x2_cv
             if x_top_cv_h_line > self.x_cv_IPM_horizontal_ROI:
                 if y1_cv >= margin_y_left_IPM - margin_error and y2_cv <= margin_y_right_IPM + margin_error:
-                    filtered_horizontal_lines.append(line)
+                    # filtered_horizontal_lines.append(line)
                     self.draw_line(line_IPM, (255,255,0), frame_ROI_IPM)
                     sum += math.sqrt((y2_cv - y1_cv) * 2 + (x2_cv - x1_cv) * 2)
 
@@ -337,10 +337,9 @@ class LaneDetectionThread(Thread):
             frame_ROI = frame[self.x_cv_ROI:, :]
             frame_ROI_IPM = cv2.warpPerspective(frame_ROI, self.H, (self.width_ROI_IPM, self.height_ROI_IPM), flags=cv2.INTER_NEAREST)
 
-            try:
-                theta, found_horizontal_line = self.get_theta(frame_ROI, frame_ROI_IPM=frame_ROI_IPM)
-            except ValueError:
-                theta, found_horizontal_line = -10000, False
+            theta, found_horizontal_line = self.get_theta(frame_ROI, frame_ROI_IPM=frame_ROI_IPM)
+            """except ValueError:
+                theta, found_horizontal_line = -10000, False"""
             if theta != - 10000:    # no line found
                 theta_average = round(theta * 0.6 + theta_average * 0.4)
             #print("theta = {}".format(theta_average))
