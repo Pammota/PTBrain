@@ -340,7 +340,7 @@ class LaneDetectionThread(Thread):
             try:
                 theta, found_horizontal_line = self.get_theta(frame_ROI, frame_ROI_IPM=frame_ROI_IPM)
             except TypeError:
-                theta, found_horizontal_line = -10000, False"""
+                theta, found_horizontal_line = -10000, False
             if theta != - 10000:    # no line found
                 theta_average = round(theta * 0.6 + theta_average * 0.4)
             #print("theta = {}".format(theta_average))
