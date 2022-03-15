@@ -40,6 +40,10 @@ class Controller():
                 self.had_parking = True
             else:
                 if self.flags["crosswalk"]: #and not self.executed["crosswalk"]:
+                    print("CROSSWALK SPOTTED!!!!!")
+                    print("CROSSWALK SPOTTED!!!!!")
+                    print("CROSSWALK SPOTTED!!!!!")
+                    print("CROSSWALK SPOTTED!!!!!")
                     self.setExecuted(crosswalk=True)
                     return [0, 0, 0, 0, 0, 1, 0]  # activate crosswalk flag
             if self.had_parking is True and self.flags["parking"] is False: #and not self.executed["parking"]:
