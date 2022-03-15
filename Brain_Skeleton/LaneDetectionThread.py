@@ -250,7 +250,7 @@ class LaneDetectionThread(Thread):
                 if y1_cv >= margin_y_left_IPM - margin_error and y2_cv <= margin_y_right_IPM + margin_error:
                     # filtered_horizontal_lines.append(line)
                     self.draw_line(line_IPM, (255,255,0), frame_ROI_IPM)
-                    sum += math.sqrt((y2_cv - y1_cv) * 2 + (x2_cv - x1_cv) * 2)
+                    sum += math.sqrt((y2_cv - y1_cv) ** 2 + (x2_cv - x1_cv) ** 2)
 
         print("Sum = {}".format(sum))
         return sum
@@ -319,7 +319,7 @@ class LaneDetectionThread(Thread):
         else:
             theta = -10000
         found_horizontal_line = False
-        if sum_h > 70:
+        if sum_h > 200:
             found_horizontal_line = True
         return theta, found_horizontal_line
 
