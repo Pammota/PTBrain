@@ -24,7 +24,7 @@ class Controller():
         self.passed_horiz_line = LD_info["horiz_line"]
 
         if self.state == "Lane Follow":
-            if self.passed_horiz_line or self.flags["stop"]:
+            if self.passed_horiz_line:
                 self.setExecuted(parking=False, crosswalk=False)
                 self.state = "Intersection"
                 self.ongoing_intersection = True
