@@ -1,6 +1,7 @@
 from threading import Thread
 import time
 import math
+import config
 import numpy as np
 import cv2
 
@@ -342,7 +343,7 @@ class LaneDetectionThread(Thread):
                 theta, found_horizontal_line = -10000, False
             if theta != - 10000:    # no line found
                 theta_average = round(theta * 0.6 + theta_average * 0.4)
-            print("theta = {}".format(theta_average))
+            #print("theta = {}".format(theta_average))
             # print("time: {}".format(time.time() - start))
 
             cv2.putText(img=frame_ROI, text=str(theta_average), org=(350, 200), fontFace=cv2.FONT_HERSHEY_TRIPLEX, fontScale=1,
@@ -354,7 +355,8 @@ class LaneDetectionThread(Thread):
             #cv2.waitKey(1)
 
             end = time.time()
-            print("Lane detection time: {}".format(end - start))
+            if config.PRINT_EXEC_TIMES:
+                print("Lane detection time: {}".format(end - start))
 
             ######### here the lane detection ends ###########
 
