@@ -21,16 +21,16 @@ class Controller():
     def checkState(self, OD_info, LD_info):
         self.setFlags(OD_info)
         self.setTheta(LD_info)
-        self.passed_horiz_line = False
+        self.passed_horiz_line = LD_info["horiz_line"]
 
         if self.state == "Lane Follow":
-            if self.passed_horiz_line is True:
+            if self.passed_horiz_line:
                 self.setExecuted(parking=False, crosswalk=False)
                 self.state = "Intersection"
                 self.ongoing_intersection = True
 
         if self.state == "Intersection":
-            if self.ongoing_intersection is False:
+            if not self.ongoing_intersection:
                 self.state = "Lane Follow"
                 self.dir_idx += 1
 
