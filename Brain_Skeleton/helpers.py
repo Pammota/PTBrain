@@ -6,7 +6,7 @@ def size_threshold(x1, x2, y1, y2, w, h):
     print("HEIGHT = {}".format(y2 - y1))
     if (x2 - x1) < w * 0.07 and (y2 - y1) < h * 0.07:
         return False
-    if (x2 - x1) > w * 0.2 or (y2 - y1) > h * 0.2:
+    if (x2 - x1) > w * 0.25 or (y2 - y1) > h * 0.25:
         return False
     return False
 
