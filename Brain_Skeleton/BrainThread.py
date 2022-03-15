@@ -137,7 +137,7 @@ class BrainThread(Thread):
         if stop is True:
             if self.cameraSpoof is None:
                 theta_command = Controller.getAngleCommand(0)
-                speed_command, startup = Controller.getSpeedCommand(0)
+                speed_command = Controller.getSpeedCommand(0)
                 self.outP_com.send((theta_command, speed_command))
             print("Stopped at the STOP sign at intersection.BRB")
             time.sleep(2)
