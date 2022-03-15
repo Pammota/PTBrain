@@ -337,8 +337,9 @@ class LaneDetectionThread(Thread):
             frame_ROI = frame[self.x_cv_ROI:, :]
             frame_ROI_IPM = cv2.warpPerspective(frame_ROI, self.H, (self.width_ROI_IPM, self.height_ROI_IPM), flags=cv2.INTER_NEAREST)
 
-            theta, found_horizontal_line = self.get_theta(frame_ROI, frame_ROI_IPM=frame_ROI_IPM)
-            """except ValueError:
+            try:
+                theta, found_horizontal_line = self.get_theta(frame_ROI, frame_ROI_IPM=frame_ROI_IPM)
+            except TypeError:
                 theta, found_horizontal_line = -10000, False"""
             if theta != - 10000:    # no line found
                 theta_average = round(theta * 0.6 + theta_average * 0.4)
