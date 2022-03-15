@@ -94,7 +94,7 @@ class BrainThread(Thread):
             print("Sent detection info after {}".format(current_time - loop_start_time))"""
 
             # waits for the outputs of the other threads and gets them
-            time_start, lane_info = self.inP_lane.recv()
+            time_start, lane_info, found_horizontal_line = self.inP_lane.recv()
 
             current_time = time.time()
             print("Grabbed lane detection info after {}".format(current_time - loop_start_time))
@@ -105,6 +105,9 @@ class BrainThread(Thread):
             print("Grabbed object detection info after {}".format(current_time - loop_start_time))
             print("Object detection pipe delay {}".format(current_time - time_start))
 
+            if found_horizontal_line:
+                break
+            
             traffic_lights_info = {}
             #print(traffic_lights_info)
 
