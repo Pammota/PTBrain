@@ -335,10 +335,10 @@ class LaneDetectionThread(Thread):
             start = time.time()
 
             frame_ROI = frame[self.x_cv_ROI:, :]
-            # frame_ROI_IPM = cv2.warpPerspective(frame_ROI, self.H, (self.width_ROI_IPM, self.height_ROI_IPM), flags=cv2.INTER_NEAREST)
+            frame_ROI_IPM = cv2.warpPerspective(frame_ROI, self.H, (self.width_ROI_IPM, self.height_ROI_IPM), flags=cv2.INTER_NEAREST)
 
             try:
-                theta, found_horizontal_line = self.get_theta(frame_ROI, frame_ROI_IPM=None)
+                theta, found_horizontal_line = self.get_theta(frame_ROI, frame_ROI_IPM=frame_ROI_IPM)
             except ValueError:
                 theta, found_horizontal_line = -10000, False
             if theta != - 10000:    # no line found
@@ -354,8 +354,8 @@ class LaneDetectionThread(Thread):
 
             # cv2.imshow("Frame", frame)
             #cv2.imshow("ROI", frame_ROI)
-            # cv2.imshow("IPM", frame_ROI_IPM)
-            #cv2.waitKey(1)
+            cv2.imshow("IPM", frame_ROI_IPM)
+            cv2.waitKey(1)
 
             end = time.time()
             if config.PRINT_EXEC_TIMES:
