@@ -4,7 +4,7 @@ import config
 def size_threshold(x1, x2, y1, y2, w, h):
     if x2 - x1 > w * 0.07 or y2 - y1 > h * 0.07:
         return True
-    if x2 - x1 < w * 0.2 or y2 - y1 < h * 0.2:
+    if x2 - x1 < w * 0.2 and y2 - y1 < h * 0.2:
         return True
     return False
 
