@@ -34,7 +34,6 @@ class ObjectDetectionThread(Thread):
 
     def perform_object_detection(self, image):
 
-
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         np_image = (np.array(image, dtype=np.float32) - 127.5) / 127.5
 
@@ -59,6 +58,9 @@ class ObjectDetectionThread(Thread):
 
         ids = self.stabilizer.add_frame(boxes, labels, scores)
 
+        flags = {"forward": False, "forbidden": False, "parking": False, "sem_yellow": False, "sem_red": False,
+                 "sem_green": False, "priority": False, "crosswalk": False, "stop": False}
+
         for idx in range(len(ids)):
             exists, box, label, score = self.stabilizer.get_object_data(ids[idx])
 
@@ -78,42 +80,40 @@ class ObjectDetectionThread(Thread):
             if color and label_text:# and accept_box(boxes, box, 5.0):
                 cv2.rectangle(image, (x1, y1), (x2, y2), color, 2)
                 cv2.putText(image, label_text, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 0.55, color, 2)
+                flags[label_text] = True
 
         output_frame = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-        #detection_output = {"num_detections": len(boxes), "boxes": boxes, "labels:": labels}
-        return output_frame
+
+        return flags
 
     def run(self):
 
-        (img_annotated, output, tl_info) = np.zeros([640, 640, 3]), {}, []
+
         while True:
 
             # waits for the preprocessed image and gets it
             image = self.inP_img.recv()
 
             ######### here takes place the object detection ###########
-            img_annotated, output, tl_info = image, {}, []
+            flags = {"forward": False, "forbidden": False, "parking": False, "sem_yellow": False, "sem_red": False,
+                     "sem_green": False, "priority": False, "crosswalk": False, "stop": False}
 
             start = time.time()
 
-            if config.RUN_MODE == "NORMAL":
-                (img_annotated, output, tl_info) = od.perform_object_detection_video(self.object_detector,
-                                          image, self.traffic_light_classifier)
             if config.RUN_MODE == "TFLITE":
                 try:
-                    img_annotated = self.perform_object_detection(image)
+                    flags = self.perform_object_detection(image)
                 except cv2.error:
                     print("cv2 error")
-                    (img_annotated, output, tl_info) = np.zeros([640, 640, 3]), {}, []
             if config.RUN_MODE == "NO_DETECTION":
-                (img_annotated, output, tl_info) = np.zeros([640, 640, 3]), {}, []
+                flags = flags
 
             end = time.time()
             print("Object detection time: {}".format(end - start))
 
             ######### here the object detection ends ###########
 
-            self.outP_obj.send(end)  # sends the results of the detection back
+            self.outP_obj.send((end, flags))  # sends the results of the detection back
 
     def init_models(self):
 
