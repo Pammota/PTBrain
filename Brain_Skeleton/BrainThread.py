@@ -30,8 +30,6 @@ class BrainThread(Thread):
         self.cameraSpoof = cameraSpoof
         self.camera = cv2.VideoCapture(0 if cameraSpoof is None else cameraSpoof)
 
-        self.baseSpeed = 20
-
         self.show_vid = show_vid
         self.show_lane = show_lane
         self.stop_car = stop_car

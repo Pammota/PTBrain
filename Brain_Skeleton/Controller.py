@@ -9,7 +9,7 @@ class Controller():
         self.directions = ["right", "left", "right", "forward", "left", "forward"]
         self.dir_idx = 0
         self.had_parking = False
-        self.base_speed = 15
+        self.base_speed = 13
         self.theta = 0
         self.thetas = []
         self.passed_horiz_line = False
