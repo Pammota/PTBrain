@@ -4,10 +4,10 @@ import config
 def size_threshold(x1, x2, y1, y2, w, h):
     print("WIDTH = {}".format(x2 - x1))
     print("HEIGHT = {}".format(y2 - y1))
-    if (x2 - x1) > w * 0.07 or (y2 - y1) > h * 0.07:
-        return True
-    if (x2 - x1) < w * 0.2 and (y2 - y1) < h * 0.2:
-        return True
+    if (x2 - x1) < w * 0.07 and (y2 - y1) < h * 0.07:
+        return False
+    if (x2 - x1) > w * 0.2 or (y2 - y1) > h * 0.2:
+        return False
     return False
 
 def accept_box(boxes, box, tolerance):
