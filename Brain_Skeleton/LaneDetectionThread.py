@@ -311,7 +311,7 @@ class LaneDetectionThread(Thread):
         if vp_exists:
             line_vp = self.get_inverse_line_IPM([y_cv_IPM_vp, x_cv_IPM_vp, int(self.width_ROI_IPM / 2 + self.offset_origin), self.height_ROI_IPM], frame_ROI)
             self.draw_line(line_vp, (255, 255, 255), frame_ROI)
-            theta = int(round(math.degrees(math.atan((self.y_cv_IPM_center - y_cv_IPM_vp) / (self.height_ROI_IPM - x_cv_IPM_vp)))) / 2.5)
+            theta = int(round(math.degrees(math.atan((self.y_cv_IPM_center - y_cv_IPM_vp) / (self.height_ROI_IPM - x_cv_IPM_vp)))) / 2)
             if theta > 23:
                 theta = 23
             if theta < -23:
@@ -350,9 +350,9 @@ class LaneDetectionThread(Thread):
                         color=(0, 255, 0), thickness=3)
 
             # cv2.imshow("Frame", frame)
-            #cv2.imshow("ROI", frame_ROI)
+            cv2.imshow("ROI", frame_ROI)
             # cv2.imshow("IPM", frame_ROI_IPM)
-            #cv2.waitKey(1)
+            cv2.waitKey(1)
 
             end = time.time()
             if config.PRINT_EXEC_TIMES:
