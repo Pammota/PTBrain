@@ -24,7 +24,7 @@ class Controller():
         self.passed_horiz_line = LD_info["horiz_line"]
 
         if self.state == "Lane Follow":
-            if self.passed_horiz_line:
+            if self.passed_horiz_line or self.flags["stop"]:
                 self.setExecuted(parking=False, crosswalk=False)
                 self.state = "Intersection"
                 self.ongoing_intersection = True
@@ -44,6 +44,7 @@ class Controller():
                     return [0, 0, 0, 0, 0, 1, 0]  # activate crosswalk flag
             if self.had_parking is True and self.flags["parking"] is False: #and not self.executed["parking"]:
                 self.setExecuted(parking=True)
+                self.had_parking = False
                 return [0, 0, 0, 0, 0, 0, 1]  #activate parking flag
             return [self.base_speed, self.theta, 0, 0, 0, 0, 0]
 
