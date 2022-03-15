@@ -360,6 +360,8 @@ class LaneDetectionThread(Thread):
 
             ######### here the lane detection ends ###########
 
+            theta_average = (theta_average // 4) * 4
+
             lane_info = {"theta": -theta_average, "horiz_line": found_horizontal_line}
 
             self.outP_lane.send((end, lane_info))   # sends the results of the detection back
