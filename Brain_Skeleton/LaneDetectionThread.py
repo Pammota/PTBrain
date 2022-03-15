@@ -29,6 +29,7 @@ class LaneDetectionThread(Thread):
         self.height_ROI_IPM = 210  # calculated related to pixel_resolution and the real dimensions
         self.width_ROI_IPM = 547
         self.y_cv_IPM_center = int(self.width_ROI_IPM / 2 + self.offset_origin)
+        self.x_cv_IPM_horizontal_ROI = 100
         ''' ================================================================================================================================ '''
 
 
