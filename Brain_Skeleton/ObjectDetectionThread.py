@@ -77,7 +77,7 @@ class ObjectDetectionThread(Thread):
             label_text = config.CLASSES[label]["LABEL"]
             color = config.CLASSES[label]["COLOR"]
 
-            if color and label_text and (x2 - x1 > image.shape[0]*0.07 or y2 - y1 > image.shape[1]*0.07):# and accept_box(boxes, box, 5.0):
+            if color and label_text and size_threshold(x1, x2, y1, y2, image.shape[0], image.shape[1]) is True:# and accept_box(boxes, box, 5.0):
                 cv2.rectangle(image, (x1, y1), (x2, y2), color, 2)
                 cv2.putText(image, label_text, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 0.55, color, 2)
                 #if (x2 - x1) / (y2 - y1) > 1.5 or (y2 - y1) / (x2 - x1) > 1.5:
