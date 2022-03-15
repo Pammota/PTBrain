@@ -8,7 +8,7 @@ def size_threshold(x1, x2, y1, y2, w, h):
         return False
     if (x2 - x1) > w * 0.25 or (y2 - y1) > h * 0.25:
         return False
-    return False
+    return True
 
 def accept_box(boxes, box, tolerance):
     """
