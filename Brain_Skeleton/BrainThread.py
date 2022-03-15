@@ -72,13 +72,13 @@ class BrainThread(Thread):
                 break
 
             # waits for the outputs of the other threads and gets them
-            time_start, lane_info = self.inP_lane.recv()
+            """time_start, lane_info = self.inP_lane.recv()
 
             current_time = time.time()
 
             if PRINT_EXEC_TIMES:
                 print("Grabbed lane detection info after {}".format(current_time - loop_start_time))
-                print("Lane detection pipe delay {}".format(current_time - time_start))
+                print("Lane detection pipe delay {}".format(current_time - time_start))"""
 
             time_start, obj_info = self.inP_obj.recv()
             current_time = time.time()
@@ -89,6 +89,7 @@ class BrainThread(Thread):
 
             ############### here takes place the processing of the info #############
 
+            lane_info = {"theta": 0, "horiz_line": False}
             self.controller.checkState(obj_info, lane_info)
             action = self.controller.takeAction()
 
@@ -256,7 +257,7 @@ class BrainThread(Thread):
         outP_brain_obj, inP_brain_obj = Pipe()  # out will be sent from BrainThread
                                                    # in will be recieved in ObjectDetectionThread
 
-        self.outPs = [outP_brain_obj, outP_brain_lane]
+        self.outPs = [outP_brain_obj]#, outP_brain_lane]
 
         outP_lane, self.inP_lane = Pipe()  # out will be sent from LaneDetectionThread
                                      # in will be recieved in BrainThread (here)
