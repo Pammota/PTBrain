@@ -1,15 +1,13 @@
-import enum
+ACTION_SPEED = 0
+ACTION_ANGLE = 1
+ACTION_STOP = 2
+ACTION_RED = 3
+ACTION_DIRECTION = 4
+ACTION_CROSSWALK = 5
+ACTION_PARKING = 6
 
-class Action(enum.Enum):
-    SPEED = 0
-    ANGLE = 1
-    STOP = 2
-    RED = 3
-    DIRECTION = 4
-    CROSSWALK = 5
-    PARKING = 6
-
-RUN_MODE = "NO_DETECTION"
+RUN_MODE = "TFLITE"
+PRINT_EXEC_TIMES = False
 
 CLASSES = {
     1: {"LABEL": "forward", "COLOR": (0, 0, 255)},

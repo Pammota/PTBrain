@@ -5,7 +5,7 @@ from LaneDetectionThread import LaneDetectionThread
 from ObjectDetectionThread import ObjectDetectionThread
 from Controller import Controller
 from writethread import WriteThread
-from config import Action
+from config import *
 import time
 import cv2
 import numpy as np
@@ -75,43 +75,48 @@ class BrainThread(Thread):
             time_start, lane_info = self.inP_lane.recv()
 
             current_time = time.time()
-            print("Grabbed lane detection info after {}".format(current_time - loop_start_time))
-            print("Lane detection pipe delay {}".format(current_time - time_start))
+
+            if PRINT_EXEC_TIMES:
+                print("Grabbed lane detection info after {}".format(current_time - loop_start_time))
+                print("Lane detection pipe delay {}".format(current_time - time_start))
 
             time_start, obj_info = self.inP_obj.recv()
             current_time = time.time()
-            print("Grabbed object detection info after {}".format(current_time - loop_start_time))
-            print("Object detection pipe delay {}".format(current_time - time_start))
+
+            if PRINT_EXEC_TIMES:
+                print("Grabbed object detection info after {}".format(current_time - loop_start_time))
+                print("Object detection pipe delay {}".format(current_time - time_start))
 
             ############### here takes place the processing of the info #############
 
-            self.controller.checkState(obj_info, lane_info)
+            self.controller.checkState(obj_info, {"theta": lane_info})
             action = self.controller.takeAction()
 
-            if action[Action.CROSSWALK] != 0:
+            if action[ACTION_CROSSWALK] != 0:
                 if self.cameraSpoof is None:
                     self.crosswalk_maneuver_routine()
                 else:
                     print("Performing crosswalk routine.BRB")
                     time.sleep(2)
-            elif action[Action.PARKING] != 0:
+            elif action[ACTION_PARKING] != 0:
                 if self.cameraSpoof is None:
                     self.parking_maneuver()
                 else:
                     print("Performing parking routine.BRB")
                     time.sleep(2)
-            elif action[Action.DIRECTION] != 0:
-                self.intersection_maneuver_routine(action[Action.STOP], action[Action.RED], action[Action.DIRECTION])
+            elif action[ACTION_DIRECTION] != 0:
+                self.intersection_maneuver_routine(action[ACTION_STOP], action[ACTION_RED], action[ACTION_DIRECTION])
             else:
-                theta_command = Controller.getAngleCommand(action[Action.ANGLE])
-                speed_command = Controller.getSpeedCommand(action[Action.SPEED])
+                theta_command = Controller.getAngleCommand(action[ACTION_ANGLE])
+                speed_command = Controller.getSpeedCommand(action[ACTION_SPEED])
                 if self.cameraSpoof is None:
                     self.outP_com.send((theta_command, speed_command))
                 else:
-                    print("Sent command of SPEED: {}, ANGLE: {}".format(action[Action.SPEED], action[Action.ANGLE]))
+                    print("Sent command of SPEED: {}, ANGLE: {}".format(action[ACTION_SPEED], action[ACTION_ANGLE]))
 
             end = time.time()
-            print("Ended brain loop after {}".format(end - loop_start_time))
+            if PRINT_EXEC_TIMES:
+                print("Ended brain loop after {}".format(end - loop_start_time))
             print("---------------------------------------------------------------------\n\n")
             ############### here processing of info ends ############
 

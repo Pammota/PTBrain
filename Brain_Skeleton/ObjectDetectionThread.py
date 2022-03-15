@@ -27,7 +27,7 @@ class ObjectDetectionThread(Thread):
 
         self.traffic_light_classifier_tflite = None
         self.object_detector_tflite = None
-        self.stabilizer = ObjectStabilizer(3, 0.5)
+        self.stabilizer = ObjectStabilizer(7, 0.5)
 
         self.init_models()
 
@@ -77,12 +77,16 @@ class ObjectDetectionThread(Thread):
             label_text = config.CLASSES[label]["LABEL"]
             color = config.CLASSES[label]["COLOR"]
 
-            if color and label_text:# and accept_box(boxes, box, 5.0):
+            if color and label_text and (x2 - x1 > image.shape[0]*0.07 or y2 - y1 > image.shape[1]*0.07):# and accept_box(boxes, box, 5.0):
                 cv2.rectangle(image, (x1, y1), (x2, y2), color, 2)
                 cv2.putText(image, label_text, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 0.55, color, 2)
-                flags[label_text] = True
+                if (x2 - x1) / (y2 - y1) > 1.5 or (y2 - y1) / (x2 - x1) > 1.5:
+                    flags[label_text] = True
 
         output_frame = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+        output_frame = cv2.resize(output_frame, (640, 480))
+        cv2.imshow("image", output_frame)
+        cv2.waitKey(1)
 
         return flags
 
@@ -109,7 +113,8 @@ class ObjectDetectionThread(Thread):
                 flags = flags
 
             end = time.time()
-            print("Object detection time: {}".format(end - start))
+            if config.PRINT_EXEC_TIMES:
+                print("Object detection time: {}".format(end - start))
 
             ######### here the object detection ends ###########
 
@@ -128,6 +133,6 @@ class ObjectDetectionThread(Thread):
             """self.traffic_light_classifier_tflite = TFLiteModel("models/model_mobilenet_v3_static_input_edgetpu.tflite",
                                                          input_shape=config.CLASSIFIER_INPUT_SHAPE,
                                                          quantized_input=True, quantized_output=True)"""
-            self.object_detector_tflite = TFLiteModel("models/mobilenet_cityscapes_frozen_normalized_bfmc_dataset_32_bsize_edgetpu.tflite",
+            self.object_detector_tflite = TFLiteModel("models/mobilenet_cs_bfmc_bodo_32bsize_edgetpu.tflite",
                                                        input_shape=config.DETECTOR_INPUT_SHAPE,
                                                        quantized_input=False, quantized_output=False)
