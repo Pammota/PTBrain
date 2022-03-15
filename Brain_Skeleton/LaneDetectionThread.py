@@ -346,6 +346,9 @@ class LaneDetectionThread(Thread):
             #print("theta = {}".format(theta_average))
             # print("time: {}".format(time.time() - start))
 
+
+            theta_average = (theta_average // 4) * 4
+
             cv2.putText(img=frame_ROI, text=str(theta_average), org=(350, 200), fontFace=cv2.FONT_HERSHEY_TRIPLEX, fontScale=1,
                         color=(0, 255, 0), thickness=3)
 
@@ -360,7 +363,6 @@ class LaneDetectionThread(Thread):
 
             ######### here the lane detection ends ###########
 
-            theta_average = (theta_average // 4) * 4
 
             lane_info = {"theta": -theta_average, "horiz_line": found_horizontal_line}
 
