@@ -121,8 +121,8 @@ class BrainThread(Thread):
                 grabbed, frame = self.camera.read()
                 grabbed, frame = self.camera.read()
             elif action[ACTION_PARKING] != 0:
-                if self.cameraSpoof is None:
-                    self.parking_maneuver()
+                """if self.cameraSpoof is None:
+                    self.parking_maneuver()"""
                 print("Performing parking routine.BRB")
                 time.sleep(2)
                 grabbed, frame = self.camera.read()
