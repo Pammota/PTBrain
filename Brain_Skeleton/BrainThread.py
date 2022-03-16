@@ -196,9 +196,9 @@ class BrainThread(Thread):
     def right_maneuver_routine(self):
         self.hardcoded_move(0, 23, 10, 0.04)
         time.sleep(0.05)
-        self.hardcoded_move(17, 21, 210, 0.025)
+        self.hardcoded_move(22, 21, 195, 0.025)
         time.sleep(0.05)
-        self.hardcoded_move(0, 0, 10, 0.001)
+        self.hardcoded_move(0, 13, 10, 0.001)
 
 
     def left_maneuver_routine(self):
