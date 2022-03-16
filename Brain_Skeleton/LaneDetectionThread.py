@@ -87,7 +87,7 @@ class LaneDetectionThread(Thread):
             except OverflowError:
                 intercept_oX = 30000
 
-            return intercept_oX, theta
+            return intercept_oX, theta, coefficients[0]
 
 
     def left_or_right_candidate_line(self, intercept_oX, theta):  # 0 -> left line;   # 1 -> right line;
