@@ -22,9 +22,9 @@ class Controller():
         self.setTheta(LD_info)
         self.passed_horiz_line = LD_info["horiz_line"]
 
-        print("STATE: {}".format(self.state))
+        #print("STATE: {}".format(self.state))
         #print("HORIZ_LINE: {}".format(self.passed_horiz_line))
-        print("PARKING: {}".format(OD_info["parking"]))
+        #print("PARKING: {}".format(OD_info["parking"]))
 
         if self.state == "Lane Follow":
             if self.passed_horiz_line and not self.flags["crosswalk"]:
@@ -41,6 +41,8 @@ class Controller():
                 self.dir_idx += 1
 
     def takeAction(self):
+        print("PARKING AGGREGATED: {}".format(self.flags["parking"]))
+        print("HAD PARKING: {}".format(self.had_parking))
         if self.state == "Lane Follow":
             if self.flags["parking"] is True:
                 self.had_parking = True
