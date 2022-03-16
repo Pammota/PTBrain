@@ -392,6 +392,8 @@ class LaneDetectionThread(Thread):
                         color=(0, 255, 0), thickness=3)
 
             # cv2.imshow("Frame", frame)
+            cv2.imshow("ROI", frame_ROI)
+            # cv2.imshow("IPM", frame_ROI_IPM)
             #cv2.imshow("ROI", frame_ROI)
             #cv2.imshow("IPM", frame_ROI_IPM)
             #cv2.waitKey(1)
