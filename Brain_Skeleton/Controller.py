@@ -40,6 +40,7 @@ class Controller():
                 self.dir_idx += 1
 
     def takeAction(self):
+        print("CURRENT STATE: {}".format(self.state))
         print("PARKING AGGREGATED: {}".format(self.flags["parking"]))
         print("HAD PARKING: {}".format(self.had_parking))
         if self.state == "Lane Follow":
