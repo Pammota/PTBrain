@@ -119,21 +119,14 @@ class BrainThread(Thread):
                 else:
                     time.sleep(2)
 
-                grabbed, frame = self.camera.read()
-                grabbed, frame = self.camera.read()
             elif action[ACTION_PARKING] != 0:
                 if self.cameraSpoof is None:
                     self.parking_maneuver()
                 print("Performing parking routine.BRB")
                 time.sleep(2)
-                grabbed, frame = self.camera.read()
-                grabbed, frame = self.camera.read()
             elif action[ACTION_DIRECTION] != 0 and ((self.num_frames - self.last_intersection > 10)\
                     or self.last_intersection == 0):
                 self.intersection_maneuver_routine(action[ACTION_STOP], action[ACTION_RED], action[ACTION_DIRECTION])
-                if action[ACTION_RED] == 0:
-                    grabbed, frame = self.camera.read()
-                    grabbed, frame = self.camera.read()
             else:
                 theta_command = Controller.getAngleCommand(action[ACTION_ANGLE])
                 speed_command = Controller.getSpeedCommand(action[ACTION_SPEED])

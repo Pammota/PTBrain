@@ -82,10 +82,10 @@ class LaneDetectionThread(Thread):
             # coefficients[0] = intercept on oY
             # y = slope * x + intercept_oY
             theta = math.degrees(math.atan(coefficients[1]))
-            try:  # huge values of intercept_oY because of horizontal lines
-                intercept_oX = int((-coefficients[0]) / coefficients[1])
-            except OverflowError:
-                intercept_oX = 30000
+           # try:  # huge values of intercept_oY because of horizontal lines
+            intercept_oX = int((-coefficients[0]) / coefficients[1])
+            #except OverflowError:
+               # intercept_oX = 30000
 
             return intercept_oX, theta, coefficients[0]
 
