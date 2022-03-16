@@ -21,6 +21,10 @@ class Controller():
         self.setTheta(LD_info)
         self.passed_horiz_line = LD_info["horiz_line"]
 
+        print("STATE: {}".format(self.state))
+        print("HORIZ_LINE: {}".format(self.passed_horiz_line))
+        print("CROSSWALK: {}".format(self.flags["crosswalk"]))
+
         if self.state == "Lane Follow":
             if self.passed_horiz_line and not self.flags["crosswalk"]:
                 if self.dir_idx > len(self.directions):
