@@ -80,9 +80,8 @@ class ObjectDetectionThread(Thread):
             if color and label_text and size_threshold_max(x1, x2, y1, y2, image.shape[0], image.shape[1]) is True:# and accept_box(boxes, box, 5.0):
                 cv2.rectangle(image, (x1, y1), (x2, y2), color, 2)
                 cv2.putText(image, label_text, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 0.55, color, 2)
-                if size_threshold_min(x1, x2, y1, y2, image.shape[0], image.shape[1]) is True:
-                    cv2.rectangle(image, (x1, y1), (x2, y2), color, -1)
-                    flags[label_text] = True
+                #if size_threshold_min(x1, x2, y1, y2, image.shape[0], image.shape[1]) is True:
+                flags[label_text] = True
 
         output_frame = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
         output_frame = cv2.resize(output_frame, (640, 480))
