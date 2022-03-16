@@ -27,7 +27,7 @@ class ObjectDetectionThread(Thread):
 
         self.traffic_light_classifier_tflite = None
         self.object_detector_tflite = None
-        self.stabilizer = ObjectStabilizer(3, 0.5)
+        self.stabilizer = ObjectStabilizer(5, 0.5)
 
         self.init_models()
 
@@ -77,25 +77,28 @@ class ObjectDetectionThread(Thread):
             label_text = config.CLASSES[label]["LABEL"]
             color = config.CLASSES[label]["COLOR"]
 
-            if color and label_text and size_threshold(x1, x2, y1, y2, image.shape[0], image.shape[1]) is True:# and accept_box(boxes, box, 5.0):
+            if color and label_text and size_threshold_max(x1, x2, y1, y2, image.shape[0], image.shape[1]) is True:# and accept_box(boxes, box, 5.0):
                 cv2.rectangle(image, (x1, y1), (x2, y2), color, 2)
                 cv2.putText(image, label_text, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 0.55, color, 2)
-                flags[label_text] = True
+                if size_threshold_min(x1, x2, y1, y2, image.shape[0], image.shape[1]) is True:
+                    cv2.rectangle(image, (x1, y1), (x2, y2), color, -1)
+                    flags[label_text] = True
 
         output_frame = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
         output_frame = cv2.resize(output_frame, (640, 480))
-        """cv2.imshow("image", output_frame)
-        cv2.waitKey(1)"""
+        cv2.imshow("image", output_frame)
+        cv2.waitKey(1)
 
         return flags
 
     def run(self):
 
-
         while True:
 
             # waits for the preprocessed image and gets it
             image = self.inP_img.recv()
+            if image is None:
+                break
 
             ######### here takes place the object detection ###########
             flags = {"forward": False, "forbidden": False, "parking": False, "sem_yellow": False, "sem_red": False,

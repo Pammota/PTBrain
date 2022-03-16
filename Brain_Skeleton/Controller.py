@@ -2,8 +2,6 @@ import numpy as np
 
 class Controller():
     def __init__(self):
-        #call the GraphPars for path planning based on the maneuvers we want
-        # flags given by oobject detection -
         self.flags = {}
         self.state = "Lane Follow"
         self.directions = ["right", "left", "right", "forward", "left", "forward"]
@@ -25,9 +23,12 @@ class Controller():
 
         if self.state == "Lane Follow":
             if self.passed_horiz_line:
-                self.setExecuted(parking=False, crosswalk=False)
-                self.state = "Intersection"
-                self.ongoing_intersection = True
+                if self.dir_idx > len(self.directions):
+                    self.state = "Terminate"
+                else:
+                    self.setExecuted(parking=False, crosswalk=False)
+                    self.state = "Intersection"
+                    self.ongoing_intersection = True
 
         if self.state == "Intersection":
             if not self.ongoing_intersection:
@@ -67,7 +68,7 @@ class Controller():
                     self.ongoing_intersection = False
                     return [0, 0, 0, 0, self.directions[self.dir_idx], 0, 0]
 
-        return [0, 0, 0, 0, "forward", 0, 0]
+        return None
 
     def setFlags(self, OD_info):
         self.flags = OD_info
@@ -86,16 +87,10 @@ class Controller():
 
     @staticmethod
     def getAngleCommand(theta):
-        """error = theta
-        self.error_sum = self.error_sum + error
-        if abs(error) < 6:
-            self.error_sum = 0"""
-        #+ self.kp * theta + self.kd * (error - self.last_error) + self.ki * self.error_sum"""
         if theta >= 23:
             theta = 22
         elif theta <= -23:
             theta = -22
-        #self.last_error = error
         return {'action': '2', 'steerAngle': float(theta)}
 
     @staticmethod

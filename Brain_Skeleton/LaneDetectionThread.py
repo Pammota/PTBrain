@@ -368,6 +368,9 @@ class LaneDetectionThread(Thread):
             # waits for the preprocessed image and gets it
             frame = self.inP_img.recv()
 
+            if frame is None:
+                break
+
             start = time.time()
 
             frame_ROI = frame[self.x_cv_ROI:, :]
@@ -389,16 +392,15 @@ class LaneDetectionThread(Thread):
                         color=(0, 255, 0), thickness=3)
 
             # cv2.imshow("Frame", frame)
-            cv2.imshow("ROI", frame_ROI)
+            #cv2.imshow("ROI", frame_ROI)
             # cv2.imshow("IPM", frame_ROI_IPM)
-            cv2.waitKey(1)
+            #cv2.waitKey(1)
 
             end = time.time()
             if config.PRINT_EXEC_TIMES:
                 print("Lane detection time: {}".format(end - start))
 
             ######### here the lane detection ends ###########
-
 
             lane_info = {"theta": -theta_average, "horiz_line": found_horizontal_line}
 
