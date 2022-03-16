@@ -44,6 +44,7 @@ class Controller():
         print("PARKING AGGREGATED: {}".format(self.flags["parking"]))
         print("HAD PARKING: {}".format(self.had_parking))
         if self.state == "Lane Follow":
+            print("checking")
             if self.flags["parking"] is True:
                 print("set had_parking to True")
                 self.had_parking = True
