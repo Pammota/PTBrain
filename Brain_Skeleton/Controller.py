@@ -40,9 +40,6 @@ class Controller():
                 self.dir_idx += 1
 
     def takeAction(self):
-        print("CURRENT STATE: {}".format(self.state))
-        print("PARKING AGGREGATED: {}".format(self.flags["parking"]))
-        print("HAD PARKING: {}".format(self.had_parking))
         if self.state == "Lane Follow":
             if self.flags["parking"]:
                 print("set had_parking to True")
@@ -59,7 +56,10 @@ class Controller():
             return [self.base_speed, self.theta, 0, 0, 0, 0, 0]
 
         if self.state == "Intersection":
-            if self.flags["stop"] is True:
+            if self.flags["stop"]:
+                print("SPOTTED STOP SIGN IN INTERSECTION!!!")
+                print("SPOTTED STOP SIGN IN INTERSECTION!!!")
+                print("SPOTTED STOP SIGN IN INTERSECTION!!!")
                 self.ongoing_intersection = False
                 return [0, 0, 1, 0, self.directions[self.dir_idx], 0, 0]
             else:
