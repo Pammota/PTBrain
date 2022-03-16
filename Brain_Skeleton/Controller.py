@@ -3,6 +3,7 @@ import numpy as np
 class Controller():
     def __init__(self):
         self.flags = {}
+        self.flags_history = []
         self.state = "Lane Follow"
         self.directions = ["right", "left", "right", "forward", "left", "forward"]
         self.dir_idx = 0
@@ -15,7 +16,6 @@ class Controller():
 
         self.executed = {"parking": False, "crosswalk": False}
 
-
     def checkState(self, OD_info, LD_info):
         self.setFlags(OD_info)
         self.setTheta(LD_info)
@@ -23,7 +23,7 @@ class Controller():
 
         print("STATE: {}".format(self.state))
         print("HORIZ_LINE: {}".format(self.passed_horiz_line))
-        print("CROSSWALK: {}".format(self.flags["crosswalk"]))
+        print("CROSSWALK: {}".format(OD_info["crosswalk"]))
 
         if self.state == "Lane Follow":
             if self.passed_horiz_line and not self.flags["crosswalk"]:
@@ -68,7 +68,10 @@ class Controller():
         return None
 
     def setFlags(self, OD_info):
-        self.flags = OD_info
+        self.flags_history.append(OD_info)
+        self.flags_history = self.flags_history[-10:]
+        for k in self.flags.keys():
+            self.flags[k] = (np.sum([1 if fl[k] is True else 0 for fl in self.flags_history]) > 5)
 
     def setTheta(self, LD_info):
         self.thetas.append(LD_info["theta"])
