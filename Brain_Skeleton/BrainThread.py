@@ -118,8 +118,8 @@ class BrainThread(Thread):
                 else:
                     time.sleep(2)
             elif action[ACTION_PARKING] != 0:
-                """if self.cameraSpoof is None:
-                    self.parking_maneuver()"""
+                if self.cameraSpoof is None:
+                    self.parking_maneuver()
                 print("Performing parking routine.BRB")
                 time.sleep(2)
             elif action[ACTION_DIRECTION] != 0:
