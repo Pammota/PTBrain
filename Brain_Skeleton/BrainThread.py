@@ -22,14 +22,16 @@ class BrainThread(Thread):
         """
         super(BrainThread, self).__init__()
 
-        self.threads = []  # holds the threads managed by this object
-        self.writethread = None
-        self.lanedetectionthread = None
+        self.num_frames = 0
+
+        # holds the threads managed by this object
+        self.threads = []
 
         # constructs the video feed (from file if cameraSpoof exists, otherwise from camera
         self.cameraSpoof = cameraSpoof
         self.camera = cv2.VideoCapture(0 if cameraSpoof is None else cameraSpoof)
 
+        # params for video debugging
         self.show_vid = show_vid
         self.show_lane = show_lane
         self.stop_car = stop_car
@@ -42,6 +44,10 @@ class BrainThread(Thread):
         self.inP_com = None
         self.outP_brain_lane = None
         self.outP_brain_obj = None
+
+        # booleans that keep track of wether threads are actively working or just waiting
+        self.laneDetectionThread_working = False
+        self.objectDetectionThread_working = False
 
         #  creates a controller object to control the car
         self.controller = Controller()
@@ -59,11 +65,9 @@ class BrainThread(Thread):
         # self.stop_car = True
         # self.hardcoded_move(0, 0, 10, 0.001)
 
-        idx = 0
         obj_info = {"forward": False, "forbidden": False, "parking": False, "sem_yellow": False, "sem_red": False,
                  "sem_green": False, "priority": False, "crosswalk": False, "stop": False}
         while not self.stop_car:
-
             loop_start_time = time.time()
             # grabs an image from the camera (or from the video)
             grabbed, frame = self.camera.read()
@@ -72,14 +76,17 @@ class BrainThread(Thread):
             if grabbed is True:
                 """for outP in self.outPs:
                     outP.send(frame)"""
+                self.laneDetectionThread_working = True
                 self.outP_brain_lane.send(frame)
-                if idx % 2 == 0:
+                if self.num_frames % 2 == 0:
+                    self.objectDetectionThread_working = True
                     self.outP_brain_obj.send(frame)
             else:
                 break
 
             # waits for the outputs of the other threads and gets them
             time_start, lane_info = self.inP_lane.recv()
+            self.laneDetectionThread_working = False
 
             current_time = time.time()
 
@@ -87,8 +94,9 @@ class BrainThread(Thread):
                 print("Grabbed lane detection info after {}".format(current_time - loop_start_time))
                 print("Lane detection pipe delay {}".format(current_time - time_start))
 
-            if idx % 2 == 1:
+            if self.num_frames % 2 == 1:
                 time_start, obj_info = self.inP_obj.recv()
+                self.objectDetectionThread_working = False
                 current_time = time.time()
 
                 if PRINT_EXEC_TIMES:
@@ -99,6 +107,9 @@ class BrainThread(Thread):
 
             self.controller.checkState(obj_info, lane_info)
             action = self.controller.takeAction()
+
+            if action is None:
+                break
 
             if action[ACTION_CROSSWALK] != 0:
                 if self.cameraSpoof is None:
@@ -121,7 +132,7 @@ class BrainThread(Thread):
                 else:
                     print("Sent command of SPEED: {}, ANGLE: {}".format(action[ACTION_SPEED], action[ACTION_ANGLE]))
 
-            idx += 1
+            self.num_frames += 1
             end = time.time()
             if PRINT_EXEC_TIMES:
                 print("Ended brain loop after {}".format(end - loop_start_time))
@@ -133,12 +144,7 @@ class BrainThread(Thread):
             and send through them a "stop" signal, which would make them break out
             of the infinite loops"""
 
-        theta_command = Controller.getAngleCommand(0)
-        speed_command = Controller.getSpeedCommand(0)
-
-        if self.cameraSpoof is None:
-            self.outP_com.send((theta_command, speed_command))
-
+        raise InterruptedError
 
     def intersection_maneuver_routine(self, stop=False, sem_red=False, direction="forward"):
         if stop == 1:
@@ -281,15 +287,34 @@ class BrainThread(Thread):
         # adds threads
         #self.threads.append(ImageProcessingThread(inP_img, [outP_imgProc_lane, outP_imgProc_obj]))
         self.threads.append(LaneDetectionThread(inP_brain_lane, outP_lane, show_lane=self.show_lane))
-        self.lanedetectionthread = self.threads[-1]
         self.threads.append(ObjectDetectionThread(inP_brain_obj, outP_obj))
         if self.cameraSpoof is None:
             self.threads.append(WriteThread(self.inP_com, zero_theta_command, zero_speed_command))
-            self.writethread = self.threads[-1]
 
         # starts all threads
         for thread in self.threads:
             thread.start()
 
+    def terminate(self):
+        theta_command = Controller.getAngleCommand(0)
+        speed_command = Controller.getSpeedCommand(0)
+
+        if self.cameraSpoof is None:
+            self.outP_com.send((theta_command, speed_command))
+
+        print("Stopped car")
+
+        self._kill_threads()
+
     def _kill_threads(self):
-        raise NotImplementedError
+
+        if self.laneDetectionThread_working:
+            _, _ = self.inP_lane.recv()
+        if self.objectDetectionThread_working:
+            _, _ = self.inP_obj.recv()
+
+        self.outP_brain_lane.send(None)
+        self.outP_brain_obj.send(None)
+        self.outP_com.send(None)
+
+        print("Stopped threads")

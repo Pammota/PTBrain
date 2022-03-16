@@ -91,11 +91,12 @@ class ObjectDetectionThread(Thread):
 
     def run(self):
 
-
         while True:
 
             # waits for the preprocessed image and gets it
             image = self.inP_img.recv()
+            if image is None:
+                break
 
             ######### here takes place the object detection ###########
             flags = {"forward": False, "forbidden": False, "parking": False, "sem_yellow": False, "sem_red": False,

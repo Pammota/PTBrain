@@ -1,5 +1,6 @@
 from threading import Thread
 from BrainThread import BrainThread
+from threading import Event
 import argparse
 import config
 import time
@@ -25,3 +26,16 @@ else:
     else:
         brain = BrainThread(cameraSpoof=args['path_to_vid'], stop_car=args['stop_car'])
 brain.start()
+
+blocker = Event()
+
+try:
+    blocker.wait()
+except KeyboardInterrupt:
+    brain.terminate()
+except InterruptedError:
+    brain.terminate()
+except:
+    brain.terminate()
+
+print("Exitted")

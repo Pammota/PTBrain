@@ -79,7 +79,11 @@ class WriteThread(Thread):
         print("activated pid")
 
         while True:
-            theta_command, speed_command = self.inP.recv()
+            commands = self.inP.recv()
+            if commands is None:
+                break
+            theta_command, speed_command = commands
+
             # Unpacking the dictionary into action and values
             if theta_command["steerAngle"] != self.last_theta:
                 for i in range(5):
