@@ -82,10 +82,10 @@ class LaneDetectionThread(Thread):
             # coefficients[0] = intercept on oY
             # y = slope * x + intercept_oY
             theta = math.degrees(math.atan(coefficients[1]))
-           # try:  # huge values of intercept_oY because of horizontal lines
-            intercept_oX = int((-coefficients[0]) / coefficients[1])
-            #except OverflowError:
-               # intercept_oX = 30000
+            try:  # huge values of intercept_oY because of horizontal lines
+                intercept_oX = int((-coefficients[0]) / coefficients[1])
+            except OverflowError:
+                intercept_oX = 30000
 
             return intercept_oX, theta, coefficients[0]
 
@@ -397,12 +397,12 @@ class LaneDetectionThread(Thread):
             cv2.putText(img=frame_ROI, text=str(theta_average), org=(350, 200), fontFace=cv2.FONT_HERSHEY_TRIPLEX, fontScale=1,
                         color=(0, 255, 0), thickness=3)
 
-            cv2.imshow("Frame", frame)
-            #cv2.imshow("ROI", frame_ROI)
+            # cv2.imshow("Frame", frame)
+            # cv2.imshow("ROI", frame_ROI)
             # cv2.imshow("IPM", frame_ROI_IPM)
-            #cv2.imshow("ROI", frame_ROI)
-            #cv2.imshow("IPM", frame_ROI_IPM)
-            cv2.waitKey(1)
+            # cv2.imshow("ROI", frame_ROI)
+            # cv2.imshow("IPM", frame_ROI_IPM)
+            # cv2.waitKey(1)
 
             end = time.time()
             if config.PRINT_EXEC_TIMES:
