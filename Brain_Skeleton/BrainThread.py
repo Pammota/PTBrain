@@ -132,12 +132,15 @@ class BrainThread(Thread):
                 else:
                     print("Sent command of SPEED: {}, ANGLE: {}".format(action[ACTION_SPEED], action[ACTION_ANGLE]))
 
+            grabbed, frame = self.camera.read()
+            grabbed, frame = self.camera.read()
             self.num_frames += 1
             end = time.time()
             if PRINT_EXEC_TIMES:
                 print("Ended brain loop after {}".format(end - loop_start_time))
             print("---------------------------------------------------------------------\n\n")
             ############### here processing of info ends ############
+
 
 
         """If we want to stop the threads, we exit from the Brain thread, flush pipes, 
