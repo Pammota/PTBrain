@@ -87,7 +87,7 @@ class LaneDetectionThread(Thread):
             except OverflowError:
                 intercept_oX = 30000
 
-            return intercept_oX, theta, coefficients[0]
+            return intercept_oX, theta
 
 
     def left_or_right_candidate_line(self, intercept_oX, theta):  # 0 -> left line;   # 1 -> right line;
@@ -108,41 +108,13 @@ class LaneDetectionThread(Thread):
                 return 1
         return -1  # no line of the road
 
-    def determine_line_manual(self, param_line, frame_ROI):
-        intercept_oY, theta = param_line
-        slope = math.tan(math.radians(theta))
-        coefficient = [intercept_oY, slope]
-        y1 = 0
-        y2 = self.height_ROI
-        try:
-            x1 = int((y1 - coefficient[0]) / coefficient[1])
-        except OverflowError:
-            x1 = -10000
-        try:
-            x2 = int((y1 - coefficient[0]) / coefficient[1])
-        except OverflowError:
-            x2 = 10000
-
-        # convert our estimated line from XoY in cv2 coordinate system
-        y1_cv = x1
-        y2_cv = x2
-        x1_cv = abs(y1 - self.height_ROI)
-        x2_cv = abs(y2 - self.height_ROI)
-
-        cv2.line(frame_ROI, (y1_cv, x1_cv), (y2_cv, x2_cv), (0, 255, 0), 3)
-        # (y1_cv, x1_cv) -> bottom of the image;   (y2_cv, x2_cv) -> top of the image
-        return y1_cv, x1_cv, y2_cv, x2_cv
 
     def filter_lines(self, lines_candidate, frame_ROI, frame_ROI_IPM=None):
         horizontal_lines = []
         left_lines = []
         right_lines = []
-        left_line_aux_intercept_oY = 0
-        left_line_aux_theta = 0
-        right_line_aux_intercept_oY = 0
-        right_line_aux_theta = 0
         for line in lines_candidate:
-            intercept_oX, theta, intercept_oY = self.get_intercept_theta_line(line)
+            intercept_oX, theta = self.get_intercept_theta_line(line)
             # horizontal line
             if abs(theta) <= 35:
                 self.draw_line(line, (50, 50, 50), frame_ROI)
@@ -153,59 +125,45 @@ class LaneDetectionThread(Thread):
                 if line_code == 0:  # left line
                     self.draw_line(line, (255, 0, 0), frame_ROI)  # BLUE = LEFT
                     left_lines.append(line)
-                    left_line_aux_intercept_oY += intercept_oY
-                    left_line_aux_theta += theta
                 if line_code == 1:  # right line
                     self.draw_line(line, (0, 0, 255), frame_ROI)  # RED = RIGHT
                     right_lines.append(line)
-                    right_line_aux_intercept_oY += intercept_oY
-                    right_line_aux_theta += theta
 
-        if len(left_lines) > 0:
-            left_line_aux_intercept_oY = left_line_aux_intercept_oY // len(left_lines)
-            left_line_aux_theta = left_line_aux_theta // len(left_lines)
+        return left_lines, right_lines, horizontal_lines
 
-        if len(right_lines) > 0:
-            right_line_aux_intercept_oY = right_line_aux_intercept_oY // len(right_lines)
-            right_line_aux_theta = right_line_aux_theta // len(right_lines)
 
-        return left_lines, right_lines, horizontal_lines, (left_line_aux_intercept_oY, left_line_aux_theta), (
-            right_line_aux_intercept_oY, right_line_aux_theta)
+    def polyfit(self, lines, frame_ROI):  # polyfit on a set of coordinates of lines
+        # coordinates used for estimating our line
+        x_points = []
+        y_points = []
 
-    def polyfit(self, lines, frame_ROI, param_line):  # polyfit on a set of coordinates of lines
-        if len(lines) >= 5:
-            # coordinates used for estimating our line
-            x_points = []
-            y_points = []
+        for line in lines:
+            x1, y1, x2, y2 = self.get_XoY_coordinates(line)
+            x_points.append(x1)
+            x_points.append(x2)
+            y_points.append(y1)
+            y_points.append(y2)
 
-            for line in lines:
-                x1, y1, x2, y2 = self.get_XoY_coordinates(line)
-                x_points.append(x1)
-                x_points.append(x2)
-                y_points.append(y1)
-                y_points.append(y2)
+        # get our estimated line
+        coefficient = np.polynomial.polynomial.polyfit(x_points, y_points, deg=1)
+        # print(str(coefficient[1]) + "*x + " + str(coefficient[0]))
 
-            # get our estimated line
-            coefficient = np.polynomial.polynomial.polyfit(x_points, y_points, deg=1)
-            # print(str(coefficient[1]) + "*x + " + str(coefficient[0]))
+        # expand our estimated line from bottom to the top of the ROI
+        y1 = 0
+        y2 = self.height_ROI
+        x1 = int((y1 - coefficient[0]) / coefficient[1])
+        x2 = int((y2 - coefficient[0]) / coefficient[1])
 
-            # expand our estimated line from bottom to the top of the ROI
-            y1 = 0
-            y2 = self.height_ROI
-            x1 = int((y1 - coefficient[0]) / coefficient[1])
-            x2 = int((y2 - coefficient[0]) / coefficient[1])
+        # convert our estimated line from XoY in cv2 coordinate system
+        y1_cv = x1
+        y2_cv = x2
+        x1_cv = abs(y1 - self.height_ROI)
+        x2_cv = abs(y2 - self.height_ROI)
 
-            # convert our estimated line from XoY in cv2 coordinate system
-            y1_cv = x1
-            y2_cv = x2
-            x1_cv = abs(y1 - self.height_ROI)
-            x2_cv = abs(y2 - self.height_ROI)
+        cv2.line(frame_ROI, (y1_cv, x1_cv), (y2_cv, x2_cv), (0, 255, 0), 3)
+        # (y1_cv, x1_cv) -> bottom of the image;   (y2_cv, x2_cv) -> top of the image
+        return y1_cv, x1_cv, y2_cv, x2_cv  # return the coordinates of our estimated line and its line equation
 
-            cv2.line(frame_ROI, (y1_cv, x1_cv), (y2_cv, x2_cv), (0, 255, 0), 3)
-            # (y1_cv, x1_cv) -> bottom of the image;   (y2_cv, x2_cv) -> top of the image
-            return y1_cv, x1_cv, y2_cv, x2_cv  # return the coordinates of our estimated line and its line equation
-        else:
-            return self.determine_line_manual(param_line, frame_ROI)
 
     def get_road_lines(self, frame_ROI, frame_ROI_IPM=None):  # get left and right lines of the road
         frame_ROI_preprocessed = self.preprocess(frame_ROI)
@@ -214,18 +172,18 @@ class LaneDetectionThread(Thread):
                                           maxLineGap=80)
         # filter lines which are not candidate for road's lanes
         if lines_candidate is not None:
-            left_lines, right_lines, horizontal_lines, param_left_line_aux, param_right_line_aux = self.filter_lines(lines_candidate, frame_ROI, frame_ROI_IPM)
+            left_lines, right_lines, horizontal_lines = self.filter_lines(lines_candidate, frame_ROI, frame_ROI_IPM)
             if len(left_lines) != 0 and len(right_lines) != 0:
-                left_line = self.polyfit(left_lines, frame_ROI, param_left_line_aux)
-                right_line = self.polyfit(right_lines, frame_ROI, param_right_line_aux)
+                left_line = self.polyfit(left_lines, frame_ROI)
+                right_line = self.polyfit(right_lines, frame_ROI)
             else:
                 if len(left_lines) != 0:
-                    left_line = self.polyfit(left_lines, frame_ROI, param_left_line_aux)
+                    left_line = self.polyfit(left_lines, frame_ROI)
                     right_line = None
                 else:
                     if len(right_lines) != 0:
                         left_line = None
-                        right_line = self.polyfit(right_lines, frame_ROI, param_right_line_aux)
+                        right_line = self.polyfit(right_lines, frame_ROI)
                     else:
                         left_line = None
                         right_line = None
@@ -398,11 +356,9 @@ class LaneDetectionThread(Thread):
                         color=(0, 255, 0), thickness=3)
 
             # cv2.imshow("Frame", frame)
-            # cv2.imshow("ROI", frame_ROI)
+            #cv2.imshow("ROI", frame_ROI)
             # cv2.imshow("IPM", frame_ROI_IPM)
-            # cv2.imshow("ROI", frame_ROI)
-            # cv2.imshow("IPM", frame_ROI_IPM)
-            # cv2.waitKey(1)
+            #cv2.waitKey(1)
 
             end = time.time()
             if config.PRINT_EXEC_TIMES:
