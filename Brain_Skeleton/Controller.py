@@ -75,7 +75,7 @@ class Controller():
         self.flags_history.append(OD_info)
         self.flags_history = self.flags_history[-10:]
         for k in self.flags.keys():
-            self.flags[k] = (np.sum([1 if fl[k] is True else 0 for fl in self.flags_history]) > 5)
+            self.flags[k] = (np.sum([1 if fl[k] is True else 0 for fl in self.flags_history]) > 3)
 
     def setTheta(self, LD_info):
         self.thetas.append(LD_info["theta"])
