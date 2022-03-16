@@ -51,7 +51,7 @@ class Controller():
                 self.passed_horiz_line = False
                 self.setExecuted(crosswalk=True)
                 return [0, 0, 0, 0, 0, 1, 0]  # activate crosswalk flag
-            elif self.had_parking is True and self.flags["parking"] is False and not self.executed["parking"]:
+            elif self.had_parking is True and not self.flags["parking"] and not self.executed["parking"]:
                 self.setExecuted(parking=True)
                 print("Set had_parking to false")
                 self.had_parking = False
