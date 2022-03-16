@@ -114,8 +114,14 @@ class LaneDetectionThread(Thread):
         coefficient = [intercept_oY, slope]
         y1 = 0
         y2 = self.height_ROI
-        x1 = int((y1 - coefficient[0]) / coefficient[1])
-        x2 = int((y2 - coefficient[0]) / coefficient[1])
+        try:
+            x1 = int((y1 - coefficient[0]) / coefficient[1])
+        except OverflowError:
+            x1 = -10000
+        try:
+            x2 = int((y1 - coefficient[0]) / coefficient[1])
+        except OverflowError:
+            x2 = 10000
 
         # convert our estimated line from XoY in cv2 coordinate system
         y1_cv = x1

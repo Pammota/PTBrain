@@ -23,6 +23,7 @@ class BrainThread(Thread):
         super(BrainThread, self).__init__()
 
         self.num_frames = 0
+        self.last_intersection = 0
 
         # holds the threads managed by this object
         self.threads = []
@@ -127,7 +128,8 @@ class BrainThread(Thread):
                 time.sleep(2)
                 grabbed, frame = self.camera.read()
                 grabbed, frame = self.camera.read()
-            elif action[ACTION_DIRECTION] != 0:
+            elif action[ACTION_DIRECTION] != 0 and not (self.num_frames - self.last_intersection > 10)\
+                    or self.last_intersection == 0:
                 self.intersection_maneuver_routine(action[ACTION_STOP], action[ACTION_RED], action[ACTION_DIRECTION])
                 if action[ACTION_RED] == 0:
                     grabbed, frame = self.camera.read()
@@ -182,7 +184,7 @@ class BrainThread(Thread):
             print("Executing a right maneuver")
         else:
             print("Executing a forward maneuver")
-
+        self.last_intersection = self.num_frames
         self.controller.ongoing_intersection = False
 
 
