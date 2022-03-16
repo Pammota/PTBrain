@@ -2,7 +2,8 @@ import numpy as np
 
 class Controller():
     def __init__(self):
-        self.flags = {}
+        self.flags =  {"forward": False, "forbidden": False, "parking": False, "sem_yellow": False, "sem_red": False,
+                 "sem_green": False, "priority": False, "crosswalk": False, "stop": False}
         self.flags_history = []
         self.state = "Lane Follow"
         self.directions = ["right", "left", "right", "forward", "left", "forward"]
