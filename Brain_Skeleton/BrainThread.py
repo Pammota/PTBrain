@@ -97,7 +97,6 @@ class BrainThread(Thread):
 
             ############### here takes place the processing of the info #############
 
-            print(lane_info["horiz_line"])
             self.controller.checkState(obj_info, lane_info)
             action = self.controller.takeAction()
 
