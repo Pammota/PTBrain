@@ -44,6 +44,7 @@ class Controller():
         print("HAD PARKING: {}".format(self.had_parking))
         if self.state == "Lane Follow":
             if self.flags["parking"] is True:
+                print("set had_parking to True")
                 self.had_parking = True
             elif self.flags["crosswalk"] and self.passed_horiz_line and not self.executed["crosswalk"]:
                 self.passed_horiz_line = False
@@ -51,6 +52,7 @@ class Controller():
                 return [0, 0, 0, 0, 0, 1, 0]  # activate crosswalk flag
             elif self.had_parking is True and self.flags["parking"] is False and not self.executed["parking"]:
                 self.setExecuted(parking=True)
+                print("Set had_parking to false")
                 self.had_parking = False
                 return [0, 0, 0, 0, 0, 0, 1]  #activate parking flag
             return [self.base_speed, self.theta, 0, 0, 0, 0, 0]
