@@ -132,8 +132,6 @@ class BrainThread(Thread):
                 else:
                     print("Sent command of SPEED: {}, ANGLE: {}".format(action[ACTION_SPEED], action[ACTION_ANGLE]))
 
-            grabbed, frame = self.camera.read()
-            grabbed, frame = self.camera.read()
             self.num_frames += 1
             end = time.time()
             if PRINT_EXEC_TIMES:
@@ -177,6 +175,9 @@ class BrainThread(Thread):
         else:
             print("Executing a forward maneuver")
 
+        grabbed, frame = self.camera.read()
+        grabbed, frame = self.camera.read()
+
         self.controller.ongoing_intersection = False
 
 
@@ -185,6 +186,9 @@ class BrainThread(Thread):
         self.hardcoded_move(0, 0, 10, 0.2)
         time.sleep(0.05)
         self.hardcoded_move(0, 20, 10, 0.1)
+
+        grabbed, frame = self.camera.read()
+        grabbed, frame = self.camera.read()
 
 
     def right_maneuver_routine(self):
@@ -217,6 +221,9 @@ class BrainThread(Thread):
         self.hardcoded_move(0, 46, 25, 0.02)
         time.sleep(0.02)
         self.hardcoded_move(0, 0, 10, 0.001)
+
+        grabbed, frame = self.camera.read()
+        grabbed, frame = self.camera.read()
 
 
     def hardcoded_move(self, theta, speed, r_ange, s_leep):
