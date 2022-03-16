@@ -9,7 +9,7 @@ class Controller():
         self.directions = ["right", "left", "right", "forward", "left", "forward"]
         self.dir_idx = 0
         self.had_parking = False
-        self.base_speed = 15
+        self.base_speed = 13
         self.theta = 0
         self.thetas = []
         self.passed_horiz_line = False
@@ -24,7 +24,7 @@ class Controller():
         self.passed_horiz_line = LD_info["horiz_line"]
 
         if self.state == "Lane Follow":
-            if self.passed_horiz_line or self.flags["stop"]:
+            if self.passed_horiz_line:
                 self.setExecuted(parking=False, crosswalk=False)
                 self.state = "Intersection"
                 self.ongoing_intersection = True
@@ -39,10 +39,14 @@ class Controller():
             if self.flags["parking"] is True:
                 self.had_parking = True
             else:
-                if self.flags["crosswalk"]: #and not self.executed["crosswalk"]:
+                if self.flags["crosswalk"] and not self.executed["crosswalk"]: #and not self.executed["crosswalk"]:
+                    print("CROSSWALK SPOTTED!!!!!")
+                    print("CROSSWALK SPOTTED!!!!!")
+                    print("CROSSWALK SPOTTED!!!!!")
+                    print("CROSSWALK SPOTTED!!!!!")
                     self.setExecuted(crosswalk=True)
                     return [0, 0, 0, 0, 0, 1, 0]  # activate crosswalk flag
-            if self.had_parking is True and self.flags["parking"] is False: #and not self.executed["parking"]:
+            if self.had_parking is True and self.flags["parking"] is False and not self.executed["parking"]: #and not self.executed["parking"]:
                 self.setExecuted(parking=True)
                 self.had_parking = False
                 return [0, 0, 0, 0, 0, 0, 1]  #activate parking flag
@@ -50,6 +54,10 @@ class Controller():
 
         if self.state == "Intersection":
             if self.flags["stop"] is True:
+                print("STOP SIGN IN INTERSECTION SPOTTED!!!")
+                print("STOP SIGN IN INTERSECTION SPOTTED!!!")
+                print("STOP SIGN IN INTERSECTION SPOTTED!!!")
+                print("STOP SIGN IN INTERSECTION SPOTTED!!!")
                 self.ongoing_intersection = False
                 return [0, 0, 1, 0, self.directions[self.dir_idx], 0, 0]
             else:

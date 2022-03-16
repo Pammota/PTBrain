@@ -234,7 +234,7 @@ class LaneDetectionThread(Thread):
         cv2.line(frame_ROI_IPM, (margin_y_left_IPM, self.x_cv_IPM_horizontal_ROI), (margin_y_right_IPM, self.x_cv_IPM_horizontal_ROI), (123, 22, 23), 2)
 
         # filter horizontal lines which do not belong to our region
-        filtered_horizontal_lines = []
+        # filtered_horizontal_lines = []
         sum = 0
         margin_error = 50
         for line in horizontal_lines:
@@ -248,11 +248,11 @@ class LaneDetectionThread(Thread):
                 x_top_cv_h_line = x2_cv
             if x_top_cv_h_line > self.x_cv_IPM_horizontal_ROI:
                 if y1_cv >= margin_y_left_IPM - margin_error and y2_cv <= margin_y_right_IPM + margin_error:
-                    filtered_horizontal_lines.append(line)
+                    # filtered_horizontal_lines.append(line)
                     self.draw_line(line_IPM, (255,255,0), frame_ROI_IPM)
-                    sum += math.sqrt((y2_cv - y1_cv) * 2 + (x2_cv - x1_cv) * 2)
+                    sum += math.sqrt((y2_cv - y1_cv) ** 2 + (x2_cv - x1_cv) ** 2)
 
-        # print("Sum = {}".format(sum))
+        print("Sum = {}".format(sum))
         return sum
 
 
@@ -335,30 +335,34 @@ class LaneDetectionThread(Thread):
             start = time.time()
 
             frame_ROI = frame[self.x_cv_ROI:, :]
-            # frame_ROI_IPM = cv2.warpPerspective(frame_ROI, self.H, (self.width_ROI_IPM, self.height_ROI_IPM), flags=cv2.INTER_NEAREST)
+            frame_ROI_IPM = cv2.warpPerspective(frame_ROI, self.H, (self.width_ROI_IPM, self.height_ROI_IPM), flags=cv2.INTER_NEAREST)
 
             try:
-                theta, found_horizontal_line = self.get_theta(frame_ROI, frame_ROI_IPM=None)
-            except ValueError:
+                theta, found_horizontal_line = self.get_theta(frame_ROI, frame_ROI_IPM=frame_ROI_IPM)
+            except TypeError:
                 theta, found_horizontal_line = -10000, False
             if theta != - 10000:    # no line found
                 theta_average = round(theta * 0.6 + theta_average * 0.4)
             #print("theta = {}".format(theta_average))
             # print("time: {}".format(time.time() - start))
 
+
+            theta_average = (theta_average // 4) * 4
+
             cv2.putText(img=frame_ROI, text=str(theta_average), org=(350, 200), fontFace=cv2.FONT_HERSHEY_TRIPLEX, fontScale=1,
                         color=(0, 255, 0), thickness=3)
 
             # cv2.imshow("Frame", frame)
             #cv2.imshow("ROI", frame_ROI)
-            # cv2.imshow("IPM", frame_ROI_IPM)
-            #cv2.waitKey(1)
+            cv2.imshow("IPM", frame_ROI_IPM)
+            cv2.waitKey(1)
 
             end = time.time()
             if config.PRINT_EXEC_TIMES:
                 print("Lane detection time: {}".format(end - start))
 
             ######### here the lane detection ends ###########
+
 
             lane_info = {"theta": -theta_average, "horiz_line": found_horizontal_line}
 

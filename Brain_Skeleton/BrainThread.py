@@ -30,8 +30,6 @@ class BrainThread(Thread):
         self.cameraSpoof = cameraSpoof
         self.camera = cv2.VideoCapture(0 if cameraSpoof is None else cameraSpoof)
 
-        self.baseSpeed = 20
-
         self.show_vid = show_vid
         self.show_lane = show_lane
         self.stop_car = stop_car
@@ -42,6 +40,8 @@ class BrainThread(Thread):
         self.inP_obj = None
         self.outP_com = None
         self.inP_com = None
+        self.outP_brain_lane = None
+        self.outP_brain_obj = None
 
         #  creates a controller object to control the car
         self.controller = Controller()
@@ -58,6 +58,10 @@ class BrainThread(Thread):
         # self.parking_maneuver()
         # self.stop_car = True
         # self.hardcoded_move(0, 0, 10, 0.001)
+
+        idx = 0
+        obj_info = {"forward": False, "forbidden": False, "parking": False, "sem_yellow": False, "sem_red": False,
+                 "sem_green": False, "priority": False, "crosswalk": False, "stop": False}
         while not self.stop_car:
 
             loop_start_time = time.time()
@@ -66,8 +70,11 @@ class BrainThread(Thread):
 
             # sends the image through the pipe if it exists
             if grabbed is True:
-                for outP in self.outPs:
-                    outP.send(frame)
+                """for outP in self.outPs:
+                    outP.send(frame)"""
+                self.outP_brain_lane.send(frame)
+                if idx % 2 == 0:
+                    self.outP_brain_obj.send(frame)
             else:
                 break
 
@@ -80,16 +87,17 @@ class BrainThread(Thread):
                 print("Grabbed lane detection info after {}".format(current_time - loop_start_time))
                 print("Lane detection pipe delay {}".format(current_time - time_start))
 
-            time_start, obj_info = self.inP_obj.recv()
-            current_time = time.time()
+            if idx % 2 == 1:
+                time_start, obj_info = self.inP_obj.recv()
+                current_time = time.time()
 
-            if PRINT_EXEC_TIMES:
-                print("Grabbed object detection info after {}".format(current_time - loop_start_time))
-                print("Object detection pipe delay {}".format(current_time - time_start))
+                if PRINT_EXEC_TIMES:
+                    print("Grabbed object detection info after {}".format(current_time - loop_start_time))
+                    print("Object detection pipe delay {}".format(current_time - time_start))
 
             ############### here takes place the processing of the info #############
 
-            lane_info = {"theta": 0, "horiz_line": False}
+            print(lane_info["horiz_line"])
             self.controller.checkState(obj_info, lane_info)
             action = self.controller.takeAction()
 
@@ -100,11 +108,10 @@ class BrainThread(Thread):
                 else:
                     time.sleep(2)
             elif action[ACTION_PARKING] != 0:
-                if self.cameraSpoof is None:
-                    self.parking_maneuver()
-                    print("Performing parking routine.BRB")
-                else:
-                    time.sleep(2)
+                """if self.cameraSpoof is None:
+                    self.parking_maneuver()"""
+                print("Performing parking routine.BRB")
+                time.sleep(2)
             elif action[ACTION_DIRECTION] != 0:
                 self.intersection_maneuver_routine(action[ACTION_STOP], action[ACTION_RED], action[ACTION_DIRECTION])
             else:
@@ -115,6 +122,7 @@ class BrainThread(Thread):
                 else:
                     print("Sent command of SPEED: {}, ANGLE: {}".format(action[ACTION_SPEED], action[ACTION_ANGLE]))
 
+            idx += 1
             end = time.time()
             if PRINT_EXEC_TIMES:
                 print("Ended brain loop after {}".format(end - loop_start_time))
@@ -134,7 +142,7 @@ class BrainThread(Thread):
 
 
     def intersection_maneuver_routine(self, stop=False, sem_red=False, direction="forward"):
-        if stop is True:
+        if stop == 1:
             if self.cameraSpoof is None:
                 theta_command = Controller.getAngleCommand(0)
                 speed_command = Controller.getSpeedCommand(0)
@@ -142,7 +150,7 @@ class BrainThread(Thread):
             print("Stopped at the STOP sign at intersection.BRB")
             time.sleep(2)
 
-        if sem_red is True:
+        if sem_red == 1:
             if self.cameraSpoof is None:
                 theta_command = Controller.getAngleCommand(0)
                 speed_command = Controller.getSpeedCommand(0)
@@ -253,13 +261,13 @@ class BrainThread(Thread):
         #self.outP_img, inP_img = Pipe()  # out will be sent from BrainThread (here),
                                    # in will be recieved in ImageProcessingThread
 
-        outP_brain_lane, inP_brain_lane = Pipe()  # out will be sent from BrainThread
+        self.outP_brain_lane, inP_brain_lane = Pipe()  # out will be sent from BrainThread
                                                      # in will be recieved in LaneDetectionThread
 
-        outP_brain_obj, inP_brain_obj = Pipe()  # out will be sent from BrainThread
+        self.outP_brain_obj, inP_brain_obj = Pipe()  # out will be sent from BrainThread
                                                    # in will be recieved in ObjectDetectionThread
 
-        self.outPs = [outP_brain_obj, outP_brain_lane]
+        #self.outPs = [outP_brain_obj, outP_brain_lane]
 
         outP_lane, self.inP_lane = Pipe()  # out will be sent from LaneDetectionThread
                                      # in will be recieved in BrainThread (here)
