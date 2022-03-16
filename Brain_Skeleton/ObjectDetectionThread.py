@@ -87,7 +87,7 @@ class ObjectDetectionThread(Thread):
         output_frame = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
         output_frame = cv2.resize(output_frame, (640, 480))
         # cv2.imshow("image", output_frame)
-        cv2.waitKey(1)
+        #cv2.waitKey(1)
 
         return flags
 

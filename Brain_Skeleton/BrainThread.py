@@ -117,13 +117,21 @@ class BrainThread(Thread):
                     print("Performing crosswalk routine.BRB")
                 else:
                     time.sleep(2)
+
+                grabbed, frame = self.camera.read()
+                grabbed, frame = self.camera.read()
             elif action[ACTION_PARKING] != 0:
                 if self.cameraSpoof is None:
                     self.parking_maneuver()
                 print("Performing parking routine.BRB")
                 time.sleep(2)
+                grabbed, frame = self.camera.read()
+                grabbed, frame = self.camera.read()
             elif action[ACTION_DIRECTION] != 0:
                 self.intersection_maneuver_routine(action[ACTION_STOP], action[ACTION_RED], action[ACTION_DIRECTION])
+                if action[ACTION_RED] == 0:
+                    grabbed, frame = self.camera.read()
+                    grabbed, frame = self.camera.read()
             else:
                 theta_command = Controller.getAngleCommand(action[ACTION_ANGLE])
                 speed_command = Controller.getSpeedCommand(action[ACTION_SPEED])
@@ -175,9 +183,6 @@ class BrainThread(Thread):
         else:
             print("Executing a forward maneuver")
 
-        grabbed, frame = self.camera.read()
-        grabbed, frame = self.camera.read()
-
         self.controller.ongoing_intersection = False
 
 
@@ -186,9 +191,6 @@ class BrainThread(Thread):
         self.hardcoded_move(0, 0, 10, 0.2)
         time.sleep(0.05)
         self.hardcoded_move(0, 20, 10, 0.1)
-
-        grabbed, frame = self.camera.read()
-        grabbed, frame = self.camera.read()
 
 
     def right_maneuver_routine(self):
@@ -221,9 +223,6 @@ class BrainThread(Thread):
         self.hardcoded_move(0, 46, 25, 0.02)
         time.sleep(0.02)
         self.hardcoded_move(0, 0, 10, 0.001)
-
-        grabbed, frame = self.camera.read()
-        grabbed, frame = self.camera.read()
 
 
     def hardcoded_move(self, theta, speed, r_ange, s_leep):

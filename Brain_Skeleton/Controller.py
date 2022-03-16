@@ -22,7 +22,7 @@ class Controller():
         self.passed_horiz_line = LD_info["horiz_line"]
 
         if self.state == "Lane Follow":
-            if self.passed_horiz_line:
+            if self.passed_horiz_line and not self.flags["crosswalk"]:
                 if self.dir_idx > len(self.directions):
                     self.state = "Terminate"
                 else:
