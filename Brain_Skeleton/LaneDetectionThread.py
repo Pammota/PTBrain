@@ -47,8 +47,8 @@ class LaneDetectionThread(Thread):
 
     def preprocess(self, frame_ROI):  # preprocessing phase of our pipeline
         frame_ROI_gray = cv2.cvtColor(frame_ROI, cv2.COLOR_BGR2GRAY)
-        # frame_ROI_blurred = cv2.GaussianBlur(frame_ROI_gray, (11, 11), 0)
-        frame_ROI_preprocessed = cv2.Canny(frame_ROI_gray, 30, 255)
+        frame_ROI_blurred = cv2.GaussianBlur(frame_ROI_gray, (7, 7), 0)
+        frame_ROI_preprocessed = cv2.Canny(frame_ROI_blurred, 180, 255)
         return frame_ROI_preprocessed
 
 
@@ -319,7 +319,7 @@ class LaneDetectionThread(Thread):
         else:
             theta = -10000
         found_horizontal_line = False
-        if sum_h > 200:
+        if sum_h > 500:
             found_horizontal_line = True
         return theta, found_horizontal_line
 
