@@ -27,7 +27,7 @@ class ObjectDetectionThread(Thread):
 
         self.traffic_light_classifier_tflite = None
         self.object_detector_tflite = None
-        self.stabilizer = ObjectStabilizer(3, 0.5)
+        self.stabilizer = ObjectStabilizer(5, 0.5)
 
         self.init_models()
 
