@@ -12,7 +12,7 @@ class ReadThread(Thread):
         devFile = '/dev/ttyACM1'
 
         # comm init
-        self.serialCom = serial.Serial(devFile, 9600, timeout=0.01)
+        self.serialCom = serial.Serial(devFile, 9600)
         self.serialCom.flushInput()
         self.serialCom.flushOutput()
 
