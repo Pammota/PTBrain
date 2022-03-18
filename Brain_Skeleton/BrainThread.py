@@ -194,7 +194,7 @@ class BrainThread(Thread):
         time.sleep(0.05)
         self.hardcoded_move(22.9, 17, 210, 0.025)
         time.sleep(0.05)
-        self.hardcoded_move(0, 13, 10, 0.001)
+        self.hardcoded_move(0, 13, 1, 0.001)
 
 
     def left_maneuver_routine(self):
@@ -212,13 +212,13 @@ class BrainThread(Thread):
         time.sleep(0.02)
         self.hardcoded_move(-22.9, -46, 65, 0.02)
         time.sleep(0.02)
-        self.hardcoded_move(-22.9, 0, 20, 0.001)
+        self.hardcoded_move(-22.9, 0, 1, 0.001)
         time.sleep(2)
         self.hardcoded_move(-22.9, 46, 40, 0.02)
         self.hardcoded_move(22.9, 46, 42, 0.02)
         self.hardcoded_move(0, 46, 25, 0.02)
         time.sleep(0.02)
-        self.hardcoded_move(0, 13, 5, 0.001)
+        self.hardcoded_move(0, 13, 1, 0.001)
         # self.hardcoded_move(0, 0, 10, 0.001)
 
 
@@ -228,6 +228,9 @@ class BrainThread(Thread):
         speed_command = Controller.getSpeedCommand(speed)
         for index in range(r_ange):
             self.outP_com.send((theta_command, speed_command))
+            grabbed, image = self.camera.read()
+            cv2.imshow("image", image)
+            cv2.waitKey(1)
             time.sleep(s_leep)
 
 
