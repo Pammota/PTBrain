@@ -9,7 +9,7 @@ class ReadThread(Thread):
 
         super(ReadThread, self).__init__()
 
-        devFile = '/dev/ttyAMA0'
+        devFile = '/dev/ttyACM0'
 
         # comm init
         self.serialCom = serial.Serial(devFile, 256000, timeout=0.003)
