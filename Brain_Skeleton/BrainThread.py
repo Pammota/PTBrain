@@ -176,6 +176,7 @@ class BrainThread(Thread):
                 self.right_maneuver_routine()
             print("Executing a right maneuver")
         else:
+            self.forward_maneuver()
             print("Executing a forward maneuver")
 
         self.last_intersection = self.num_frames
@@ -204,7 +205,6 @@ class BrainThread(Thread):
         time.sleep(0.025)
         #self.hardcoded_move(0, 13, 3, 0.04)
 
-
     def parking_maneuver(self):
         print("Executing parking routine")
         self.hardcoded_move(0, -20, 10, 0.02)
@@ -221,6 +221,8 @@ class BrainThread(Thread):
         self.hardcoded_move(0, 13, 1, 0.001)
         # self.hardcoded_move(0, 0, 10, 0.001)
 
+    def forward_maneuver(self):
+        self.hardcoded_move(13, 0, 150, 0.02)
 
     def hardcoded_move(self, theta, speed, r_ange, s_leep):
         index = 0
