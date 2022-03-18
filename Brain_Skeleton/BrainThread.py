@@ -208,14 +208,14 @@ class BrainThread(Thread):
     def parking_maneuver(self):
         print("Executing parking routine")
         self.hardcoded_move(0, -20, 10, 0.02)
-        self.hardcoded_move(22.9, -20, 57, 0.02)
+        self.hardcoded_move(22.9, -20, 80, 0.02)
         time.sleep(0.02)
-        self.hardcoded_move(-22.9, -20, 65, 0.02)
+        self.hardcoded_move(-22.9, -20, 70, 0.02)
         time.sleep(0.02)
         self.hardcoded_move(-22.9, 0, 1, 0.001)
         time.sleep(2)
-        self.hardcoded_move(-22.9, 20, 40, 0.02)
-        self.hardcoded_move(22.9, 20, 42, 0.02)
+        self.hardcoded_move(-22.9, 20, 75, 0.02)
+        self.hardcoded_move(22.9, 20, 70, 0.02)
         self.hardcoded_move(0, 20, 25, 0.02)
         time.sleep(0.02)
         self.hardcoded_move(0, 13, 1, 0.001)
@@ -228,7 +228,8 @@ class BrainThread(Thread):
         speed_command = Controller.getSpeedCommand(speed)
         if r_ange > 200:
             r_ange -= 30
-        s_leep -= 0.01
+        if s_leep > 0.011:
+            s_leep -= 0.01
         for index in range(r_ange):
             self.outP_com.send((theta_command, speed_command))
             grabbed, image = self.camera.read()
