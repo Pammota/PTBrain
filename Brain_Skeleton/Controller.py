@@ -22,7 +22,7 @@ class Controller():
 
         self.executed = {"parking": False, "crosswalk": False}
 
-    def checkState(self, OD_info, LD_info, DSFront_info):
+    def checkState(self, OD_info, LD_info, DSFront_info=100):
         self.timer_crt = time.time()
 
         self.setFlags(OD_info)

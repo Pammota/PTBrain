@@ -59,11 +59,11 @@ class BrainThread(Thread):
         self._init_threads()
 
         # initializes the distance sensor
-        devFile = '/dev/ttyACM1'
+        """devFile = '/dev/ttyACM1'
 
         self.serialCom = serial.Serial(devFile, 9600)
         self.serialCom.flushInput()
-        self.serialCom.flushOutput()
+        self.serialCom.flushOutput()"""
 
 
     def run(self):
@@ -114,9 +114,9 @@ class BrainThread(Thread):
 
             ############### here takes place the processing of the info #############
 
-            DSFront_info = self.get_distance_info()
+            #DSFront_info = self.get_distance_info()
 
-            self.controller.checkState(obj_info, lane_info, DSFront_info)
+            self.controller.checkState(obj_info, lane_info)#, DSFront_info)
             action = self.controller.takeAction()
 
             if action is None:
