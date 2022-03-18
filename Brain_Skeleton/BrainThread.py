@@ -287,9 +287,11 @@ class BrainThread(Thread):
         rec_data += self.serialCom.read(data_left)
         print(rec_data)
 
-        rec_number = rec_data[rec_data.find(" "):rec_data.rfind(" ")]
+        idxf = rec_data.index(rec_data.find(": "))
+
+        rec_number = int(rec_data[idxf + 2:])
         print(rec_number)
-        return int(rec_number)
+        return rec_number
 
 
     def _init_threads(self):
