@@ -8,7 +8,6 @@ import numpy as np
 import tensorflow as tf
 import config
 from TFLiteModel import TFLiteModel
-import object_detection as od
 from ObjectStabilizer import ObjectStabilizer
 
 class ObjectDetectionThread(Thread):
