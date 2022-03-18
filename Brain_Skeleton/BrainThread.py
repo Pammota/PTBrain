@@ -226,6 +226,10 @@ class BrainThread(Thread):
         index = 0
         theta_command = Controller.getAngleCommand(theta)
         speed_command = Controller.getSpeedCommand(speed)
+        if r_ange > 200:
+            r_ange -= 30
+        else:
+            r_ange -= 5
         s_leep -= 0.01
         for index in range(r_ange):
             self.outP_com.send((theta_command, speed_command))
