@@ -16,7 +16,6 @@ class ReadThread(Thread):
         self.serialCom.flushInput()
         self.serialCom.flushOutput()
 
-        self.serialCom = self.serialCom
         self.is_active = True
 
     # ===================================== RUN ==========================================

@@ -6,6 +6,7 @@ from ObjectDetectionThread import ObjectDetectionThread
 from Controller import Controller
 from writethread import WriteThread
 from config import *
+import serial
 import time
 import cv2
 import numpy as np
@@ -57,6 +58,13 @@ class BrainThread(Thread):
         # creates and starts the threads managed by this object
         self._init_threads()
 
+        # initializes the distance sensor
+        devFile = '/dev/ttyACM1'
+
+        self.serialCom = serial.Serial(devFile, 9600)
+        self.serialCom.flushInput()
+        self.serialCom.flushOutput()
+
 
     def run(self):
 
@@ -106,7 +114,9 @@ class BrainThread(Thread):
 
             ############### here takes place the processing of the info #############
 
-            self.controller.checkState(obj_info, lane_info)
+            DSFront_info = self.get_distance_info()
+
+            self.controller.checkState(obj_info, lane_info, DSFront_info)
             action = self.controller.takeAction()
 
             if action is None:
@@ -270,6 +280,17 @@ class BrainThread(Thread):
 
         cv2.imshow("graph", canvas)
         cv2.waitKey(0)
+
+    def get_distance_info(self):
+        rec_data = self.serialCom.read(10)
+        data_left = self.serialCom.inWaiting()
+        rec_data += self.serialCom.read(data_left)
+        print(rec_data)
+
+        rec_number = rec_data[rec_data.find(" "):rec_data.rfind(" ")]
+        print(rec_number)
+        return int(rec_number)
+
 
     def _init_threads(self):
 
