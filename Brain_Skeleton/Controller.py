@@ -70,10 +70,6 @@ class Controller():
             if self.flags["parking"]:
                 print("set had_parking to True")
                 self.had_parking = True
-            # elif self.flags["crosswalk"] and self.passed_horiz_line and not self.executed["crosswalk"]:
-            #     self.passed_horiz_line = False
-            #     self.setExecuted(crosswalk=True)
-            #     return [0, 0, 0, 0, 0, 1, 0]  # activate crosswalk flag
             elif self.had_parking is True and not self.flags["parking"] and not self.executed["parking"]:
                 self.setExecuted(parking=True)
                 print("Set had_parking to false")
@@ -84,13 +80,13 @@ class Controller():
         if self.state == "Intersection":
             if self.flags["stop"]:
                 self.ongoing_intersection = False
-                return [0, 0, 1, 0, self.directions[self.dir_idx], 0, 0]
+                return [0, self.theta, 1, 0, self.directions[self.dir_idx], 0, 0]
             else:
                 if self.flags["sem_red"]:
-                    return [0, 0, 0, 1, self.directions[self.dir_idx], 0, 0]
+                    return [0, self.theta, 0, 1, self.directions[self.dir_idx], 0, 0]
                 else:
                     self.ongoing_intersection = False
-                    return [0, 0, 0, 0, self.directions[self.dir_idx], 0, 0]
+                    return [0, self.theta, 0, 0, self.directions[self.dir_idx], 0, 0]
 
         if self.state == "Crosswalk":
             if self.executed["crosswalk"]:

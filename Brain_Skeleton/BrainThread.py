@@ -146,7 +146,7 @@ class BrainThread(Thread):
                 time.sleep(2)
             elif action[ACTION_DIRECTION] != 0 and ((self.num_frames - self.last_intersection > 10)\
                     or self.last_intersection == 0):
-                self.intersection_maneuver_routine(action[ACTION_STOP], action[ACTION_RED], action[ACTION_DIRECTION])
+                self.intersection_maneuver_routine(action[ACTION_ANGLE], action[ACTION_STOP], action[ACTION_RED], action[ACTION_DIRECTION])
             else:
                 theta_command = Controller.getAngleCommand(action[ACTION_ANGLE])
                 speed_command = Controller.getSpeedCommand(action[ACTION_SPEED])
@@ -191,7 +191,7 @@ class BrainThread(Thread):
 
         raise InterruptedError
 
-    def intersection_maneuver_routine(self, stop=False, sem_red=False, direction="forward"):
+    def intersection_maneuver_routine(self, theta, stop=False, sem_red=False, direction="forward"):
         if stop == 1:
             if self.cameraSpoof is None:
                 theta_command = Controller.getAngleCommand(0)
@@ -217,7 +217,7 @@ class BrainThread(Thread):
                 self.right_maneuver_routine()
             print("Executing a right maneuver")
         else:
-            self.forward_maneuver()
+            self.forward_maneuver(theta)
             print("Executing a forward maneuver")
 
         self.last_intersection = self.num_frames
@@ -262,8 +262,9 @@ class BrainThread(Thread):
         self.hardcoded_move(0, 13, 1, 0.001)
         # self.hardcoded_move(0, 0, 10, 0.001)
 
-    def forward_maneuver(self):
-        self.hardcoded_move(0, 13, 300, 0.02)
+    def forward_maneuver(self, theta):
+        self.hardcoded_move(0, 13, 160, 0.02)
+        self.hardcoded_move(theta, 13, 160, 0.02)
 
     def hardcoded_move(self, theta, speed, r_ange, s_leep):
         index = 0
