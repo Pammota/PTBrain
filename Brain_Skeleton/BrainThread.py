@@ -158,8 +158,8 @@ class BrainThread(Thread):
                 cv2.putText(frame, label_text, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 0.55, label_color, 2)
 
             ############ draw lines from lane detection
-            # print(left_line)
-            # print(right_line)
+            print(left_line[0])
+            print(right_line[0])
             # print(road_line)
             if len(left_line) == 4:
                 y1, x1, y2, x2 = left_line
