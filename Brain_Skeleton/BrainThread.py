@@ -158,9 +158,6 @@ class BrainThread(Thread):
                 cv2.putText(frame, label_text, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 0.55, label_color, 2)
 
             ############ draw lines from lane detection
-            # print(left_line[0])
-            # print(right_line[0])
-            # print(road_line)
             if len(left_line) == 1:
                 self.draw_line(left_line[0], (0, 255, 0), frame)
             if len(right_line) == 1:
@@ -271,7 +268,7 @@ class BrainThread(Thread):
         for index in range(r_ange):
             self.outP_com.send((theta_command, speed_command))
             grabbed, image = self.camera.read()
-            cv2.imshow("image", image)
+            cv2.imshow("CAR POV", image)
             cv2.waitKey(1)
             time.sleep(s_leep)
 
