@@ -158,13 +158,14 @@ class BrainThread(Thread):
                 cv2.putText(frame, label_text, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 0.55, label_color, 2)
 
             ############ draw lines from lane detection
-            print(left_line)
-            print(right_line)
-            print(road_line)
+            # print(left_line)
+            # print(right_line)
+            # print(road_line)
             if len(left_line) == 4:
-                self.draw_line(left_line, (0, 255, 0), frame)
+                y1, x1, y2, x2 = left_line
+                self.draw_line(left_line[0], (0, 255, 0), frame)
             if len(right_line) == 4:
-                self.draw_line(right_line, (0, 255, 0), frame)
+                self.draw_line(right_line[0], (0, 255, 0), frame)
             if len(road_line) == 4:
                 self.draw_line(road_line, (255, 255, 255), frame)
 
