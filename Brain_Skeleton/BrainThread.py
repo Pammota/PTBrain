@@ -265,7 +265,7 @@ class BrainThread(Thread):
     def forward_maneuver(self, theta):
         print("Aici e theta din intersectie: " + str(theta))
         self.hardcoded_move(0, 13, 160, 0.02)
-        self.hardcoded_move(theta, 13, 160, 0.02)
+        self.hardcoded_move(theta + 3, 13, 160, 0.02)
 
     def hardcoded_move(self, theta, speed, r_ange, s_leep):
         index = 0
