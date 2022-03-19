@@ -85,11 +85,10 @@ class WriteThread(Thread):
             theta_command, speed_command = commands
 
             # Unpacking the dictionary into action and values
-            if theta_command["steerAngle"] != self.last_theta:
-                for i in range(5):
-                    self.last_theta = theta_command["steerAngle"]
-                    command_msg = self.messageConverter.get_command(**theta_command)
-                    self.serialCom.write(command_msg.encode('ascii'))
+            for i in range(5):
+                self.last_theta = theta_command["steerAngle"]
+                command_msg = self.messageConverter.get_command(**theta_command)
+                self.serialCom.write(command_msg.encode('ascii'))
             if speed_command["speed"] != self.last_speed:
                 for i in range(5):
                     self.last_theta = speed_command["speed"]
