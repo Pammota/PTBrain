@@ -61,7 +61,7 @@ class Controller():
                     if self.timer_crt - self.timer_start > 1:
                         self.pedestrian_present = False
                         self.timer_start = time.time()
-                elif self.timer_crt - self.timer_start > 1.5:
+                elif self.timer_crt - self.timer_start > 2:
                     self.state = "Lane Follow"
 
 
