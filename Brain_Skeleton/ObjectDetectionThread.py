@@ -59,6 +59,7 @@ class ObjectDetectionThread(Thread):
 
         flags = {"forward": False, "forbidden": False, "parking": False, "sem_yellow": False, "sem_red": False,
                  "sem_green": False, "priority": False, "crosswalk": False, "stop": False}
+        bboxes = []
 
         for idx in range(len(ids)):
             exists, box, label, score = self.stabilizer.get_object_data(ids[idx])
@@ -81,13 +82,14 @@ class ObjectDetectionThread(Thread):
                 cv2.putText(image, label_text, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 0.55, color, 2)
                 #if size_threshold_min(x1, x2, y1, y2, image.shape[0], image.shape[1]) is True:
                 flags[label_text] = True
+                bboxes.append((label, (x1, y1, x2, y2)))
 
-        output_frame = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+        """output_frame = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
         output_frame = cv2.resize(output_frame, (640, 480))
         cv2.imshow("image", output_frame)
-        cv2.waitKey(1)
+        cv2.waitKey(1)"""
 
-        return flags
+        return flags, bboxes
 
     def run(self):
 
@@ -101,16 +103,18 @@ class ObjectDetectionThread(Thread):
             ######### here takes place the object detection ###########
             flags = {"forward": False, "forbidden": False, "parking": False, "sem_yellow": False, "sem_red": False,
                      "sem_green": False, "priority": False, "crosswalk": False, "stop": False}
+            bboxes = []
 
             start = time.time()
 
             if config.RUN_MODE == "TFLITE":
                 try:
-                    flags = self.perform_object_detection(image)
+                    flags, bboxes = self.perform_object_detection(image)
                 except cv2.error:
                     print("cv2 error")
             if config.RUN_MODE == "NO_DETECTION":
                 flags = flags
+                bboxes = bboxes
 
             end = time.time()
             if config.PRINT_EXEC_TIMES:
@@ -118,15 +122,9 @@ class ObjectDetectionThread(Thread):
 
             ######### here the object detection ends ###########
 
-            self.outP_obj.send((end, flags))  # sends the results of the detection back
+            self.outP_obj.send((end, flags, bboxes))  # sends the results of the detection back
 
     def init_models(self):
-
-        ###################### keras - tensorflow models ######################################
-        if config.RUN_MODE == "NORMAL":
-            self.traffic_light_classifier = tf.keras.models.load_model("models/model_mobilenet_v3.h5")
-            self.object_detector = od.load_ssd_coco("mobilenet")
-            print("done?")
 
         ###################### tflite models (interpreters) ###################################
         if config.RUN_MODE == "TFLITE":

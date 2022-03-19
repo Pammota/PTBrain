@@ -76,6 +76,8 @@ class BrainThread(Thread):
 
         obj_info = {"forward": False, "forbidden": False, "parking": False, "sem_yellow": False, "sem_red": False,
                  "sem_green": False, "priority": False, "crosswalk": False, "stop": False}
+        bboxes = []
+
         while not self.stop_car:
             loop_start_time = time.time()
             # grabs an image from the camera (or from the video)
@@ -104,7 +106,7 @@ class BrainThread(Thread):
                 print("Lane detection pipe delay {}".format(current_time - time_start))
 
             if self.num_frames % 2 == 1:
-                time_start, obj_info = self.inP_obj.recv()
+                time_start, obj_info, bboxes = self.inP_obj.recv()
                 self.objectDetectionThread_working = False
                 current_time = time.time()
 
@@ -145,13 +147,25 @@ class BrainThread(Thread):
                 else:
                     print("Sent command of SPEED: {}, ANGLE: {}".format(action[ACTION_SPEED], action[ACTION_ANGLE]))
 
+            ############ draw bounding boxes of objects on the screen
+            for label, bbox in bboxes:
+                label_text = CLASSES[label]["LABEL"]
+                label_color = CLASSES[label]["COLOR"]
+
+                x1, y1, x2, y2 = bbox
+
+                cv2.rectangle(frame, (x1, y1), (x2, y2), label_color, 2)
+                cv2.putText(frame, label_text, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 0.55, label_color, 2)
+
+            cv2.imshow("CAR POV", frame)
+            cv2.waitKey(1)
+
             self.num_frames += 1
             end = time.time()
             if PRINT_EXEC_TIMES:
                 print("Ended brain loop after {}".format(end - loop_start_time))
             print("---------------------------------------------------------------------\n\n")
             ############### here processing of info ends ############
-
 
 
         """If we want to stop the threads, we exit from the Brain thread, flush pipes, 
