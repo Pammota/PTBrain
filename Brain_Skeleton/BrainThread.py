@@ -77,6 +77,7 @@ class BrainThread(Thread):
         obj_info = {"forward": False, "forbidden": False, "parking": False, "sem_yellow": False, "sem_red": False,
                  "sem_green": False, "priority": False, "crosswalk": False, "stop": False}
         bboxes = []
+        DSFront_info = 0
 
         while not self.stop_car:
             loop_start_time = time.time()
@@ -120,9 +121,12 @@ class BrainThread(Thread):
 
             ############### here takes place the processing of the info #############
 
-            DSFront_info = self.get_distance_info()
 
             self.controller.checkState(obj_info, lane_info, DSFront_info)
+
+            if self.controller.state == "Crosswalk":
+                DSFront_info = self.get_distance_info()
+
             action = self.controller.takeAction()
 
             if action is None:
@@ -230,7 +234,7 @@ class BrainThread(Thread):
     def right_maneuver_routine(self):
         self.hardcoded_move(0, 17, 10, 0.04)
         time.sleep(0.05)
-        self.hardcoded_move(22.9, 17, 210, 0.025)
+        self.hardcoded_move(22.9, 17, 200, 0.025)
         time.sleep(0.05)
         self.hardcoded_move(0, 13, 1, 0.001)
 
@@ -238,12 +242,12 @@ class BrainThread(Thread):
     def left_maneuver_routine(self):
         self.hardcoded_move(0, 23, 5, 0.05)
         time.sleep(0.05)
-        self.hardcoded_move(-16, 17, 290, 0.025)
+        self.hardcoded_move(-16, 17, 285, 0.025)
         time.sleep(0.025)
         #self.hardcoded_move(0, 13, 3, 0.04)
 
     def parking_maneuver(self):
-        print("Executing parking routine")
+        print("Executing parking maneuver")
         self.hardcoded_move(0, -20, 10, 0.02)
         self.hardcoded_move(22.9, -20, 87, 0.02)
         time.sleep(0.02)

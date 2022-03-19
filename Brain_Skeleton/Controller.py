@@ -50,9 +50,11 @@ class Controller():
             if not self.executed["crosswalk"]:
                 if self.timer_crt - self.timer_start > 3:
                     if self.front_distance > 40:
+                        print("Stopped at the crosswalk")
                         self.setExecuted(crosswalk=True)
                         self.timer_start = time.time()
                     else:
+                        print("A pedestrian is on the crosswalk!")
                         self.pedestrian_present = True
             else:
                 if self.pedestrian_present:
