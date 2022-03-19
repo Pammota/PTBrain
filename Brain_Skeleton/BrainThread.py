@@ -159,9 +159,9 @@ class BrainThread(Thread):
 
             ############ draw lines from lane detection
             if len(left_line) == 4:
-                self.draw_line(left_line, (0, 255, 0), frame)
+                self.draw_line(left_line, (255, 0, 0), frame)
             if len(right_line) == 4:
-                self.draw_line(right_line, (0, 255, 0), frame)
+                self.draw_line(right_line, (0, 0, 255), frame)
             if len(road_line) == 4:
                 self.draw_line(road_line, (255, 255, 255), frame)
 
@@ -391,6 +391,6 @@ class BrainThread(Thread):
         radius = 5
         color_left_most_point = (0, 255, 0)  # GREEN for left_most point
         color_right_most_point = (255, 0, 0)  # BLUE fpr right_most point
-        cv2.circle(image, (y1_cv, x1_cv), radius, color_left_most_point, 1)
-        cv2.circle(image, (y2_cv, x2_cv), radius, color_right_most_point, 1)
+        cv2.circle(image, (y1_cv, x1_cv), radius, color_left_most_point, 3)
+        cv2.circle(image, (y2_cv, x2_cv), radius, color_right_most_point, 3)
         cv2.line(image, (y1_cv, x1_cv), (y2_cv, x2_cv), color, 2)
