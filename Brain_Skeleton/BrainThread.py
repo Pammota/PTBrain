@@ -263,7 +263,7 @@ class BrainThread(Thread):
         # self.hardcoded_move(0, 0, 10, 0.001)
 
     def forward_maneuver(self):
-        self.hardcoded_move(0, 13, 210, 0.02)
+        self.hardcoded_move(0, 13, 300, 0.02)
 
     def hardcoded_move(self, theta, speed, r_ange, s_leep):
         index = 0
