@@ -191,19 +191,23 @@ class LaneDetectionThread(Thread):
             left_lines, right_lines, horizontal_lines = self.filter_lines(lines_candidate, frame_ROI, frame_ROI_IPM)
             if len(left_lines) != 0 and len(right_lines) != 0:
                 left_line = self.polyfit(left_lines, frame_ROI)
-                self.left_line = [left_line]
+                if left_line is not None:
+                    self.left_line = [left_line]
                 right_line = self.polyfit(right_lines, frame_ROI)
-                self.right_line = [right_line]
+                if right_line is not None:
+                    self.right_line = [right_line]
             else:
                 if len(left_lines) != 0:
                     left_line = self.polyfit(left_lines, frame_ROI)
-                    self.left_line = [left_line]
+                    if left_line is not None:
+                        self.left_line = [left_line]
                     right_line = None
                 else:
                     if len(right_lines) != 0:
                         left_line = None
                         right_line = self.polyfit(right_lines, frame_ROI)
-                        self.right_line = [right_line]
+                        if right_line is not None:
+                            self.right_line = [right_line]
                     else:
                         left_line = None
                         right_line = None
