@@ -52,7 +52,7 @@ class Controller():
         elif self.state == "Crosswalk":
             if not self.executed["crosswalk"]:
                 if self.timer_crt - self.timer_start > 3:
-                    if self.front_distance > 20:
+                    if self.front_distance > 40:
                         self.setExecuted(crosswalk=True)
                         self.timer_start = time.time()
             else:
