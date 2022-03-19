@@ -289,8 +289,13 @@ class BrainThread(Thread):
 
         rec_numbers = [int(s) for s in rec_data.split() if s.isdigit()]
 
-        print(rec_numbers[0])
-        return rec_numbers[0]
+        rec_number = 100
+        try:
+            rec_number = rec_numbers[0]
+        except IndexError:
+            rec_number = rec_number = 100
+        print(rec_number)
+        return rec_number
 
 
     def _init_threads(self):
