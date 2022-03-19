@@ -118,7 +118,7 @@ class BrainThread(Thread):
 
             #DSFront_info = self.get_distance_info()
 
-            self.controller.checkState(obj_info, lane_info, DSFront_info)
+            self.controller.checkState(obj_info, lane_info)#, DSFront_info)
             action = self.controller.takeAction()
 
             if action is None:
