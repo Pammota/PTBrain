@@ -19,6 +19,7 @@ class Controller():
         self.front_distance = 1000
         self.timer_start = 0
         self.timer_crt = 0
+        self.pedestrian_present = False
 
         self.executed = {"parking": False, "crosswalk": False}
 
@@ -29,10 +30,6 @@ class Controller():
         self.setTheta(LD_info)
         self.passed_horiz_line = LD_info["horiz_line"]
         self.front_distance = DSFront_info
-
-        #print("STATE: {}".format(self.state))
-        #print("HORIZ_LINE: {}".format(self.passed_horiz_line))
-        #print("PARKING: {}".format(OD_info["parking"]))
 
         if self.state == "Lane Follow":
             if self.passed_horiz_line and not self.flags["crosswalk"]:
@@ -55,8 +52,14 @@ class Controller():
                     if self.front_distance > 40:
                         self.setExecuted(crosswalk=True)
                         self.timer_start = time.time()
+                    else:
+                        self.pedestrian_present = True
             else:
-                if self.timer_crt - self.timer_start > 1.5:
+                if self.pedestrian_present:
+                    if self.timer_crt - self.timer_start > 1:
+                        self.pedestrian_present = False
+                        self.timer_start = time.time()
+                elif self.timer_crt - self.timer_start > 1.5:
                     self.state = "Lane Follow"
 
 
