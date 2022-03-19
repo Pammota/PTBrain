@@ -89,9 +89,13 @@ class BrainThread(Thread):
                     outP.send(frame)"""
                 self.laneDetectionThread_working = True
                 self.outP_brain_lane.send(frame)
+                if PRINT_EXEC_TIMES:
+                    print("Sent image to lane detection after {}".format(time.time() - loop_start_time))
                 if self.num_frames % 2 == 0:
                     self.objectDetectionThread_working = True
                     self.outP_brain_obj.send(frame)
+                    if PRINT_EXEC_TIMES:
+                        print("Sent image to object detection afer {}".format(time.time() - loop_start_time))
             else:
                 break
 
