@@ -194,7 +194,7 @@ class BrainThread(Thread):
                 speed_command = Controller.getSpeedCommand(0)
                 self.outP_com.send((theta_command, speed_command))
             print("Stopped at the STOP sign at intersection.BRB")
-            time.sleep(2)
+            time.sleep(3)
 
         if sem_red == 1:
             if self.cameraSpoof is None:
