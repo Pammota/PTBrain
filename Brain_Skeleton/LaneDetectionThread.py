@@ -18,6 +18,9 @@ class LaneDetectionThread(Thread):
         self.show_lane = show_lane
         self.writer = cv2.VideoWriter('PHT_Video.avi', cv2.VideoWriter_fourcc(*'DIVX'), 15, (640, 480))
         self.list_of_frames = []
+        self.left_line = []
+        self.right_line = []
+        self.road_line = []
 
         self.x_cv_ROI = 270
         self.height_ROI = 210   # 480(frame.height) - 270
@@ -175,15 +178,19 @@ class LaneDetectionThread(Thread):
             left_lines, right_lines, horizontal_lines = self.filter_lines(lines_candidate, frame_ROI, frame_ROI_IPM)
             if len(left_lines) != 0 and len(right_lines) != 0:
                 left_line = self.polyfit(left_lines, frame_ROI)
+                self.left_line = [left_line]
                 right_line = self.polyfit(right_lines, frame_ROI)
+                self.right_line = [right_line]
             else:
                 if len(left_lines) != 0:
                     left_line = self.polyfit(left_lines, frame_ROI)
+                    self.left_line = [left_line]
                     right_line = None
                 else:
                     if len(right_lines) != 0:
                         left_line = None
                         right_line = self.polyfit(right_lines, frame_ROI)
+                        self.right_line = [right_line]
                     else:
                         left_line = None
                         right_line = None
@@ -310,6 +317,7 @@ class LaneDetectionThread(Thread):
 
         if vp_exists:
             line_vp = self.get_inverse_line_IPM([y_cv_IPM_vp, x_cv_IPM_vp, int(self.width_ROI_IPM / 2 + self.offset_origin), self.height_ROI_IPM], frame_ROI)
+            self.road_line = line_vp[0]
             self.draw_line(line_vp, (255, 255, 255), frame_ROI)
             theta = round(math.degrees(math.atan((self.y_cv_IPM_center - y_cv_IPM_vp) / (self.height_ROI_IPM - x_cv_IPM_vp)))) // 1.5
             if theta > 23:
@@ -368,4 +376,9 @@ class LaneDetectionThread(Thread):
 
             lane_info = {"theta": -theta_average, "horiz_line": found_horizontal_line}
 
-            self.outP_lane.send((end, lane_info))   # sends the results of the detection back
+            self.outP_lane.send((end, lane_info, self.left_line, self.right_line, self.road_line))   # sends the results of the detection back
+
+            self.left_line = []
+            self.right_line = []
+            self.road_line = []
+
