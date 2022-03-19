@@ -289,11 +289,11 @@ class BrainThread(Thread):
 
         rec_numbers = [int(s) for s in rec_data.split() if s.isdigit()]
 
-        rec_number = 100
+        rec_number = 3
         try:
             rec_number = rec_numbers[0]
         except IndexError:
-            rec_number = rec_number = 100
+            rec_number = rec_number = 3
         print(rec_number)
         return rec_number
 
