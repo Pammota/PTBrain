@@ -143,17 +143,17 @@ class LaneDetectionThread(Thread):
         max_x_cv = 0
 
         for line in lines:
-            y1_cv, x1_cv, y2_cv, x2_cv = line[0]
-            if x1_cv < min_x_cv:
-                min_x_cv = x1_cv
-            if x2_cv < min_x_cv:
-                min_x_cv = x2_cv
-            if x1_cv > max_x_cv:
-                max_x_cv = x1_cv
-            if x2_cv > max_x_cv:
-                max_x_cv = x2_cv
-            if abs(max_x_cv - min_x_cv) < 110:
-                return None
+            # y1_cv, x1_cv, y2_cv, x2_cv = line[0]
+            # if x1_cv < min_x_cv:
+            #     min_x_cv = x1_cv
+            # if x2_cv < min_x_cv:
+            #     min_x_cv = x2_cv
+            # if x1_cv > max_x_cv:
+            #     max_x_cv = x1_cv
+            # if x2_cv > max_x_cv:
+            #     max_x_cv = x2_cv
+            # if abs(max_x_cv - min_x_cv) < 100:
+            #     return None
             x1, y1, x2, y2 = self.get_XoY_coordinates(line)
             x_points.append(x1)
             x_points.append(x2)
