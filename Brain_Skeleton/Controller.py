@@ -33,10 +33,10 @@ class Controller():
 
         if self.state == "Lane Follow":
             if self.passed_horiz_line and not self.flags["crosswalk"]:
-                if self.dir_idx > len(self.directions):
+                if self.dir_idx >= len(self.directions):
                     self.state = "Terminate"
                 else:
-                    self.setExecuted(parking=False, crosswalk=False)
+                    #self.setExecuted(parking=False, crosswalk=False)
                     self.state = "Intersection"
                     self.ongoing_intersection = True
             if self.passed_horiz_line and self.flags["crosswalk"] and not self.executed["crosswalk"]:
