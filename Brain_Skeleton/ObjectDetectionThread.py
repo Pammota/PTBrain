@@ -1,3 +1,4 @@
+import copy
 from threading import Thread, Event
 import time
 import random
@@ -101,7 +102,8 @@ class ObjectDetectionThread(Thread):
             if signal is False:
                 break
 
-            image = self.brain.get_crt_frame()
+            recvd = self.brain.get_crt_frame()
+            image = copy.deepcopy(recvd)
 
             ######### here takes place the object detection ###########
             flags = {"forward": False, "forbidden": False, "parking": False, "sem_yellow": False, "sem_red": False,

@@ -1,3 +1,4 @@
+import copy
 from threading import Thread
 import time
 import math
@@ -362,7 +363,8 @@ class LaneDetectionThread(Thread):
             if signal is False:
                 break
 
-            frame = self.brain.get_crt_frame()
+            recvd = self.brain.get_crt_frame()
+            frame = copy.deepcopy(recvd)
 
             start = time.time()
 
