@@ -6,7 +6,7 @@ import numpy as np
 import cv2
 
 class LaneDetectionThread(Thread):
-    def __init__(self, inP_img, outP_lane, show_lane=False):
+    def __init__(self, inP_img, outP_lane, brain, show_lane=False):
         """
 
         :param inP_img: receives a preprocessed image from a pipe
@@ -34,6 +34,8 @@ class LaneDetectionThread(Thread):
         self.width_ROI_IPM = 547
         self.y_cv_IPM_center = int(self.width_ROI_IPM / 2 + self.offset_origin)
         self.x_cv_IPM_horizontal_ROI = 10
+
+        self.brain = brain
         ''' ================================================================================================================================ '''
 
 
@@ -355,10 +357,12 @@ class LaneDetectionThread(Thread):
         while True:
 
             # waits for the preprocessed image and gets it
-            frame = self.inP_img.recv()
+            signal = self.inP_img.recv()
 
-            if frame is None:
+            if signal is False:
                 break
+
+            frame = self.brain.get_crt_frame()
 
             start = time.time()
 

@@ -11,7 +11,7 @@ from TFLiteModel import TFLiteModel
 from ObjectStabilizer import ObjectStabilizer
 
 class ObjectDetectionThread(Thread):
-    def __init__(self, inP_img, outP_obj):
+    def __init__(self, inP_img, outP_obj, brain):
         """
 
         :param inP_img: receives the preprocessed image through a pipe
@@ -20,6 +20,7 @@ class ObjectDetectionThread(Thread):
         super(ObjectDetectionThread, self).__init__()
         self.inP_img = inP_img
         self.outP_obj = outP_obj
+        self.brain = brain
 
         self.object_detector = None
         self.traffic_light_classifier = None
@@ -96,9 +97,11 @@ class ObjectDetectionThread(Thread):
         while True:
 
             # waits for the preprocessed image and gets it
-            image = self.inP_img.recv()
-            if image is None:
+            signal = self.inP_img.recv()
+            if signal is False:
                 break
+
+            image = self.brain.get_crt_frame()
 
             ######### here takes place the object detection ###########
             flags = {"forward": False, "forbidden": False, "parking": False, "sem_yellow": False, "sem_red": False,

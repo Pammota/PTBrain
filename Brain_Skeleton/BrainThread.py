@@ -23,6 +23,7 @@ class BrainThread(Thread):
         """
         super(BrainThread, self).__init__()
 
+        self.frame = None
         self.num_frames = 0
         self.last_intersection = 0
 
@@ -82,19 +83,19 @@ class BrainThread(Thread):
         while not self.stop_car:
             loop_start_time = time.time()
             # grabs an image from the camera (or from the video)
-            grabbed, frame = self.camera.read()
+            grabbed, self.frame = self.camera.read()
 
             # sends the image through the pipe if it exists
             if grabbed is True:
                 """for outP in self.outPs:
                     outP.send(frame)"""
                 self.laneDetectionThread_working = True
-                self.outP_brain_lane.send(frame)
+                self.outP_brain_lane.send(True)
                 if PRINT_EXEC_TIMES:
                     print("Sent image to lane detection after {}".format(time.time() - loop_start_time))
                 if self.num_frames % 2 == 0:
                     self.objectDetectionThread_working = True
-                    self.outP_brain_obj.send(frame)
+                    self.outP_brain_obj.send(True)
                     if PRINT_EXEC_TIMES:
                         print("Sent image to object detection afer {}".format(time.time() - loop_start_time))
             else:
@@ -334,6 +335,8 @@ class BrainThread(Thread):
         print(rec_number)
         return rec_number
 
+    def get_crt_frame(self):
+        return self.frame
 
     def _init_threads(self):
 
@@ -365,8 +368,8 @@ class BrainThread(Thread):
 
         # adds threads
         #self.threads.append(ImageProcessingThread(inP_img, [outP_imgProc_lane, outP_imgProc_obj]))
-        self.threads.append(LaneDetectionThread(inP_brain_lane, outP_lane, show_lane=self.show_lane))
-        self.threads.append(ObjectDetectionThread(inP_brain_obj, outP_obj))
+        self.threads.append(LaneDetectionThread(inP_brain_lane, outP_lane, self, show_lane=self.show_lane))
+        self.threads.append(ObjectDetectionThread(inP_brain_obj, outP_obj, self))
         if self.cameraSpoof is None:
             self.threads.append(WriteThread(self.inP_com, zero_theta_command, zero_speed_command))
 
