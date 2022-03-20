@@ -84,6 +84,7 @@ class BrainThread(Thread):
             loop_start_time = time.time()
             # grabs an image from the camera (or from the video)
             grabbed, self.frame = self.camera.read()
+            frame = self.frame
 
             # sends the image through the pipe if it exists
             if grabbed is True:
