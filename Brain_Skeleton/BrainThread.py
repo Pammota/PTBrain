@@ -222,18 +222,20 @@ class BrainThread(Thread):
             if self.cameraSpoof is None:
                 self.right_maneuver_routine()
             print("Executing a right maneuver")
-        else:
+        elif direction == "forward":
             self.forward_maneuver(theta)
             print("Executing a forward maneuver")
+        else:
+            self.crosswalk_maneuver_routine()
 
         self.last_intersection = self.num_frames
         self.controller.ongoing_intersection = False
 
 
     def crosswalk_maneuver_routine(self):
-        print("Executing Crosswalk routine")
+        print("Finished track")
         self.hardcoded_move(0, 0, 10, 0.2)
-        time.sleep(0.05)
+        time.sleep(5)
         self.hardcoded_move(0, 20, 10, 0.1)
 
 
