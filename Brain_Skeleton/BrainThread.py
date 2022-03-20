@@ -172,6 +172,9 @@ class BrainThread(Thread):
                 self.draw_line(right_line[0], (0, 0, 255), frame)
             if len(road_line) == 4:
                 self.draw_line(road_line, (255, 255, 255), frame)
+            cv2.putText(img=frame, text=str(lane_info["theta"]), org=(350, 200), fontFace=cv2.FONT_HERSHEY_TRIPLEX,
+                        fontScale=1,
+                        color=(0, 255, 0), thickness=3)
 
 
             cv2.imshow("CAR POV", frame)
