@@ -102,7 +102,7 @@ class Controller():
             if k == "crosswalk":
                 self.flags[k] = (np.sum([1 if fl[k] is True else 0 for fl in self.flags_history]) > 1)
             elif k == "stop":
-                self.flags[k] = (np.sum([1 if fl[k] is True else 0 for fl in self.flags_history[-20]]) > 4)
+                self.flags[k] = (np.sum([1 if fl[k] is True else 0 for fl in self.flags_history[-20:]]) > 4)
             else:
                 self.flags[k] = (np.sum([1 if fl[k] is True else 0 for fl in self.flags_history[-10:]]) > 3)
 
