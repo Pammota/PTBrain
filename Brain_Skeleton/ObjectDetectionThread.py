@@ -44,9 +44,9 @@ class ObjectDetectionThread(Thread):
         # boxes, labels, scores, num_predictions = prediction0
         #print(labels)
 
-        last_idx = 0
-        while scores[0][last_idx] > config.DETECTION_SCORE_THRESHOLD and last_idx < num_predictions[0] - 1:  # config.DETECTION_SCORE_THRESHOLD:
-            last_idx += 1
+        last_idx = 5
+        """while scores[0][last_idx] > config.DETECTION_SCORE_THRESHOLD and last_idx < num_predictions[0] - 1:  # config.DETECTION_SCORE_THRESHOLD:
+            last_idx += 1"""
         scores = scores[0][:last_idx]
         boxes = [[int(y1 * image.shape[1]), int(x1 * image.shape[0]),
                   int(y2 * image.shape[1]), int(x2 * image.shape[0])]
@@ -78,6 +78,9 @@ class ObjectDetectionThread(Thread):
 
             label_text = config.CLASSES[label]["LABEL"]
             color = config.CLASSES[label]["COLOR"]
+
+            if label_text != "Crosswalk" and score < config.DETECTION_SCORE_THRESHOLD*100:
+                continue
 
             if color and label_text and size_threshold_max(x1, x2, y1, y2, image.shape[0], image.shape[1]) is True:# and accept_box(boxes, box, 5.0):
                 cv2.rectangle(image, (x1, y1), (x2, y2), color, 2)
