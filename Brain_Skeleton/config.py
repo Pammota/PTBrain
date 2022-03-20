@@ -10,15 +10,15 @@ RUN_MODE = "TFLITE"
 PRINT_EXEC_TIMES = True
 
 CLASSES = {
-    1: {"LABEL": "forward", "COLOR": (0, 0, 255)},
-    2: {"LABEL": "forbidden", "COLOR": (255, 0, 0)},
-    3: {"LABEL": "parking", "COLOR": (0, 0, 255)},
-    4: {"LABEL": "sem_yellow", "COLOR": (255, 0, 0)},
-    5: {"LABEL": "sem_red", "COLOR": (255, 0, 0)},
+    1: {"LABEL": "forward", "COLOR": (255, 0, 0)},
+    2: {"LABEL": "forbidden", "COLOR": (0, 0, 255)},
+    3: {"LABEL": "parking", "COLOR": (255, 0, 0)},
+    4: {"LABEL": "sem_yellow", "COLOR": (0, 0, 255)},
+    5: {"LABEL": "sem_red", "COLOR": (0, 0, 255)},
     6: {"LABEL": "sem_green", "COLOR": (0, 255, 0)},
     7: {"LABEL": "priority", "COLOR": (0, 255, 0)},
-    8: {"LABEL": "crosswalk", "COLOR": (0, 0, 255)},
-    9: {"LABEL": "stop", "COLOR": (255, 0, 0)}
+    8: {"LABEL": "crosswalk", "COLOR": (255, 0, 0)},
+    9: {"LABEL": "stop", "COLOR": (0, 0, 255)}
 }
 
 DETECTION_SCORE_THRESHOLD = 0.1
