@@ -174,7 +174,7 @@ class BrainThread(Thread):
             self.thetas.append(abs(lane_info['theta']))
             self.loop_times.append(end - loop_start_time)
 
-            print("---------------------------------------------------------------------\n\n")
+            #print("---------------------------------------------------------------------\n\n")
             ############### here processing of info ends ############
 
 
