@@ -1,12 +1,12 @@
 import copy
 from threading import Thread
 import time
-from Brain_Skeleton.ObjectDetectionUtils.helpers import *
+from Brain_Skeleton.helpers import *
 import cv2
 import numpy as np
 import config
-from Brain_Skeleton.ObjectDetectionUtils.TFLiteModel import TFLiteModel
-from Brain_Skeleton.ObjectDetectionUtils.ObjectStabilizer import ObjectStabilizer
+from Brain_Skeleton.TFLiteModel import TFLiteModel
+from Brain_Skeleton.ObjectStabilizer import ObjectStabilizer
 
 class ObjectDetectionThread(Thread):
     def __init__(self, inP_img, outP_obj, brain):

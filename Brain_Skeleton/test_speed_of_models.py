@@ -1,4 +1,4 @@
-from Brain_Skeleton.ObjectDetectionUtils.TFLiteModel import TFLiteModel
+from Brain_Skeleton.TFLiteModel import TFLiteModel
 from imutils.paths import list_images
 import config
 import time

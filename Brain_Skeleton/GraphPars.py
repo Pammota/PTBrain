@@ -6,7 +6,7 @@ import sys
 from queue import Queue
 import matplotlib
 import networkx as nx
-sys.path.append("../../")
+sys.path.append("../")
 
 class GraphPars():
     def __init__(self):

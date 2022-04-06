@@ -1,5 +1,5 @@
 import numpy as np
-import Brain_Skeleton.config
+import config
 
 def size_threshold_max(x1, x2, y1, y2, w, h):
     if (x2 - x1) > w * 0.35 or (y2 - y1) > h * 0.35:
