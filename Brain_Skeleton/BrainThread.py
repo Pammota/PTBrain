@@ -163,6 +163,10 @@ class BrainThread(Thread):
             end = time.time()
             if PRINT_EXEC_TIMES:
                 print("Ended brain loop after {}".format(end - loop_start_time))
+            print("Theta: {}".format(lane_info['theta']))
+            print("Brain loop time: {}".format(end - loop_start_time))
+            """if lane_info['theta'] != 0:
+                print("AngleMagnitude/Time ratio: {}".format((end - loop_start_time)*100 / lane_info['theta']))"""
             print("---------------------------------------------------------------------\n\n")
             ############### here processing of info ends ############
 
@@ -171,7 +175,7 @@ class BrainThread(Thread):
             and send through them a "stop" signal, which would make them break out
             of the infinite loops"""
 
-        raise InterruptedError
+        self.terminate()
 
     def intersection_maneuver_routine(self, theta, stop=False, sem_red=False, direction="forward"):
         if stop == 1:
