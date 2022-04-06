@@ -1,10 +1,10 @@
 import copy
 from threading import Thread
 from multiprocessing import Pipe
-from Brain_Skeleton.LaneDetectionThread import LaneDetectionThread
-from Brain_Skeleton.ObjectDetectionThread import ObjectDetectionThread
+from LaneDetectionThread import LaneDetectionThread
+from ObjectDetectionThread import ObjectDetectionThread
 from Controller import Controller
-from Brain_Skeleton.writethread import WriteThread
+from writethread import WriteThread
 from config import *
 import serial
 import time
