@@ -1,15 +1,12 @@
 import copy
-from threading import Thread, Event
+from threading import Thread
 import time
-import random
-import os
-from helpers import *
+from Brain_Skeleton.ObjectDetectionUtils.helpers import *
 import cv2
 import numpy as np
-import tensorflow as tf
 import config
-from TFLiteModel import TFLiteModel
-from ObjectStabilizer import ObjectStabilizer
+from Brain_Skeleton.ObjectDetectionUtils.TFLiteModel import TFLiteModel
+from Brain_Skeleton.ObjectDetectionUtils.ObjectStabilizer import ObjectStabilizer
 
 class ObjectDetectionThread(Thread):
     def __init__(self, inP_img, outP_obj, brain):
@@ -83,7 +80,7 @@ class ObjectDetectionThread(Thread):
                 continue
 
             if color and label_text and size_threshold_max(x1, x2, y1, y2, image.shape[0], image.shape[1]) is True \
-                                    and size_threshold_max(x1, x2, y1, y2, image.shape[0], image.shape[1]) is True:# and accept_box(boxes, box, 5.0):
+                                    and size_threshold_min(x1, x2, y1, y2, image.shape[0], image.shape[1]) is True:# and accept_box(boxes, box, 5.0):
                 cv2.rectangle(image, (x1, y1), (x2, y2), color, 2)
                 cv2.putText(image, label_text, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 0.55, color, 2)
                 #if size_threshold_min(x1, x2, y1, y2, image.shape[0], image.shape[1]) is True:
@@ -141,5 +138,5 @@ class ObjectDetectionThread(Thread):
                                                          input_shape=config.CLASSIFIER_INPUT_SHAPE,
                                                          quantized_input=True, quantized_output=True)"""
             self.object_detector_tflite = TFLiteModel("models/mobilenet_cs_bfmc_bodo_32bsize_edgetpu.tflite",
-                                                       input_shape=config.DETECTOR_INPUT_SHAPE,
-                                                       quantized_input=False, quantized_output=False)
+                                                      input_shape=config.DETECTOR_INPUT_SHAPE,
+                                                      quantized_input=False, quantized_output=False)

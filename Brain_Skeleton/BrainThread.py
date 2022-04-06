@@ -1,18 +1,16 @@
 import copy
 from threading import Thread
 from multiprocessing import Pipe
-from ImageProcessingThread import ImageProcessingThread
-from LaneDetectionThread import LaneDetectionThread
-from ObjectDetectionThread import ObjectDetectionThread
+from Brain_Skeleton.LaneDetectionThread import LaneDetectionThread
+from Brain_Skeleton.ObjectDetectionThread import ObjectDetectionThread
 from Controller import Controller
-from writethread import WriteThread
+from Brain_Skeleton.IOUtils.writethread import WriteThread
 from config import *
 import serial
 import time
 import cv2
 import numpy as np
-import json
-import os
+
 
 class BrainThread(Thread):
     def __init__(self, cameraSpoof=None, show_vid=False, show_lane=False, stop_car=False):
@@ -89,17 +87,17 @@ class BrainThread(Thread):
 
             # sends the image through the pipe if it exists
             if grabbed is True:
-                """for outP in self.outPs:
-                    outP.send(frame)"""
-                self.laneDetectionThread_working = True
-                self.outP_brain_lane.send(True)
-                if PRINT_EXEC_TIMES:
-                    print("Sent image to lane detection after {}".format(time.time() - loop_start_time))
+
                 if self.num_frames % 2 == 0:
                     self.objectDetectionThread_working = True
                     self.outP_brain_obj.send(True)
                     if PRINT_EXEC_TIMES:
                         print("Sent image to object detection afer {}".format(time.time() - loop_start_time))
+
+                self.laneDetectionThread_working = True
+                self.outP_brain_lane.send(True)
+                if PRINT_EXEC_TIMES:
+                    print("Sent image to lane detection after {}".format(time.time() - loop_start_time))
             else:
                 break
 
@@ -124,13 +122,14 @@ class BrainThread(Thread):
 
             ############### here takes place the processing of the info #############
 
-
             self.controller.checkState(obj_info, lane_info, DSFront_info)
 
             if self.controller.state == "Crosswalk":
                 DSFront_info = self.get_distance_info()
 
             action = self.controller.takeAction()
+
+            self.show_image(frame, bboxes, lane_info, left_line, right_line, road_line)
 
             if action is None:
                 break
@@ -145,8 +144,9 @@ class BrainThread(Thread):
             elif action[ACTION_PARKING] != 0:
                 if self.cameraSpoof is None:
                     self.parking_maneuver()
+                else:
+                    time.sleep(2)
                 print("Performing parking routine.BRB")
-                time.sleep(2)
             elif action[ACTION_DIRECTION] != 0 and ((self.num_frames - self.last_intersection > 10)\
                     or self.last_intersection == 0):
                 self.intersection_maneuver_routine(action[ACTION_ANGLE], action[ACTION_STOP], action[ACTION_RED], action[ACTION_DIRECTION])
@@ -158,30 +158,6 @@ class BrainThread(Thread):
                 else:
                     print("Sent command of SPEED: {}, ANGLE: {}".format(action[ACTION_SPEED], action[ACTION_ANGLE]))
 
-            ############ draw bounding boxes of objects on the screen
-            for label, bbox in bboxes:
-                label_text = CLASSES[label]["LABEL"]
-                label_color = CLASSES[label]["COLOR"]
-
-                x1, y1, x2, y2 = bbox
-
-                cv2.rectangle(frame, (x1, y1), (x2, y2), label_color, 2)
-                cv2.putText(frame, label_text, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 0.55, label_color, 2)
-
-            ############ draw lines from lane detection
-            if len(left_line) == 1:
-                self.draw_line(left_line[0], (255, 0, 0), frame)
-            if len(right_line) == 1:
-                self.draw_line(right_line[0], (0, 0, 255), frame)
-            if len(road_line) == 4:
-                self.draw_line(road_line, (255, 255, 255), frame)
-            cv2.putText(img=frame, text=str(lane_info["theta"]), org=(350, 200), fontFace=cv2.FONT_HERSHEY_TRIPLEX,
-                        fontScale=1,
-                        color=(0, 255, 0), thickness=3)
-
-
-            cv2.imshow("CAR POV", frame)
-            cv2.waitKey(1)
 
             self.num_frames += 1
             end = time.time()
@@ -335,7 +311,7 @@ class BrainThread(Thread):
         try:
             rec_number = rec_numbers[0]
         except IndexError:
-            rec_number = rec_number = 3
+            rec_number = 3
         print(rec_number)
         return rec_number
 
@@ -415,3 +391,28 @@ class BrainThread(Thread):
         cv2.circle(image, (y1_cv, x1_cv), radius, color_left_most_point, 1)
         cv2.circle(image, (y2_cv, x2_cv), radius, color_right_most_point, 1)
         cv2.line(image, (y1_cv, x1_cv), (y2_cv, x2_cv), color, 4)
+
+    def show_image(self, frame, bboxes, lane_info, left_line, right_line, road_line):
+        ############ draw bounding boxes of objects on the screen
+        for label, bbox in bboxes:
+            label_text = CLASSES[label]["LABEL"]
+            label_color = CLASSES[label]["COLOR"]
+
+            x1, y1, x2, y2 = bbox
+
+            cv2.rectangle(frame, (x1, y1), (x2, y2), label_color, 2)
+            cv2.putText(frame, label_text, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 0.55, label_color, 2)
+
+        ############ draw lines from lane detection
+        if len(left_line) == 1:
+            self.draw_line(left_line[0], (255, 0, 0), frame)
+        if len(right_line) == 1:
+            self.draw_line(right_line[0], (0, 0, 255), frame)
+        if len(road_line) == 4:
+            self.draw_line(road_line, (255, 255, 255), frame)
+        cv2.putText(img=frame, text=str(lane_info["theta"]), org=(350, 200), fontFace=cv2.FONT_HERSHEY_TRIPLEX,
+                    fontScale=1,
+                    color=(0, 255, 0), thickness=3)
+
+        cv2.imshow("CAR POV", frame)
+        cv2.waitKey(1)
