@@ -5,7 +5,6 @@ from LaneDetectionThread import LaneDetectionThread
 from ObjectDetectionThread import ObjectDetectionThread
 from Controller import Controller
 from writethread import WriteThread
-import matplotlib.pyplot as plt
 from config import *
 import serial
 import time
@@ -369,19 +368,8 @@ class BrainThread(Thread):
         for thread in self.threads:
             thread.start()
 
-    def plot_thetas_times(self):
-        figure, axis = plt.subplots(2, 1)
-        axis[0, 0].plot(self.times[0::2], self.thetas[0::2])
-        axis[0, 0].plot(self.times[0::2], self.loop_times[0::2])
-
-        axis[1, 0].plot(self.times[1::2], self.thetas[1::2])
-        axis[1, 0].plot(self.times[1::2], self.loop_times[1::2])
-
-        plt.plot()
 
     def terminate(self):
-
-        self.plot_thetas_times()
 
         theta_command = Controller.getAngleCommand(0)
         speed_command = Controller.getSpeedCommand(0)
