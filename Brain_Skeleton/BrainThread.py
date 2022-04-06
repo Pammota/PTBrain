@@ -5,6 +5,7 @@ from LaneDetectionThread import LaneDetectionThread
 from ObjectDetectionThread import ObjectDetectionThread
 from Controller import Controller
 from writethread import WriteThread
+import matplotlib.pyplot as plt
 from config import *
 import serial
 import time
@@ -21,6 +22,10 @@ class BrainThread(Thread):
                             default - None
         """
         super(BrainThread, self).__init__()
+
+        self.times = []
+        self.thetas = []
+        self.loop_times = []
 
         self.frame = None
         self.num_frames = 0
@@ -78,6 +83,8 @@ class BrainThread(Thread):
                  "sem_green": False, "priority": False, "crosswalk": False, "stop": False}
         bboxes = []
         DSFront_info = 0
+
+        start = time.time()
 
         while not self.stop_car:
             loop_start_time = time.time()
@@ -163,10 +170,11 @@ class BrainThread(Thread):
             end = time.time()
             if PRINT_EXEC_TIMES:
                 print("Ended brain loop after {}".format(end - loop_start_time))
-            print("Theta: {}".format(lane_info['theta']))
-            print("Brain loop time: {}".format(end - loop_start_time))
-            """if lane_info['theta'] != 0:
-                print("AngleMagnitude/Time ratio: {}".format((end - loop_start_time)*100 / lane_info['theta']))"""
+
+            self.times.append(end - start)
+            self.thetas.append(abs(lane_info['theta']))
+            self.loop_times.append(end - loop_start_time)
+
             print("---------------------------------------------------------------------\n\n")
             ############### here processing of info ends ############
 
@@ -361,7 +369,20 @@ class BrainThread(Thread):
         for thread in self.threads:
             thread.start()
 
+    def plot_thetas_times(self):
+        figure, axis = plt.subplots(2, 1)
+        axis[0, 0].plot(self.times[0::2], self.thetas[0::2])
+        axis[0, 0].plot(self.times[0::2], self.loop_times[0::2])
+
+        axis[1, 0].plot(self.times[1::2], self.thetas[1::2])
+        axis[1, 0].plot(self.times[1::2], self.loop_times[1::2])
+
+        plt.plot()
+
     def terminate(self):
+
+        self.plot_thetas_times()
+
         theta_command = Controller.getAngleCommand(0)
         speed_command = Controller.getSpeedCommand(0)
 

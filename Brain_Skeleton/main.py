@@ -31,11 +31,7 @@ blocker = Event()
 
 try:
     blocker.wait()
-except KeyboardInterrupt:
-    brain.terminate()
-except InterruptedError:
-    brain.terminate()
-except:
+finally:
     brain.terminate()
 
 print("Exitted")
