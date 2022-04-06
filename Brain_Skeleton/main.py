@@ -28,7 +28,7 @@ else:
     else:
         brain = BrainThread(cameraSpoof=args['path_to_vid'], stop_car=args['stop_car'])
 brain.start()
-imu.start()
+imuthread.start()
 
 blocker = Event()
 
