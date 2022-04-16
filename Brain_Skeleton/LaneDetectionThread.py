@@ -28,6 +28,10 @@ class LaneDetectionThread(Thread):
         self.right_lane = None
         self.road_lane = None
 
+        ''' Info about previous detected road lanes'''
+        self.previous_left_lane = []
+        self.previous_right_lane = []
+
         self.utils = Utils()
 
         ''' Info about frame'''
