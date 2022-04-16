@@ -417,11 +417,11 @@ class BrainThread(Thread):
             cv2.putText(frame, label_text, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 0.55, label_color, 2)
 
         ############ draw lines from lane detection
-        if len(left_line) == 1:
-            self.draw_line(left_line[0], (255, 0, 0), frame)
-        if len(right_line) == 1:
-            self.draw_line(right_line[0], (0, 0, 255), frame)
-        if len(road_line) == 4:
+        if left_line is not None:
+            self.draw_line(left_line, (255, 0, 0), frame)
+        if right_line is not None:
+            self.draw_line(right_line, (0, 0, 255), frame)
+        if road_line is not None:
             self.draw_line(road_line, (255, 255, 255), frame)
         cv2.putText(img=frame, text=str(lane_info["theta"]), org=(350, 200), fontFace=cv2.FONT_HERSHEY_TRIPLEX,
                     fontScale=1,
