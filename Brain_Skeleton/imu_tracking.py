@@ -50,6 +50,8 @@ class IMU_tracking(Thread):
             vy = vy + (a_x_y + a_y_y) * dt
             self.v = math.sqrt(vx ** 2 + vy ** 2)
 
+            print(self.x, self.y)
+
             self.inner_map.update_map(self.x, self.y, yaw)
             image = self.inner_map.get_map()
             cv2.imshow("map", image)

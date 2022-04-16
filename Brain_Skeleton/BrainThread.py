@@ -170,12 +170,13 @@ class BrainThread(Thread):
             end = time.time()
             if PRINT_EXEC_TIMES:
                 print("Ended brain loop after {}".format(end - loop_start_time))
+                print("---------------------------------------------------------------------\n\n")
 
             self.times.append(end - start)
             self.thetas.append(abs(lane_info['theta']))
             self.loop_times.append(end - loop_start_time)
 
-            print("---------------------------------------------------------------------\n\n")
+
             ############### here processing of info ends ############
 
 
