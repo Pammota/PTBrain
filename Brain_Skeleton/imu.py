@@ -83,5 +83,7 @@ class imu(threading.Thread):
                 print("accelx = %f, accely = %f, accelz = %f"%(true_accelx, true_accely, true_accelz))
                 time.sleep(self.poll_interval*1.0/100.0)
 
+
+
     def stop(self): 
         self.running = False
