@@ -78,7 +78,7 @@ class imu(threading.Thread):
                 #print("accelx = %f, accely = %f accelz = %f" %(self.accelx, self.accely, self.accelz))
 
                 true_accelx = self.accelx + math.sin(math.radians(self.pitch))
-                true_accely = self.accely + math.sin(math.radians(self.roll))
+                true_accely = self.accely + math.cos(math.radians(self.roll))
                 true_accelz = self.accelz - math.sin(math.radians(self.pitch)) - math.sin(math.radians(self.roll))
                 print("accelx = %f, accely = %f, accelz = %f"%(true_accelx, true_accely, true_accelz))
                 time.sleep(self.poll_interval*1.0/100.0)
