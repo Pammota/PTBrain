@@ -77,7 +77,7 @@ class imu(threading.Thread):
 
                 #print("accelx = %f, accely = %f accelz = %f" %(self.accelx, self.accely, self.accelz))
 
-                print("accelx = %f, roll = %f"%(self.accelx, self.roll))
+                print("accelx = %f, pitch = %f"%(self.accelx, self.pitch))
                 time.sleep(self.poll_interval*1.0/100.0)
 
     def stop(self): 
