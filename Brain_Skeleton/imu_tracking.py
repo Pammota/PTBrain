@@ -32,6 +32,9 @@ class IMU_tracking(Thread):
             self.a_x, self.a_y, yaw = self.imu.get_data()
             self.theta = math.radians(yaw)
 
+            self.a_x *= 9.87
+            self.a_y *= 9.87
+
             # get projections on axis
             a_x_x = self.a_x * math.cos(self.theta)
             a_x_y = self.a_x * math.sin(self.theta)
@@ -51,8 +54,8 @@ class IMU_tracking(Thread):
             vy = vy + (a_x_y + a_y_y) * dt
             self.v = math.sqrt(vx ** 2 + vy ** 2)
 
-            print(self.a_x, self.a_y)
-            print(self.x, self.y)
+            print("accelx = {}, accely = {}".format(self.a_x, self.a_y))
+            print("x = {}, y = {}".format(self.x, self.y))
 
             self.inner_map.update_map(self.x, self.y, yaw)
             image = self.inner_map.get_map()
