@@ -28,7 +28,7 @@ class IMU_tracking(Thread):
         dt = 0
         while True:
 
-            a_x, a_y, yaw = self.imu.get_data()
+            self.a_x, self.a_y, yaw = self.imu.get_data()
             self.theta = math.radians(yaw)
 
             # get projections on axis
@@ -38,8 +38,8 @@ class IMU_tracking(Thread):
             a_y_x = self.a_y * math.sin(self.theta + math.pi)
             a_y_y = self.a_y * math.cos(self.theta + math.pi)
 
-            vx = self.v * math.cos(theta)
-            vy = self.v * math.sin(theta)
+            vx = self.v * math.cos(self.theta)
+            vy = self.v * math.sin(self.theta)
 
             # update coordinates
             self.x = self.x + vx * dt + (a_x_x + a_y_x) * (dt ** 2) / 2
