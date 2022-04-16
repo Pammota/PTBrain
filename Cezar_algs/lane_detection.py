@@ -1,34 +1,14 @@
-import copy
-from threading import Thread
 import time
-import math
-import config
-import numpy as np
-import cv2
-from utils import *
+from Brain_Skeleton.utils import *
 
-class LaneDetectionThread(Thread):
-    def __init__(self, inP_img, outP_lane, brain, show_lane=False):
-        """
+class LaneDetection:
 
-        :param inP_img: receives a preprocessed image from a pipe
-        :param outP_lane: outputs the result of the detection through the pipe
-        """
-        super(LaneDetectionThread, self).__init__()
-        self.inP_img = inP_img
-        self.outP_lane = outP_lane
-        self.show_lane = show_lane
-        self.writer = cv2.VideoWriter('PHT_Video.avi', cv2.VideoWriter_fourcc(*'DIVX'), 15, (640, 480))
-        self.list_of_frames = []
-
-        self.left_lines = []
-        self.right_lines = []
-        self.horizontal_lines = []
-        self.left_lane = None
-        self.right_lane = None
-        self.road_lane = None
-
+    def __init__(self):
+        self.cap = cv2.VideoCapture(0)
         self.utils = Utils()
+        ''' Info about previous detected road lanes'''
+        self.previous_left_lane = []
+        self.previous_right_lane = []
 
         ''' Info about frame'''
         self.width = 640
@@ -55,8 +35,13 @@ class LaneDetectionThread(Thread):
         self.y_heading_car_cv = self.width_ROI_IPM // 2 + self.offset_origin
         self.width_road_IPM = 310
 
-        self.brain = brain
-        ''' ================================================================================================================================ '''
+        ''' store lines for drawing in brain '''
+        self.left_lines = []
+        self.right_lines = []
+        self.horizontal_lines = []
+        self.left_lane = None
+        self.right_lane = None
+        self.road_lane = None
 
     def filter_lines(self, lines_candidate, frame_ROI, frame_ROI_IPM=None):
         left_lines = []
@@ -269,22 +254,15 @@ class LaneDetectionThread(Thread):
         return theta, offset, intersection
 
     def run(self):
-        theta_prev = 0
-        offset_prev = 0
+        ret, frame = self.cap.read()
+
+        theta_prev = None
+        offset_prev = None
 
         while True:
-
-            # waits for the preprocessed image and gets it
-            signal = self.inP_img.recv()
-
-            if signal is False:
-                break
-
-            recvd = self.brain.get_crt_frame()
-            frame = copy.deepcopy(recvd)
-
             start = time.time()
 
+            # select our ROI
             frame_ROI = frame[self.x_cv_ROI:, :]
             # frame_ROI_IPM = cv2.warpPerspective(frame_ROI, self.H, (self.width_ROI_IPM, self.height_ROI_IPM),
             #                                     flags=cv2.INTER_NEAREST)
@@ -301,17 +279,17 @@ class LaneDetectionThread(Thread):
 
             print("INTERSECTION = {}".format(intersection))
 
-            theta_prev = (theta_prev // 3) * 3
-
+            # cv2.imshow("Frame", frame)
+            # cv2.imshow("IPM", frame_ROI_IPM)
+            cv2.imshow("ROI", frame_ROI)
+            cv2.waitKey(1)
 
             end = time.time()
-            if config.PRINT_EXEC_TIMES:
-                print("Lane detection time: {}".format(end - start))
+            print("TIME = {}".format(end - start))
+            print("---------------------------------------------------------")
 
-            ######### here the lane detection ends ###########
-
-            lane_info = {"theta": -theta_prev, "offset": offset_prev, "horiz_line": intersection}
-
-            self.outP_lane.send((end, lane_info, self.left_lane, self.right_lane, self.road_lane))   # sends the results of the detection back
+            _, frame = self.cap.read()
 
 
+LD = LaneDetection()
+LD.run()
