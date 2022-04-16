@@ -152,6 +152,7 @@ class LaneDetectionThread(Thread):
         return None, None
 
     def optimized_intersection_detection(self, frame_ROI, left_lane, right_lane, frame_ROI_IPM=None):
+
         return None
 
     def get_offset_theta(self, frame_ROI, left_lane=None, right_lane=None, frame_ROI_IPM=None):
