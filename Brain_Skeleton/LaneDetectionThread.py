@@ -202,8 +202,13 @@ class LaneDetectionThread(Thread):
             # cv2.line(frame_ROI, (y1_cv, x1_cv), (y2_cv, x2_cv), (255, 255, 255), 3)
 
             # print("{}, {}, {}, {}".format(y_heading_road_cv, self.y_heading_car_cv, x_heading_road_cv, self.height_ROI_IPM))
+
+            centroid_road = [(y_heading_road_cv + y_bottom_road_cv) / 2, (x_heading_road_cv + x_bottom_road_cv) / 2]
+
+            # theta = math.degrees(
+            #     math.atan((y_heading_road_cv - self.y_heading_car_cv) / (x_heading_road_cv - self.height_ROI_IPM)))
             theta = math.degrees(
-                math.atan((y_heading_road_cv - self.y_heading_car_cv) / (x_heading_road_cv - self.height_ROI_IPM)))
+                math.atan((centroid_road[0] - self.y_heading_car_cv) / (centroid_road[1] - self.height_ROI_IPM)))
 
             # offset
             # print("{}, {}".format(y_bottom_road_cv, y_heading_road_cv))
