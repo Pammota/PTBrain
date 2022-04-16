@@ -1,6 +1,13 @@
 import math
+import time
 
-class IMU_tracking:
+import cv2
+
+from imu import imu
+from Map import Map
+from threading import Thread
+
+class IMU_tracking(Thread):
 
     def __init__(self):
         self.x = 0
@@ -12,13 +19,15 @@ class IMU_tracking:
         self.a_y = 0
 
         self.theta = 0
+        self.inner_map = Map()
+        self.imu = imu()
 
     def run(self):
 
+        dt = 0
         while True:
 
-            # get a_x, a_y, theta from IMU
-
+            a_x, a_y, theta = self.imu.get_data()
 
             # get projections on axis
             a_x_x = self.a_x * math.cos(self.theta)
@@ -39,6 +48,9 @@ class IMU_tracking:
             vy = vy + (a_x_y + a_y_y) * dt
             self.v = math.sqrt(vx ** 2, vy ** 2)
 
+            self.inner_map.update_map(self.x, self.y, self.theta)
+            image = self.inner_map.get_map()
+            cv2.imshow("map", image)
 
-
-
+            time.sleep(0.01)
+            dt = 0.01

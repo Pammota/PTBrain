@@ -23,8 +23,8 @@ class Map:
             return self.physical_map
 
     def update_map(self, x, y, yaw):
-        x = int(x/self.px_per_m)
-        y = int(y/self.px_per_m)
+        x = int(x*self.px_per_m)
+        y = int(y*self.px_per_m)
 
         x = max(0, x)
         x = min(x, self.h)
@@ -34,6 +34,9 @@ class Map:
 
         self.physical_map = cv2.line(self.physical_map, (self.prev_x, self.prev_y), (x, y),
                                      (255, 255, 255), 2)
+
+        self.prev_x = x
+        self.prev_y = y
 
         self.orientation_visualization = np.zeros((340, 200))
 
