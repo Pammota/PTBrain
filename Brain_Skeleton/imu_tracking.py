@@ -22,6 +22,7 @@ class IMU_tracking(Thread):
         self.theta = 0
         self.inner_map = Map()
         self.imu = imu()
+        self.imu.start()
 
     def run(self):
 
