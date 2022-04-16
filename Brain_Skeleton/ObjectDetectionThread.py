@@ -1,17 +1,15 @@
-from threading import Thread, Event
+import copy
+from threading import Thread
 import time
-import random
-import os
 from helpers import *
 import cv2
 import numpy as np
-import tensorflow as tf
 import config
 from TFLiteModel import TFLiteModel
 from ObjectStabilizer import ObjectStabilizer
 
 class ObjectDetectionThread(Thread):
-    def __init__(self, inP_img, outP_obj):
+    def __init__(self, inP_img, outP_obj, brain):
         """
 
         :param inP_img: receives the preprocessed image through a pipe
@@ -20,6 +18,7 @@ class ObjectDetectionThread(Thread):
         super(ObjectDetectionThread, self).__init__()
         self.inP_img = inP_img
         self.outP_obj = outP_obj
+        self.brain = brain
 
         self.object_detector = None
         self.traffic_light_classifier = None
@@ -42,9 +41,9 @@ class ObjectDetectionThread(Thread):
         # boxes, labels, scores, num_predictions = prediction0
         #print(labels)
 
-        last_idx = 0
-        while scores[0][last_idx] > config.DETECTION_SCORE_THRESHOLD and last_idx < num_predictions[0] - 1:  # config.DETECTION_SCORE_THRESHOLD:
-            last_idx += 1
+        last_idx = 5
+        """while scores[0][last_idx] > config.DETECTION_SCORE_THRESHOLD and last_idx < num_predictions[0] - 1:  # config.DETECTION_SCORE_THRESHOLD:
+            last_idx += 1"""
         scores = scores[0][:last_idx]
         boxes = [[int(y1 * image.shape[1]), int(x1 * image.shape[0]),
                   int(y2 * image.shape[1]), int(x2 * image.shape[0])]
@@ -77,7 +76,11 @@ class ObjectDetectionThread(Thread):
             label_text = config.CLASSES[label]["LABEL"]
             color = config.CLASSES[label]["COLOR"]
 
-            if color and label_text and size_threshold_max(x1, x2, y1, y2, image.shape[0], image.shape[1]) is True:# and accept_box(boxes, box, 5.0):
+            if label_text != "Crosswalk" and score < config.DETECTION_SCORE_THRESHOLD*100:
+                continue
+
+            if color and label_text and size_threshold_max(x1, x2, y1, y2, image.shape[0], image.shape[1]) is True \
+                                    and size_threshold_min(x1, x2, y1, y2, image.shape[0], image.shape[1]) is True:# and accept_box(boxes, box, 5.0):
                 cv2.rectangle(image, (x1, y1), (x2, y2), color, 2)
                 cv2.putText(image, label_text, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 0.55, color, 2)
                 #if size_threshold_min(x1, x2, y1, y2, image.shape[0], image.shape[1]) is True:
@@ -96,9 +99,12 @@ class ObjectDetectionThread(Thread):
         while True:
 
             # waits for the preprocessed image and gets it
-            image = self.inP_img.recv()
-            if image is None:
+            signal = self.inP_img.recv()
+            if signal is False:
                 break
+
+            recvd = self.brain.get_crt_frame()
+            image = copy.deepcopy(recvd)
 
             ######### here takes place the object detection ###########
             flags = {"forward": False, "forbidden": False, "parking": False, "sem_yellow": False, "sem_red": False,
@@ -131,6 +137,6 @@ class ObjectDetectionThread(Thread):
             """self.traffic_light_classifier_tflite = TFLiteModel("models/model_mobilenet_v3_static_input_edgetpu.tflite",
                                                          input_shape=config.CLASSIFIER_INPUT_SHAPE,
                                                          quantized_input=True, quantized_output=True)"""
-            self.object_detector_tflite = TFLiteModel("models/mobilenet_cityscapes_frozen_normalized_bfmc_dataset_32_bsize_edgetpu.tflite",
-                                                       input_shape=config.DETECTOR_INPUT_SHAPE,
-                                                       quantized_input=False, quantized_output=False)
+            self.object_detector_tflite = TFLiteModel("models/mobilenet_cs_bfmc_bodo_32bsize_edgetpu.tflite",
+                                                      input_shape=config.DETECTOR_INPUT_SHAPE,
+                                                      quantized_input=False, quantized_output=False)

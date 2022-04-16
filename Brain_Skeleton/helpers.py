@@ -8,7 +8,7 @@ def size_threshold_max(x1, x2, y1, y2, w, h):
 
 
 def size_threshold_min(x1, x2, y1, y2, w, h):
-    if (x2 - x1) < w * 0.13 and (y2 - y1) < h * 0.13:
+    if (x2 - x1) < w * 0.12 and (y2 - y1) < h * 0.12:
         return False
     return True
 

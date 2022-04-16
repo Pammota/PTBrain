@@ -1,7 +1,6 @@
-from readthread import ReadThread
+from imu import imu
+import time
 
-rt = ReadThread()
+imu_ = imu()
 
-rt.start()
-rt.join()
-
+imu_.start()

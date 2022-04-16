@@ -29,7 +29,6 @@ import time
 
 import serial
 from threading import Thread
-from filehandler import FileHandler
 from messageconverter import MessageConverter
 
 class WriteThread(Thread):
@@ -53,7 +52,7 @@ class WriteThread(Thread):
         logFile = 'historyFile.txt'
 
         # comm init
-        self.serialCom = serial.Serial(devFile, 256000, timeout=0.003)
+        self.serialCom = serial.Serial(devFile, 19200, timeout=0.003)
         self.serialCom.flushInput()
         self.serialCom.flushOutput()
 
@@ -86,12 +85,10 @@ class WriteThread(Thread):
 
             # Unpacking the dictionary into action and values
             if theta_command["steerAngle"] != self.last_theta:
-                for i in range(5):
-                    self.last_theta = theta_command["steerAngle"]
-                    command_msg = self.messageConverter.get_command(**theta_command)
-                    self.serialCom.write(command_msg.encode('ascii'))
+                self.last_theta = theta_command["steerAngle"]
+                command_msg = self.messageConverter.get_command(**theta_command)
+                self.serialCom.write(command_msg.encode('ascii'))
             if speed_command["speed"] != self.last_speed:
-                for i in range(5):
-                    self.last_theta = speed_command["speed"]
-                    command_msg = self.messageConverter.get_command(**speed_command)
-                    self.serialCom.write(command_msg.encode('ascii'))
+                self.last_theta = speed_command["speed"]
+                command_msg = self.messageConverter.get_command(**speed_command)
+                self.serialCom.write(command_msg.encode('ascii'))

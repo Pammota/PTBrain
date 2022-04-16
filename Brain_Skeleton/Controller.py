@@ -8,7 +8,7 @@ class Controller():
                  "sem_green": False, "priority": False, "crosswalk": False, "stop": False}
         self.flags_history = []
         self.state = "Lane Follow"
-        self.directions = ["left", "forward"]
+        self.directions = ["left", "forward", "stop"]
         self.dir_idx = 0
         self.had_parking = False
         self.base_speed = 13
@@ -36,7 +36,7 @@ class Controller():
                 if self.dir_idx > len(self.directions):
                     self.state = "Terminate"
                 else:
-                    self.setExecuted(parking=False, crosswalk=False)
+                    #self.setExecuted(parking=False, crosswalk=False)
                     self.state = "Intersection"
                     self.ongoing_intersection = True
             if self.passed_horiz_line and self.flags["crosswalk"] and not self.executed["crosswalk"]:
@@ -49,17 +49,19 @@ class Controller():
         elif self.state == "Crosswalk":
             if not self.executed["crosswalk"]:
                 if self.timer_crt - self.timer_start > 3:
-                    if self.front_distance > 40:
+                    if self.front_distance > 60:
+                        print("Stopped at the crosswalk")
                         self.setExecuted(crosswalk=True)
                         self.timer_start = time.time()
                     else:
+                        print("A pedestrian is on the crosswalk!")
                         self.pedestrian_present = True
             else:
                 if self.pedestrian_present:
                     if self.timer_crt - self.timer_start > 1:
                         self.pedestrian_present = False
                         self.timer_start = time.time()
-                elif self.timer_crt - self.timer_start > 1.5:
+                elif self.timer_crt - self.timer_start > 2:
                     self.state = "Lane Follow"
 
 
@@ -68,10 +70,6 @@ class Controller():
             if self.flags["parking"]:
                 print("set had_parking to True")
                 self.had_parking = True
-            # elif self.flags["crosswalk"] and self.passed_horiz_line and not self.executed["crosswalk"]:
-            #     self.passed_horiz_line = False
-            #     self.setExecuted(crosswalk=True)
-            #     return [0, 0, 0, 0, 0, 1, 0]  # activate crosswalk flag
             elif self.had_parking is True and not self.flags["parking"] and not self.executed["parking"]:
                 self.setExecuted(parking=True)
                 print("Set had_parking to false")
@@ -82,13 +80,13 @@ class Controller():
         if self.state == "Intersection":
             if self.flags["stop"]:
                 self.ongoing_intersection = False
-                return [0, 0, 1, 0, self.directions[self.dir_idx], 0, 0]
+                return [0, self.theta, 1, 0, self.directions[self.dir_idx], 0, 0]
             else:
                 if self.flags["sem_red"]:
-                    return [0, 0, 0, 1, self.directions[self.dir_idx], 0, 0]
+                    return [0, self.theta, 0, 1, self.directions[self.dir_idx], 0, 0]
                 else:
                     self.ongoing_intersection = False
-                    return [0, 0, 0, 0, self.directions[self.dir_idx], 0, 0]
+                    return [0, self.theta, 0, 0, self.directions[self.dir_idx], 0, 0]
 
         if self.state == "Crosswalk":
             if self.executed["crosswalk"]:
@@ -99,9 +97,14 @@ class Controller():
 
     def setFlags(self, OD_info):
         self.flags_history.append(OD_info)
-        self.flags_history = self.flags_history[-10:]
+        self.flags_history = self.flags_history[-25:]
         for k in self.flags.keys():
-            self.flags[k] = (np.sum([1 if fl[k] is True else 0 for fl in self.flags_history]) > 3)
+            if k == "crosswalk":
+                self.flags[k] = (np.sum([1 if fl[k] is True else 0 for fl in self.flags_history]) > 1)
+            elif k == "stop":
+                self.flags[k] = (np.sum([1 if fl[k] is True else 0 for fl in self.flags_history[-20:]]) > 4)
+            else:
+                self.flags[k] = (np.sum([1 if fl[k] is True else 0 for fl in self.flags_history[-10:]]) > 3)
 
     def setTheta(self, LD_info):
         self.thetas.append(LD_info["theta"])

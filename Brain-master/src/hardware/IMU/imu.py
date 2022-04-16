@@ -66,15 +66,15 @@ class imu(threading.Thread):
                 self.data = self.imu.getIMUData()
                 self.fusionPose = self.data["fusionPose"]
                 self.accel = self.data["accel"]
-                self.roll  =  math.degrees(self.fusionPose[0])
-                self.pitch =  math.degrees(self.fusionPose[1])
-                self.yaw   =  math.degrees(self.fusionPose[2])
-                self.accelx =  self.accel[0]
-                self.accely =  self.accel[1]
-                self.accelz =  self.accel[2]
+                self.roll  = math.degrees(self.fusionPose[0])
+                self.pitch = math.degrees(self.fusionPose[1])
+                self.yaw   = math.degrees(self.fusionPose[2])
+                self.accelx = self.accel[0]
+                self.accely = self.accel[1]
+                self.accelz = self.accel[2]
 
-
-                print("roll = %f pitch = %f yaw = %f" % (self.roll,self.pitch,self.yaw))
+                print("roll = %f pitch = %f yaw = %f" % (self.roll, self.pitch, self.yaw))
+                print("accelx = %f, accely = %f accelz = %f" %(self.accelx, self.accely, self.accelz))
                 time.sleep(self.poll_interval*1.0/1000.0)
 
     def stop(self): 
