@@ -8,7 +8,7 @@ class Controller():
                  "sem_green": False, "priority": False, "crosswalk": False, "stop": False}
         self.flags_history = []
         self.state = "Lane Follow"
-        self.directions = ["forward", "left", "right", "left", "forward"]
+        self.directions = ["left", "forward"]
         self.dir_idx = 0
         self.had_parking = False
         self.base_speed = 13

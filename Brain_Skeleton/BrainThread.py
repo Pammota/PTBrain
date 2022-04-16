@@ -89,9 +89,13 @@ class BrainThread(Thread):
                     outP.send(frame)"""
                 self.laneDetectionThread_working = True
                 self.outP_brain_lane.send(frame)
+                if PRINT_EXEC_TIMES:
+                    print("Sent image to lane detection after {}".format(time.time() - loop_start_time))
                 if self.num_frames % 2 == 0:
                     self.objectDetectionThread_working = True
                     self.outP_brain_obj.send(frame)
+                    if PRINT_EXEC_TIMES:
+                        print("Sent image to object detection afer {}".format(time.time() - loop_start_time))
             else:
                 break
 
@@ -158,10 +162,10 @@ class BrainThread(Thread):
                 cv2.putText(frame, label_text, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 0.55, label_color, 2)
 
             ############ draw lines from lane detection
-            if len(left_line) == 4:
-                self.draw_line(left_line, (255, 0, 0), frame)
-            if len(right_line) == 4:
-                self.draw_line(right_line, (0, 0, 255), frame)
+            if len(left_line) == 1:
+                self.draw_line(left_line[0], (0, 255, 0), frame)
+            if len(right_line) == 1:
+                self.draw_line(right_line[0], (0, 255, 0), frame)
             if len(road_line) == 4:
                 self.draw_line(road_line, (255, 255, 255), frame)
 
@@ -268,7 +272,7 @@ class BrainThread(Thread):
         for index in range(r_ange):
             self.outP_com.send((theta_command, speed_command))
             grabbed, image = self.camera.read()
-            cv2.imshow("image", image)
+            cv2.imshow("CAR POV", image)
             cv2.waitKey(1)
             time.sleep(s_leep)
 
@@ -391,6 +395,6 @@ class BrainThread(Thread):
         radius = 5
         color_left_most_point = (0, 255, 0)  # GREEN for left_most point
         color_right_most_point = (255, 0, 0)  # BLUE fpr right_most point
-        cv2.circle(image, (y1_cv, x1_cv), radius, color_left_most_point, 3)
-        cv2.circle(image, (y2_cv, x2_cv), radius, color_right_most_point, 3)
+        cv2.circle(image, (y1_cv, x1_cv), radius, color_left_most_point, 1)
+        cv2.circle(image, (y2_cv, x2_cv), radius, color_right_most_point, 1)
         cv2.line(image, (y1_cv, x1_cv), (y2_cv, x2_cv), color, 2)
