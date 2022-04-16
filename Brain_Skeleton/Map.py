@@ -29,6 +29,8 @@ class Map:
         x = max(0, x)
         x = min(x, self.h)
 
+        x = self.h - x
+
         y = max(0, y)
         y = min(y, self.w)
 
