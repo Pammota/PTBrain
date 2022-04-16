@@ -12,7 +12,7 @@ class IMU_tracking(Thread):
     def __init__(self):
         super(IMU_tracking, self).__init__()
         self.x = 0
-        self.y = 53
+        self.y = 0.53
 
         self.v = 0
 
@@ -50,6 +50,7 @@ class IMU_tracking(Thread):
             vy = vy + (a_x_y + a_y_y) * dt
             self.v = math.sqrt(vx ** 2 + vy ** 2)
 
+            print(self.a_x, self.a_y)
             print(self.x, self.y)
 
             self.inner_map.update_map(self.x, self.y, yaw)
