@@ -136,7 +136,7 @@ class BrainThread(Thread):
 
             action = self.controller.takeAction()
 
-            self.show_image(frame, bboxes, lane_info, left_line, right_line, road_line)
+            #self.show_image(frame, bboxes, lane_info, left_line, right_line, road_line)
 
             if action is None:
                 break
