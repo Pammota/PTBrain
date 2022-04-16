@@ -57,6 +57,11 @@ class imu(threading.Thread):
         self.imu.setAccelEnable(True)
         self.imu.setCompassEnable(True)
 
+        self.true_accelx = None
+        self.true_accely = None
+        self.true_accelz = None
+        self.yaw = None
+
         self.poll_interval = self.imu.IMUGetPollInterval()
         print("Recommended Poll Interval: %dmS\n" % self.poll_interval)
         
