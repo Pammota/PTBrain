@@ -10,6 +10,7 @@ from threading import Thread
 class IMU_tracking(Thread):
 
     def __init__(self):
+        super(IMU_tracking, self).__init__()
         self.x = 0
         self.y = 53
 
