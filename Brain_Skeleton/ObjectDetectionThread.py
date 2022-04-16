@@ -96,6 +96,9 @@ class ObjectDetectionThread(Thread):
 
     def run(self):
 
+        avg_object_detection_time = 0
+        num_frames = 0
+
         while True:
 
             # waits for the preprocessed image and gets it
@@ -125,6 +128,10 @@ class ObjectDetectionThread(Thread):
             end = time.time()
             if config.PRINT_EXEC_TIMES:
                 print("Object detection time: {}".format(end - start))
+                num_frames += 1
+                avg_object_detection_time *= (num_frames - 1)/num_frames
+                avg_object_detection_time += 1/num_frames * (end - start)
+                print("Average object detection time: {}".format(avg_object_detection_time))
 
             ######### here the object detection ends ###########
 
