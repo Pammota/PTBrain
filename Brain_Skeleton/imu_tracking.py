@@ -51,6 +51,7 @@ class IMU_tracking(Thread):
             self.inner_map.update_map(self.x, self.y, self.theta)
             image = self.inner_map.get_map()
             cv2.imshow("map", image)
+            cv2.waitKey(1)
 
             time.sleep(0.01)
             dt = 0.01
