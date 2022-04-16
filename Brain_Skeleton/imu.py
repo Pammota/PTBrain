@@ -76,7 +76,7 @@ class imu(threading.Thread):
                 #print("roll = %f pitch = %f yaw = %f" % (self.roll, self.pitch, self.yaw))
                 print("accelx = %f, accely = %f accelz = %f" %(self.accelx, self.accely, self.accelz))
                 #if abs(self.accelx) > 0.07:
-                print("sum = %f"%(self.accelx + self.accely + self.accelz))
+                print("sum = %f"%(-self.accelx - self.accely + self.accelz))
                 time.sleep(self.poll_interval*1.0/100.0)
 
     def stop(self): 
