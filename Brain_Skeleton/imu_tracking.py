@@ -28,7 +28,8 @@ class IMU_tracking(Thread):
         dt = 0
         while True:
 
-            a_x, a_y, theta = self.imu.get_data()
+            a_x, a_y, yaw = self.imu.get_data()
+            self.theta = math.radians(yaw)
 
             # get projections on axis
             a_x_x = self.a_x * math.cos(self.theta)
@@ -47,9 +48,9 @@ class IMU_tracking(Thread):
             # update speed
             vx = vx + (a_x_x + a_y_x) * dt
             vy = vy + (a_x_y + a_y_y) * dt
-            self.v = math.sqrt(vx ** 2, vy ** 2)
+            self.v = math.sqrt(vx ** 2 + vy ** 2)
 
-            self.inner_map.update_map(self.x, self.y, self.theta)
+            self.inner_map.update_map(self.x, self.y, yaw)
             image = self.inner_map.get_map()
             cv2.imshow("map", image)
             cv2.waitKey(1)
