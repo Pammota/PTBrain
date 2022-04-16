@@ -296,14 +296,14 @@ class LaneDetectionThread(Thread):
             theta, offset, intersection = self.lane_detection(frame_ROI, frame_ROI_IPM=frame_ROI_IPM)
 
             if offset is not None:
-                print("OFFSET = {} cm".format(offset))
+                #print("OFFSET = {} cm".format(offset))
                 offset_prev = offset
 
             if theta is not None:
-                print("THETA = {}".format(theta))
+                #print("THETA = {}".format(theta))
                 theta_prev = theta
 
-            print("INTERSECTION = {}".format(intersection))
+            #print("INTERSECTION = {}".format(intersection))
 
             theta_prev = (theta_prev // 3) * 3
 
