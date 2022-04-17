@@ -11,7 +11,7 @@ class Map:
         self.orientation_visualization = np.zeros((340, 100))
 
         self.prev_x = 0
-        self.prev_y = 53
+        self.prev_y = 287
 
         self.h = 430
         self.w = 340

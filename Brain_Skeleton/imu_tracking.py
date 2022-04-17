@@ -12,7 +12,7 @@ class IMU_tracking(Thread):
     def __init__(self):
         super(IMU_tracking, self).__init__()
         self.x = 0
-        self.y = 0.53
+        self.y = 2.87
 
         self.v = 0
 
