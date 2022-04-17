@@ -124,8 +124,9 @@ class LaneDetectionThread(Thread):
                                     self.right_lines.append(line)
                                     # cv2.line(frame_ROI, (y1_cv, x1_cv), (y2_cv, x2_cv), (0, 0, 255), 1)
                         else:
-                            horizontal_lines.append(line)
-                            self.horizontal_lines.append(line)
+                            if abs(coeff[1]) <= 0.3:
+                                horizontal_lines.append(line)
+                                self.horizontal_lines.append(line)
 
         return left_lines, right_lines, horizontal_lines
 
