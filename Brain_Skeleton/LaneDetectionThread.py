@@ -74,6 +74,7 @@ class LaneDetectionThread(Thread):
 
         for line in lines_candidate:
             y1_cv, x1_cv, y2_cv, x2_cv = line[0]
+            # centroid = [(y1_cv + y2_cv) // 2, (x1_cv + x2_cv) // 2]
             if abs(y1_cv - y2_cv) > 10:
                 coeff = np.polynomial.polynomial.polyfit((y1_cv, y2_cv), (x1_cv, x2_cv), deg=1)
                 # ---------------------------------
@@ -90,7 +91,7 @@ class LaneDetectionThread(Thread):
                     # coeff[1] -> slope in XoY coordinates
                     # coeff[0] -> intercept_oY in XoY coordinates
                     if coeff[1] != 10000:
-                        if abs(coeff[1]) >= 0.2:  # slope = +-0.2 -> +-11.3 degrees
+                        if abs(coeff[1]) >= 0.7:  # slope = +-0.2 -> +-11.3 degrees
                             # OverFlowError when we get horizontal lines
                             try:
                                 # intercept_oX = - int(coeff[0] / coeff[1])
