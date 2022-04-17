@@ -83,7 +83,7 @@ class BrainThread(Thread):
                  "sem_green": False, "priority": False, "crosswalk": False, "stop": False}
         bboxes = []
         DSFront_info = 0
-        time.sleep(0.1)
+        time.sleep(0.2)
         start = time.time()
 
         while not self.stop_car:
