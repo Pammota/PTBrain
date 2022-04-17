@@ -51,12 +51,14 @@ class IMU_tracking(Thread):
 
             # update speed
 
+
+            vx = vx + (a_x_x + a_y_x) * dt
+            vy = vy + (a_x_y + a_y_y) * dt
+
             print("vx = {0:.5f} + ({1:.5f} + {2:.5f}) * 0.03".format(vx, a_x_x, a_y_x))
             print("vy = {0:.5f} + ({1:.5f} + {2:.5f}) * 0.03".format(vy, a_x_y, a_y_y))
             print("v = {0:.5f}".format(self.v))
 
-            vx = vx + (a_x_x + a_y_x) * dt
-            vy = vy + (a_x_y + a_y_y) * dt
             self.v = math.sqrt(vx ** 2 + vy ** 2)
             print("v' = {0:.5f}\n".format(self.v))
 
