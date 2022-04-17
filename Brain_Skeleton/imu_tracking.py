@@ -62,5 +62,5 @@ class IMU_tracking(Thread):
             cv2.imshow("map", image)
             cv2.waitKey(1)
 
-            time.sleep(0.01)
-            dt = 0.01
+            time.sleep(0.005)
+            dt = 0.005
