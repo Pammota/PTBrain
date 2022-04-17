@@ -74,7 +74,7 @@ class LaneDetectionThread(Thread):
 
         for line in lines_candidate:
             y1_cv, x1_cv, y2_cv, x2_cv = line[0]
-            centroid = [(y1_cv + y2_cv) // 2, (x1_cv + x2_cv) // 2]
+            # centroid = [(y1_cv + y2_cv) // 2, (x1_cv + x2_cv) // 2]
             if abs(y1_cv - y2_cv) > 10:
                 coeff = np.polynomial.polynomial.polyfit((y1_cv, y2_cv), (x1_cv, x2_cv), deg=1)
                 # ---------------------------------
