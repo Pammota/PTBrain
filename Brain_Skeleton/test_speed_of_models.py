@@ -4,10 +4,10 @@ import config
 import time
 import cv2
 
-model = TFLiteModel("models/mobilenet_224_aug.tflite", input_shape=config.DETECTOR_INPUT_SHAPE,
+model = TFLiteModel("models/mobilenet_160_aug_edgetpu.tflite", input_shape=config.DETECTOR_INPUT_SHAPE,
                     quantized_input=False, quantized_output=False)
 
-imagePaths = list(list_images("jena"))[:200]
+imagePaths = list(list_images("lindau"))[:200]
 median_time = 0
 
 for path in imagePaths:
