@@ -4,8 +4,8 @@ import cv2
 import numpy as np
 
 class Map:
-    def __init__(self, px_per_m=100):
-        self.px_per_m = px_per_m
+    def __init__(self, px_per_unit=1):
+        self.px_per_m = px_per_unit  # unit is cm
 
         self.physical_map = np.zeros((340, 430))
         self.orientation_visualization = np.zeros((340, 100))
