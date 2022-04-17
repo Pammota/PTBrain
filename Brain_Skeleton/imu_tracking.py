@@ -57,10 +57,12 @@ class IMU_tracking(Thread):
             #print("accelx = {}, accely = {}".format(self.a_x, self.a_y))
             #print("x = {}, y = {}".format(self.x, self.y))
 
+            print("v = {.6f}, a = {.6f}".format(self.v, math.sqrt(self.a_x**2 + self.a_y**2)))
+
             self.inner_map.update_map(self.x, self.y, yaw)
             image = self.inner_map.get_map()
             cv2.imshow("map", image)
             cv2.waitKey(1)
 
-            time.sleep(0.04)
-            dt = 40 # s
+            time.sleep(0.01)
+            dt = 10  # s
