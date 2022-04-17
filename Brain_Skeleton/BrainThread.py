@@ -365,7 +365,7 @@ class BrainThread(Thread):
         self.threads.append(ObjectDetectionThread(inP_brain_obj, outP_obj, self))
         if self.cameraSpoof is None:
             self.threads.append(WriteThread(self.inP_com, zero_theta_command, zero_speed_command))
-        #self.threads.append(IMU_tracking())
+        self.threads.append(IMU_tracking())
 
         # starts all threads
         for thread in self.threads:
