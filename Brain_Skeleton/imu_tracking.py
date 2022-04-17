@@ -32,8 +32,8 @@ class IMU_tracking(Thread):
             self.a_x, self.a_y, yaw = self.imu.get_data()
             self.theta = math.radians(yaw)
 
-            self.a_x *= 0.000987 # m / s ^ 2
-            self.a_y *= 0.000987 # m / s ^ 2
+            self.a_x *= 9.87 # m / s ^ 2
+            self.a_y *= 9.87 # m / s ^ 2
 
             # get projections on axis
             a_x_x = self.a_x * math.cos(self.theta)
@@ -64,5 +64,5 @@ class IMU_tracking(Thread):
             cv2.imshow("map", image)
             cv2.waitKey(1)
 
-            time.sleep(0.01)
-            dt = 10  # s
+            time.sleep(0.03)
+            dt = 0.03  # s
