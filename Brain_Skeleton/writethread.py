@@ -48,7 +48,7 @@ class WriteThread(Thread):
         super(WriteThread, self).__init__()
         self.inP = inP
 
-        devFile = '/dev/ttyACM0'
+        devFile = '/dev/ttyACM1'
         logFile = 'historyFile.txt'
 
         # comm init

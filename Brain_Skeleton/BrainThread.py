@@ -64,7 +64,7 @@ class BrainThread(Thread):
         self._init_threads()
 
         # initializes the distance sensor
-        devFile = '/dev/ttyACM1'
+        devFile = '/dev/ttyACM0'
 
         self.serialCom = serial.Serial(devFile, 9600)
         self.serialCom.flushInput()
