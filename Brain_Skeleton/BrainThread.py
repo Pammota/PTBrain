@@ -64,7 +64,7 @@ class BrainThread(Thread):
         self._init_threads()
 
         # initializes the distance sensor
-        devFile = '/dev/ttyACM1'
+        devFile = '/dev/ttyACM0'
 
         self.serialCom = serial.Serial(devFile, 9600)
         self.serialCom.flushInput()
@@ -136,7 +136,7 @@ class BrainThread(Thread):
 
             action = self.controller.takeAction()
 
-            #self.show_image(frame, bboxes, lane_info, left_line, right_line, road_line)
+            self.show_image(frame, bboxes, lane_info, left_line, right_line, road_line)
 
             if action is None:
                 break
@@ -365,7 +365,7 @@ class BrainThread(Thread):
         self.threads.append(ObjectDetectionThread(inP_brain_obj, outP_obj, self))
         if self.cameraSpoof is None:
             self.threads.append(WriteThread(self.inP_com, zero_theta_command, zero_speed_command))
-        self.threads.append(IMU_tracking())
+        #self.threads.append(IMU_tracking())
 
         # starts all threads
         for thread in self.threads:
