@@ -135,7 +135,7 @@ class BrainThread(Thread):
 
             ############### here takes place the processing of the info #############
 
-            self.controller.checkState(obj_info, lane_info, DSFront_info)
+            self.controller.checkState(obj_info, 0, DSFront_info)
 
             if self.controller.state == "Crosswalk":
                 DSFront_info = self.get_distance_info()
