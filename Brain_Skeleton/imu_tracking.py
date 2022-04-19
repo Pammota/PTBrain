@@ -15,7 +15,7 @@ class IMU_tracking(Thread):
         self.brain = brain
 
         self.x = 0
-        self.y = 2.87
+        self.y = 287
 
         self.v = 0
 
