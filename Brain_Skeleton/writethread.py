@@ -33,7 +33,7 @@ from messageconverter import MessageConverter
 
 class WriteThread(Thread):
     # ===================================== INIT =========================================
-    def __init__(self, inP, theta_command, speed_command):
+    def __init__(self, inP, serialCon, theta_command, speed_command):
         """The purpose of this thread is to redirectionate the received through input pipe to an other device by using serial communication.
 
         Parameters
@@ -52,7 +52,7 @@ class WriteThread(Thread):
         logFile = 'historyFile.txt'
 
         # comm init
-        self.serialCom = serial.Serial(devFile, 19200, timeout=0.003)
+        self.serialCom = serialCon #serial.Serial(devFile, 19200, timeout=0.003)
         self.serialCom.flushInput()
         self.serialCom.flushOutput()
 
@@ -75,7 +75,10 @@ class WriteThread(Thread):
         command_msg = self.messageConverter.get_command(**{'action': '4', 'activate': True})
         self.serialCom.write(command_msg.encode('ascii'))
 
-        print("activated pid")
+        command_msg = self.messageConverter.get_command(**{'action': '5', 'activate': True})
+        self.serialCom.write(command_msg.encode('ascii'))
+
+        print("Activated pid and encoder publisher")
 
         while True:
             commands = self.inP.recv()

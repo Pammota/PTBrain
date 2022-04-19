@@ -10,6 +10,7 @@ import serial
 import time
 import cv2
 import numpy as np
+from readthread import ReadThread
 from imu_tracking import IMU_tracking
 
 
@@ -66,10 +67,13 @@ class BrainThread(Thread):
         # initializes the distance sensor
         devFile = '/dev/ttyACM0'
 
-        self.serialCom = serial.Serial(devFile, 9600)
-        self.serialCom.flushInput()
-        self.serialCom.flushOutput()
+        self.serialComDS = serial.Serial(devFile, 9600)
+        self.serialComDS.flushInput()
+        self.serialComDS.flushOutput()
 
+        self.serialComNucleo = serial.Serial(devFile, 19200, timeout=0.003)
+        self.serialComNucleo.flushInput()
+        self.serialComNucleo.flushOutput()
 
     def run(self):
 
@@ -313,9 +317,9 @@ class BrainThread(Thread):
         cv2.waitKey(0)
 
     def get_distance_info(self):
-        rec_data = self.serialCom.read(10)
-        data_left = self.serialCom.inWaiting()
-        rec_data += self.serialCom.read(data_left)
+        rec_data = self.serialComDS.read(10)
+        data_left = self.serialComDS.inWaiting()
+        rec_data += self.serialComDS.read(data_left)
         print(rec_data)
 
         rec_numbers = [int(s) for s in rec_data.split() if s.isdigit()]
@@ -364,7 +368,10 @@ class BrainThread(Thread):
         self.threads.append(LaneDetectionThread(inP_brain_lane, outP_lane, self, show_lane=self.show_lane))
         self.threads.append(ObjectDetectionThread(inP_brain_obj, outP_obj, self))
         if self.cameraSpoof is None:
-            self.threads.append(WriteThread(self.inP_com, zero_theta_command, zero_speed_command))
+            self.threads.append(WriteThread(self.inP_com, self.serialComNucleo,
+                                            zero_theta_command, zero_speed_command))
+            self.threads.append(ReadThread(self.serialComNucleo))
+
         #self.threads.append(IMU_tracking())
 
         # starts all threads
