@@ -86,18 +86,6 @@ class BrainThread(Thread):
         # self.stop_car = True
         # self.hardcoded_move(0, 0, 10, 0.001)
 
-        theta_command = Controller.getAngleCommand(0)
-        speed_command = Controller.getSpeedCommand(20)
-        if self.cameraSpoof is None:
-            self.outP_com.send((theta_command, speed_command))
-
-        time.sleep(7)
-
-        theta_command = Controller.getAngleCommand(0)
-        speed_command = Controller.getSpeedCommand(0)
-        if self.cameraSpoof is None:
-            self.outP_com.send((theta_command, speed_command))
-
         obj_info = {"forward": False, "forbidden": False, "parking": False, "sem_yellow": False, "sem_red": False,
                  "sem_green": False, "priority": False, "crosswalk": False, "stop": False}
         bboxes = []
