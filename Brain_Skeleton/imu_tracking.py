@@ -34,7 +34,7 @@ class IMU_tracking(Thread):
 
             speed = self.brain.get_crt_speed()
 
-            # self.a_x, self.a_y, yaw = self.imu.get_data()
+            self.a_x, self.a_y, yaw = self.imu.get_data()
             self.theta = math.radians(yaw)
 
             # self.a_x *= 9.87 # m / s ^ 2
