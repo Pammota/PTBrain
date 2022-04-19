@@ -372,7 +372,7 @@ class BrainThread(Thread):
         if self.cameraSpoof is None:
             self.threads.append(WriteThread(self.inP_com, self.serialComNucleo,
                                             zero_theta_command, zero_speed_command))
-            self.threads.append(ReadThread(self.serialComNucleo))
+            #self.threads.append(ReadThread(self.serialComNucleo))
 
         #self.threads.append(IMU_tracking())
 
