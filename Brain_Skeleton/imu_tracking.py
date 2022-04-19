@@ -32,7 +32,7 @@ class IMU_tracking(Thread):
         dt = 0
         while True:
 
-            self.speed = self.brain.get_crt_speed
+            speed = self.brain.get_crt_speed()
 
             self.a_x, self.a_y, yaw = self.imu.get_data()
             self.theta = math.radians(yaw)
