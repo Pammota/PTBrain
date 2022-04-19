@@ -9,8 +9,11 @@ from threading import Thread
 
 class IMU_tracking(Thread):
 
-    def __init__(self):
+    def __init__(self, brain):
         super(IMU_tracking, self).__init__()
+
+        self.brain = brain
+
         self.x = 0
         self.y = 2.87
 
@@ -28,6 +31,8 @@ class IMU_tracking(Thread):
 
         dt = 0
         while True:
+
+            self.speed = self.brain.get_crt_speed
 
             self.a_x, self.a_y, yaw = self.imu.get_data()
             self.theta = math.radians(yaw)

@@ -76,6 +76,7 @@ class BrainThread(Thread):
         # creates and starts the threads managed by this object
         self._init_threads()
 
+        self.speed = 0
 
     def run(self):
 
@@ -153,6 +154,7 @@ class BrainThread(Thread):
                 DSFront_info = self.get_distance_info()
 
             action = self.controller.takeAction()
+            self.speed = action[ACTION_SPEED]
 
             self.show_image(frame, bboxes, lane_info, left_line, right_line, road_line)
 
@@ -346,6 +348,9 @@ class BrainThread(Thread):
         print(rec_number)
         return rec_number
 
+    def get_crt_speed(self):
+        return self.speed
+
     def get_crt_frame(self):
         return self.frame
 
@@ -384,9 +389,9 @@ class BrainThread(Thread):
         if self.cameraSpoof is None:
             self.threads.append(WriteThread(self.inP_com, self.serialComNucleo,
                                             zero_theta_command, zero_speed_command))
-            self.threads.append(ReadThread(self.serialComNucleo))
+            #self.threads.append(ReadThread(self.serialComNucleo))
 
-        #self.threads.append(IMU_tracking())
+        self.threads.append(IMU_tracking(self))
 
         # starts all threads
         for thread in self.threads:
