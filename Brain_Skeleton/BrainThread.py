@@ -73,10 +73,13 @@ class BrainThread(Thread):
         self.serialComDS.flushInput()
         self.serialComDS.flushOutput()
 
-        # creates and starts the threads managed by this object
-        self._init_threads()
 
         self.speed = 0
+
+        # creates and starts the threads managed by this object
+
+
+        self._init_threads()
 
     def run(self):
 
