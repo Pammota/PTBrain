@@ -50,7 +50,7 @@ class ReadThread(Thread):
     def run(self):
         """ It's represent the activity of the read thread, to read the messages.
         """
-        i = 0
+        i = 1
         sumrps = 0
         while(self._running):
             read_chr = self.serialCon.read()
