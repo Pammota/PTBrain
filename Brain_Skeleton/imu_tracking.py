@@ -47,7 +47,7 @@ class IMU_tracking(Thread):
             # a_y_x = self.a_y * math.sin(self.theta + math.pi)
             # a_y_y = self.a_y * math.cos(self.theta + math.pi)
 
-            v = speed
+            self.v = speed
 
             vx = self.v * math.cos(self.theta)
             vy = self.v * math.sin(self.theta)
