@@ -68,13 +68,13 @@ class BrainThread(Thread):
         devFileDS = '/dev/ttyACM0'
         devFileNucleo = '/dev/ttyACM1'
 
-        self.serialComDS = serial.Serial(devFileDS, 9600)
-        self.serialComDS.flushInput()
-        self.serialComDS.flushOutput()
-
         self.serialComNucleo = serial.Serial(devFileNucleo, 19200, timeout=0.003)
         self.serialComNucleo.flushInput()
         self.serialComNucleo.flushOutput()
+
+        self.serialComDS = serial.Serial(devFileDS, 9600)
+        self.serialComDS.flushInput()
+        self.serialComDS.flushOutput()
 
     def run(self):
 
