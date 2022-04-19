@@ -62,15 +62,15 @@ class IMU_tracking(Thread):
             # vx = vx + (a_x_x + a_y_x) * dt
             # vy = vy + (a_x_y + a_y_y) * dt
 
-            # print("vx = {0:.5f} + ({1:.5f} + {2:.5f}) * 0.03".format(vx, a_x_x, a_y_x))
-            # print("vy = {0:.5f} + ({1:.5f} + {2:.5f}) * 0.03".format(vy, a_x_y, a_y_y))
-            # print("v = {0:.5f}".format(self.v))
+            print("vx = {0:.5f} + ({1:.5f} + {2:.5f}) * 0.03".format(vx, a_x_x, a_y_x))
+            print("vy = {0:.5f} + ({1:.5f} + {2:.5f}) * 0.03".format(vy, a_x_y, a_y_y))
+            print("v = {0:.5f}".format(self.v))
 
             # self.v = math.sqrt(vx ** 2 + vy ** 2)
             # print("v' = {0:.5f}\n".format(self.v))
 
             #print("accelx = {}, accely = {}".format(self.a_x, self.a_y))
-            #print("x = {}, y = {}".format(self.x, self.y))
+            print("x = {}, y = {}".format(self.x, self.y))
 
             #print("v = {0:.5f}, a = {1:.5f}".format(self.v, math.sqrt(self.a_x**2 + self.a_y**2)))
 
