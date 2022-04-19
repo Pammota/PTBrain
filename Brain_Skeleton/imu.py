@@ -29,6 +29,7 @@
 import sys
 sys.path.append('.')
 import RTIMU
+import config
 import os.path
 import time
 import math
@@ -86,7 +87,7 @@ class imu(threading.Thread):
                 self.true_accely = self.accely - math.sin(math.radians(self.roll))
                 self.true_accelz = self.accelz + math.sin(math.radians(self.pitch)) - math.sin(math.radians(self.roll))
                 #print("accelx = %f, accely = %f, accelz = %f"%(self.true_accelx, self.true_accely, self.true_accelz))
-                time.sleep(self.poll_interval*1.0/100.0)
+                time.sleep(config.IMU_SAMPLING_FREQUENCY)
 
     def get_data(self):
         return self.true_accelx, self.true_accely, self.yaw

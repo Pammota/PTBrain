@@ -2,6 +2,7 @@ import math
 import time
 
 import cv2
+import config
 
 from imu import imu
 from Map import Map
@@ -81,5 +82,5 @@ class IMU_tracking(Thread):
             cv2.imshow("map", image)
             cv2.waitKey(1)
 
-            time.sleep(0.03)
-            dt = 0.03  # s
+            time.sleep(config.IMU_SAMPLING_FREQUENCY*2)
+            dt = config.IMU_SAMPLING_FREQUENCY*2  # s
