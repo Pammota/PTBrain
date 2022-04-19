@@ -55,15 +55,16 @@ class ReadThread(Thread):
             read_chr = self.serialCon.read()
             try:
                 read_chr = (read_chr.decode("ascii"))
-                print(read_chr)
                 if read_chr == '@':
                     self.isResponse = True
                     if len(self.buff) != 0:
+                        print(self.buff)
                         self.__checkSubscriber(self.buff)
                     self.buff = ""
                 elif read_chr == '\r':
                     self.isResponse = False
                     if len(self.buff) != 0:
+                        print(self.buff)
                         self.__checkSubscriber(self.buff)
                     self.buff = ""
                 if self.isResponse:
