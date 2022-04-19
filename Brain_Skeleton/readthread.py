@@ -50,7 +50,8 @@ class ReadThread(Thread):
     def run(self):
         """ It's represent the activity of the read thread, to read the messages.
         """
-        
+        i = 0
+        sumrps = 0
         while(self._running):
             read_chr = self.serialCon.read()
             try:
@@ -58,13 +59,21 @@ class ReadThread(Thread):
                 if read_chr == '@':
                     self.isResponse = True
                     if len(self.buff) != 0:
+                        i += 1
+                        rps = float(self.buff[3:])
+                        sumrps += rps
                         print(self.buff)
+                        print("AVERAGE IS: {}".format(sumrps / i))
                         self.__checkSubscriber(self.buff)
                     self.buff = ""
                 elif read_chr == '\r':
                     self.isResponse = False
                     if len(self.buff) != 0:
+                        i += 1
+                        rps = float(self.buff[3:])
+                        sumrps += rps
                         print(self.buff)
+                        print("AVERAGE IS: {}".format(sumrps / i))
                         self.__checkSubscriber(self.buff)
                     self.buff = ""
                 if self.isResponse:
