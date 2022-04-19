@@ -61,9 +61,6 @@ class BrainThread(Thread):
         self.controller = Controller()
         time.sleep(0.1)
 
-        # creates and starts the threads managed by this object
-        self._init_threads()
-
         # initializes the distance sensor
         devFileDS = '/dev/ttyACM0'
         devFileNucleo = '/dev/ttyACM1'
@@ -75,6 +72,10 @@ class BrainThread(Thread):
         self.serialComDS = serial.Serial(devFileDS, 9600)
         self.serialComDS.flushInput()
         self.serialComDS.flushOutput()
+
+        # creates and starts the threads managed by this object
+        self._init_threads()
+
 
     def run(self):
 
