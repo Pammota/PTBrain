@@ -86,7 +86,7 @@ class BrainThread(Thread):
         # self.hardcoded_move(0, 0, 10, 0.001)
 
         theta_command = Controller.getAngleCommand(0)
-        speed_command = Controller.getSpeedCommand(15)
+        speed_command = Controller.getSpeedCommand(20)
         if self.cameraSpoof is None:
             self.outP_com.send((theta_command, speed_command))
 
