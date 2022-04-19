@@ -107,7 +107,7 @@ class Controller():
                 self.flags[k] = (np.sum([1 if fl[k] is True else 0 for fl in self.flags_history[-10:]]) > 3)
 
     def setTheta(self, LD_info):
-        self.thetas.append(0)#LD_info["theta"])
+        self.thetas.append(LD_info["theta"])
         if len(self.thetas) == 1:
             self.theta = np.average(self.thetas)
             self.thetas = []
