@@ -53,8 +53,8 @@ class IMU_tracking(Thread):
             vy = self.v * math.sin(self.theta)
 
             # update coordinates
-            self.x = self.x + vx * dt # + (a_x_x + a_y_x) * (dt ** 2) / 2
-            self.y = self.y + vy * dt # + (a_x_y + a_y_y) * (dt ** 2) / 2
+            self.x = self.x + vx * dt  # + (a_x_x + a_y_x) * (dt ** 2) / 2
+            self.y = self.y + vy * dt  # + (a_x_y + a_y_y) * (dt ** 2) / 2
 
             # update speed
 
@@ -81,5 +81,5 @@ class IMU_tracking(Thread):
             cv2.imshow("map", image)
             cv2.waitKey(1)
 
-            time.sleep(0.03)
-            dt = 0.03  # s
+            time.sleep(0.1)
+            dt = 0.1  # s
