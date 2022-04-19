@@ -65,13 +65,14 @@ class BrainThread(Thread):
         self._init_threads()
 
         # initializes the distance sensor
-        devFile = '/dev/ttyACM0'
+        devFileDS = '/dev/ttyACM0'
+        devFileNucleo = '/dev/ttyACM1'
 
-        self.serialComDS = serial.Serial(devFile, 9600)
+        self.serialComDS = serial.Serial(devFileDS, 9600)
         self.serialComDS.flushInput()
         self.serialComDS.flushOutput()
 
-        self.serialComNucleo = serial.Serial(devFile, 19200, timeout=0.003)
+        self.serialComNucleo = serial.Serial(devFileNucleo, 19200, timeout=0.003)
         self.serialComNucleo.flushInput()
         self.serialComNucleo.flushOutput()
 
