@@ -140,7 +140,7 @@ class BrainThread(Thread):
 
             self.controller.checkState(obj_info, lane_info, DSFront_info)
 
-            if self.controller.state == "Crosswalk" or self.num_frames % 3 == 0:
+            if self.controller.state == "Crosswalk": # or self.num_frames % 3 == 0:
                 DSFront_info = self.get_distance_info()
 
             action = self.controller.takeAction()
