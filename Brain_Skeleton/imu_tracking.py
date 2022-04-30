@@ -73,7 +73,7 @@ class IMU_tracking(Thread):
             # print("v' = {0:.5f}\n".format(self.v))
 
             #print("accelx = {}, accely = {}".format(self.a_x, self.a_y))
-            print("x = {}, y = {}".format(self.x, self.y))
+            #print("x = {}, y = {}".format(self.x, self.y))
 
             #print("v = {0:.5f}, a = {1:.5f}".format(self.v, math.sqrt(self.a_x**2 + self.a_y**2)))
 

@@ -326,7 +326,7 @@ class BrainThread(Thread):
         rec_data = self.serialComDS.read(10)
         data_left = self.serialComDS.inWaiting()
         rec_data += self.serialComDS.read(data_left)
-        print(rec_data)
+        #print(rec_data)
 
         rec_numbers = [int(s) for s in rec_data.split() if s.isdigit()]
 
@@ -335,7 +335,7 @@ class BrainThread(Thread):
             rec_number = rec_numbers[0]
         except IndexError:
             rec_number = 3
-        print(rec_number)
+        #print(rec_number)
         return rec_number
 
     def get_crt_speed(self):
