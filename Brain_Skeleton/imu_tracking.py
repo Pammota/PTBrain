@@ -79,8 +79,8 @@ class IMU_tracking(Thread):
 
             self.inner_map.update_map(self.x, self.y, yaw)
             image = self.inner_map.get_map()
-            cv2.imshow("map", image)
-            cv2.waitKey(1)
+            """cv2.imshow("map", image)
+            cv2.waitKey(1)"""
 
             time.sleep(config.IMU_SAMPLING_FREQUENCY*2)
             dt = config.IMU_SAMPLING_FREQUENCY*2  # s
