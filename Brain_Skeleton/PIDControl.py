@@ -17,4 +17,5 @@ class PIDControl():
         d = (err - self.prev_err)/dt
 
         self.prev_err = err
-        return err + self.i + d
+        #print(err, self.i, d, dt)
+        return self.kp * err + self.ki * self.i + self.kd * d
