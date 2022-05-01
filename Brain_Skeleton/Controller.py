@@ -91,10 +91,10 @@ class Controller():
                 return [0, 0, 0, 0, 0, 0, 1]  #activate parking flag
             # if a PID is defined => we have a car ahead
             elif self.PIDController is not None:  # keep distance from the car in front
-                speed = self.PIDController.update(self.front_distance(), self.dt)
-                speed = np.clip(speed, 0, 23)
-                print("PID GIVEN SPEED = {}".format(speed))
-                return [speed, self.theta, 0, 0, 0, 0, 0]
+                speed_off = self.PIDController.update(self.front_distance(), self.dt)
+                speed_off = np.clip(speed_off, 0, 23)
+                print("PID GIVEN SPEED = {}".format(speed_off))
+                return [self.base_speed + speed_off, self.theta, 0, 0, 0, 0, 0]
             return [self.base_speed, self.theta, 0, 0, 0, 0, 0]
 
         if self.state == "Intersection":

@@ -1,7 +1,7 @@
 import numpy as np
 
 class PIDControl():
-    def __init__(self, threshold, kp=0.1, ki=0.05, kd=0.05):
+    def __init__(self, threshold, kp=0.05, ki=0, kd=0.001):
 
         self.threshold = threshold
         self.kp = kp
