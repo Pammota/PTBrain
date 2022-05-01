@@ -1,6 +1,7 @@
 import time
 
 import numpy as np
+from PIDControl import PIDControl
 
 class Controller():
     def __init__(self):
@@ -16,20 +17,24 @@ class Controller():
         self.thetas = []
         self.passed_horiz_line = False
         self.ongoing_intersection = False
-        self.front_distance = 1000
+        self.front_distances = []
         self.timer_start = 0
         self.timer_crt = 0
         self.pedestrian_present = False
+        self.PIDController = PIDControl(60)
+        self.dt = 0.001
 
         self.executed = {"parking": False, "crosswalk": False}
 
-    def checkState(self, OD_info, LD_info, DSFront_info=100):
+    def checkState(self, dt, OD_info, LD_info, DSFront_info=100):
         self.timer_crt = time.time()
 
         self.setFlags(OD_info)
         self.setTheta(LD_info)
         self.passed_horiz_line = LD_info["horiz_line"]
-        self.front_distance = DSFront_info
+        self.front_distances.append(DSFront_info)
+        self.front_distances = self.front_distances[-20:]
+        self.dt = dt
 
         if self.state == "Lane Follow":
             if self.passed_horiz_line and not self.flags["crosswalk"]:
@@ -42,6 +47,13 @@ class Controller():
             if self.passed_horiz_line and self.flags["crosswalk"] and not self.executed["crosswalk"]:
                 self.state = "Crosswalk"
                 self.timer_start = time.time()
+
+            # if there is a car ahead and not PID defined, define a PID
+            if self.PIDController is None and self.front_distance() < 60:
+                self.PIDController = PIDControl(60)
+            # if there is no car ahead and a PID defined, undefine the PID
+            if self.PIDController is not None and self.front_distance() > 100:
+                self.PIDController = None
         elif self.state == "Intersection":
             if not self.ongoing_intersection:
                 self.state = "Lane Follow"
@@ -49,7 +61,7 @@ class Controller():
         elif self.state == "Crosswalk":
             if not self.executed["crosswalk"]:
                 if self.timer_crt - self.timer_start > 3:
-                    if self.front_distance > 60:
+                    if self.front_distance() > 60:
                         print("Stopped at the crosswalk")
                         self.setExecuted(crosswalk=True)
                         self.timer_start = time.time()
@@ -75,6 +87,10 @@ class Controller():
                 print("Set had_parking to false")
                 self.had_parking = False
                 return [0, 0, 0, 0, 0, 0, 1]  #activate parking flag
+            # if a PID is defined => we have a car ahead
+            elif self.PIDController is not None:  # keep distance from the car in front
+                speed = self.PIDController.update(self.front_distance(), self.dt)
+                return [speed, self.theta, 0, 0, 0, 0, 0]
             return [self.base_speed, self.theta, 0, 0, 0, 0, 0]
 
         if self.state == "Intersection":
@@ -117,6 +133,9 @@ class Controller():
             self.executed["parking"] = parking
         if crosswalk is not None:
             self.executed["crosswalk"] = crosswalk
+
+    def front_distance(self):
+        return sum(self.front_distances) / len(self.front_distances)
 
     @staticmethod
     def getAngleCommand(theta):

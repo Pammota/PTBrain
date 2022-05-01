@@ -140,7 +140,7 @@ class BrainThread(Thread):
 
             self.controller.checkState(obj_info, lane_info, DSFront_info)
 
-            if self.controller.state == "Crosswalk": # or self.num_frames % 3 == 0:
+            if self.controller.state == "Crosswalk" or self.num_frames % 3 == 0:
                 DSFront_info = self.get_distance_info()
 
             action = self.controller.takeAction()
@@ -335,7 +335,7 @@ class BrainThread(Thread):
             rec_number = rec_numbers[0]
         except IndexError:
             rec_number = 3
-        #print(rec_number)
+        print(rec_number)
         return rec_number
 
     def get_crt_speed(self):
