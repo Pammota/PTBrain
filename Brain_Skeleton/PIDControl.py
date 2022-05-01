@@ -13,9 +13,9 @@ class PIDControl():
     def update(self, measurement, dt):
 
         err = measurement - self.threshold
-        self.i += dt*(3*self.prev_err - 2*err)/2
+        self.i += dt*err
         d = (err - self.prev_err)/dt
 
         self.prev_err = err
-        #print(err, self.i, d, dt)
+        print(err, self.i, d, dt)
         return self.kp * err + self.ki * self.i + self.kd * d
