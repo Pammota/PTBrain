@@ -94,6 +94,7 @@ class BrainThread(Thread):
         DSFront_info = 0
         time.sleep(0.5)
         start = time.time()
+        dtstart = time.time()
 
         while not self.stop_car:
             loop_start_time = time.time()
@@ -138,7 +139,9 @@ class BrainThread(Thread):
 
             ############### here takes place the processing of the info #############
 
-            self.controller.checkState(obj_info, lane_info, DSFront_info)
+            dtend = time.time()
+            self.controller.checkState(dtend - dtstart, obj_info, lane_info, DSFront_info)
+            dtstart = time.time()
 
             if self.controller.state == "Crosswalk" or self.num_frames % 3 == 0:
                 DSFront_info = self.get_distance_info()
