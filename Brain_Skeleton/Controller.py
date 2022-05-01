@@ -33,7 +33,7 @@ class Controller():
         self.setTheta(LD_info)
         self.passed_horiz_line = LD_info["horiz_line"]
         self.front_distances.append(DSFront_info)
-        self.front_distances = self.front_distances[-20:]
+        self.front_distances = self.front_distances[-10:]
         self.dt = dt
 
         if self.state == "Lane Follow":
@@ -50,7 +50,7 @@ class Controller():
 
             # if there is a car ahead and not PID defined, define a PID
             if self.PIDController is None and self.front_distance() < 60:
-                self.PIDController = PIDControl(60)
+                self.PIDController = PIDControl(50)
                 print("ACTIVATED PID!!!")
             # if there is no car ahead and a PID defined, undefine the PID
             if self.PIDController is not None and self.front_distance() > 100:
