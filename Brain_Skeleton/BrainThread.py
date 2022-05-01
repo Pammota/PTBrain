@@ -146,7 +146,7 @@ class BrainThread(Thread):
 
             if self.controller.state == "Crosswalk" or self.num_frames % 3 == 0:
                 dtend = time.time()
-                dt = dtstart - dtend
+                dt = dtend - dtstart
                 DSFront_info = self.get_distance_info()
                 dtstart = time.time()
 
