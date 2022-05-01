@@ -51,9 +51,11 @@ class Controller():
             # if there is a car ahead and not PID defined, define a PID
             if self.PIDController is None and self.front_distance() < 60:
                 self.PIDController = PIDControl(60)
+                print("ACTIVATED PID!!!")
             # if there is no car ahead and a PID defined, undefine the PID
             if self.PIDController is not None and self.front_distance() > 100:
                 self.PIDController = None
+                print("DACTIVATED PID")
         elif self.state == "Intersection":
             if not self.ongoing_intersection:
                 self.state = "Lane Follow"
@@ -91,6 +93,7 @@ class Controller():
             elif self.PIDController is not None:  # keep distance from the car in front
                 speed = self.PIDController.update(self.front_distance(), self.dt)
                 speed = np.clip(speed, 0, 23)
+                print("PID GIVEN SPEED = {}".format(speed))
                 return [speed, self.theta, 0, 0, 0, 0, 0]
             return [self.base_speed, self.theta, 0, 0, 0, 0, 0]
 
