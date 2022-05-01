@@ -49,7 +49,7 @@ class Controller():
                 self.timer_start = time.time()
 
             # if there is a car ahead and not PID defined, define a PID
-            if self.PIDController is None and self.front_distance() < 60:
+            if self.PIDController is None and self.front_distance() < 0:
                 self.PIDController = PIDControl(50)
                 print("ACTIVATED PID!!!")
             # if there is no car ahead and a PID defined, undefine the PID
