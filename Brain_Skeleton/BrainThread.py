@@ -140,7 +140,9 @@ class BrainThread(Thread):
             ############### here takes place the processing of the info #############
 
 
+            dstime = time.time()
             DSFront_info = self.get_distance_info()
+            print("Distance detection time: {}".format(time.time() - dstime))
             self.controller.checkState(obj_info, lane_info, DSFront_info)
 
             action = self.controller.takeAction()
@@ -326,7 +328,7 @@ class BrainThread(Thread):
         rec_data = self.serialComDS.read(10)
         data_left = self.serialComDS.inWaiting()
         rec_data += self.serialComDS.read(data_left)
-        #print(rec_data)
+        print(rec_data)
 
         rec_numbers = [int(s) for s in rec_data.split() if s.isdigit()]
 
