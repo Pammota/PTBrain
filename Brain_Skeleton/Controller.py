@@ -21,7 +21,7 @@ class Controller():
         self.timer_start = 0
         self.timer_crt = 0
         self.pedestrian_present = False
-        self.PIDController = PIDControl(60)
+        self.PIDController = None
 
         self.executed = {"parking": False, "crosswalk": False}
 
@@ -48,7 +48,7 @@ class Controller():
 
             # if there is a car ahead and not PID defined, define a PID
             if self.PIDController is None and self.front_distance() < 0:
-                self.PIDController = PIDControl(50)
+                self.PIDController = PIDControl(40)
                 print("ACTIVATED PID!!!")
             # if there is no car ahead and a PID defined, undefine the PID
             if self.PIDController is not None and self.front_distance() > 100:
