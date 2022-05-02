@@ -18,7 +18,7 @@ class DistanceSensor(Thread):
         rec_data = self.serialComDS.read(10)
         data_left = self.serialComDS.inWaiting()
         rec_data += self.serialComDS.read(data_left)
-        print(rec_data)
+        #print(rec_data)
 
         rec_numbers = [int(s) for s in rec_data.split() if s.isdigit()]
 
