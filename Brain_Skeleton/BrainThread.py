@@ -5,6 +5,7 @@ from LaneDetectionThread import LaneDetectionThread
 from ObjectDetectionThread import ObjectDetectionThread
 from Controller import Controller
 from writethread import WriteThread
+from DistSensor import DistanceSensor
 from config import *
 import serial
 import time
@@ -69,9 +70,7 @@ class BrainThread(Thread):
         self.serialComNucleo.flushInput()
         self.serialComNucleo.flushOutput()
 
-        self.serialComDS = serial.Serial(devFileDS, 9600)
-        self.serialComDS.flushInput()
-        self.serialComDS.flushOutput()
+        self.distanceSensor = DistanceSensor(devFileDS)
 
         self.speed = 0
 
@@ -141,7 +140,7 @@ class BrainThread(Thread):
 
 
             dstime = time.time()
-            DSFront_info = self.get_distance_info()
+            DSFront_info = self.distanceSensor.get_current_distance()
             print("Distance detection time: {}".format(time.time() - dstime))
             self.controller.checkState(obj_info, lane_info, DSFront_info)
 
@@ -324,21 +323,6 @@ class BrainThread(Thread):
         cv2.imshow("graph", canvas)
         cv2.waitKey(0)
 
-    def get_distance_info(self):
-        rec_data = self.serialComDS.read(10)
-        data_left = self.serialComDS.inWaiting()
-        rec_data += self.serialComDS.read(data_left)
-        print(rec_data)
-
-        rec_numbers = [int(s) for s in rec_data.split() if s.isdigit()]
-
-        rec_number = 3
-        try:
-            rec_number = rec_numbers[0]
-        except IndexError:
-            rec_number = 3
-        print(rec_number)
-        return rec_number
 
     def get_crt_speed(self):
         return self.speed
