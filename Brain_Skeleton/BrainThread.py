@@ -140,10 +140,10 @@ class BrainThread(Thread):
             ############### here takes place the processing of the info #############
 
 
-            dstime = time.time()
+            """dstime = time.time()
             DSFront_info = self.get_distance_info()
             print("Distance detection time: {}".format(time.time() - dstime))
-            self.controller.checkState(obj_info, lane_info, DSFront_info)
+            self.controller.checkState(obj_info, lane_info, DSFront_info)"""
 
             action = self.controller.takeAction()
             self.speed = action[ACTION_SPEED]
