@@ -71,6 +71,7 @@ class BrainThread(Thread):
         self.serialComNucleo.flushOutput()
 
         self.distanceSensor = DistanceSensor(devFileDS)
+        self.distanceSensor.start()
 
         self.speed = 0
 
