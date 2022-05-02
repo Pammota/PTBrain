@@ -51,7 +51,7 @@ class Controller():
                 self.PIDController = PIDControl(40)
                 print("ACTIVATED PID!!!")
             # if there is no car ahead and a PID defined, undefine the PID
-            if self.PIDController is not None and self.front_distance() > 500:
+            if self.PIDController is not None and self.front_distance() > 100:
                 self.PIDController = None
                 print("DACTIVATED PID")
 
