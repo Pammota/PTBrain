@@ -90,7 +90,7 @@ class BrainThread(Thread):
         obj_info = {"forward": False, "forbidden": False, "parking": False, "sem_yellow": False, "sem_red": False,
                  "sem_green": False, "priority": False, "crosswalk": False, "stop": False}
         bboxes = []
-        DSFront_info = 0
+        DSFront_info = 1000
         time.sleep(0.5)
         start = time.time()
         dtstart = time.time()
@@ -140,9 +140,9 @@ class BrainThread(Thread):
             ############### here takes place the processing of the info #############
 
 
-            dstime = time.time()
+            """dstime = time.time()
             DSFront_info = self.get_distance_info()
-            print("Distance detection time: {}".format(time.time() - dstime))
+            print("Distance detection time: {}".format(time.time() - dstime))"""
             self.controller.checkState(obj_info, lane_info, DSFront_info)
 
             action = self.controller.takeAction()
