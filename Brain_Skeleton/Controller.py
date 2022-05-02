@@ -32,7 +32,7 @@ class Controller():
         self.setTheta(LD_info)
         self.passed_horiz_line = LD_info["horiz_line"]
         self.front_distances.append(DSFront_info)
-        self.front_distances = self.front_distances[-5:]
+        self.front_distances = self.front_distances[-7:]
 
         if self.state == "Lane Follow":
             if self.passed_horiz_line and not self.flags["crosswalk"]:
