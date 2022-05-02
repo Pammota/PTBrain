@@ -3,7 +3,7 @@ import time
 import numpy as np
 
 class PIDControl():
-    def __init__(self, threshold, kp=0.85, ki=0.55, kd=0.2):
+    def __init__(self, threshold, kp=0.85, ki=0.65, kd=0.35):
 
         self.threshold = threshold
         self.kp = kp
