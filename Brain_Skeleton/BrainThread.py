@@ -73,7 +73,6 @@ class BrainThread(Thread):
         self.serialComDS.flushInput()
         self.serialComDS.flushOutput()
 
-
         self.speed = 0
 
         # creates and starts the threads managed by this object
@@ -140,15 +139,9 @@ class BrainThread(Thread):
 
             ############### here takes place the processing of the info #############
 
-            if dt == 0:
-                dt = time.time() - dtstart
-            self.controller.checkState(dt, obj_info, lane_info, DSFront_info)
 
-            if self.controller.state == "Crosswalk" or self.num_frames % 3 == 0:
-                dtend = time.time()
-                dt = dtend - dtstart
-                DSFront_info = self.get_distance_info()
-                dtstart = time.time()
+            DSFront_info = self.get_distance_info()
+            self.controller.checkState(obj_info, lane_info, DSFront_info)
 
             action = self.controller.takeAction()
             self.speed = action[ACTION_SPEED]

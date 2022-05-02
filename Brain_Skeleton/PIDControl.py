@@ -1,3 +1,5 @@
+import time
+
 import numpy as np
 
 class PIDControl():
@@ -9,13 +11,18 @@ class PIDControl():
         self.kd = kd
         self.i = 0
         self.prev_err = 0
+        self.timestamp = time.time()
 
-    def update(self, measurement, dt):
+    def update(self, measurement):
+        new_timestamp = time.time()
+        dt = new_timestamp - self.timestamp
 
         err = measurement - self.threshold
         self.i += dt*err
         d = (err - self.prev_err)/dt
 
         self.prev_err = err
+        self.timestamp = new_timestamp
+
         print(err, self.i, d, dt)
         return self.kp * err + self.ki * self.i + self.kd * d

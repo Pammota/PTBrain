@@ -79,7 +79,7 @@ class imu(threading.Thread):
                 self.accely = self.accel[1]
                 self.accelz = self.accel[2]
 
-                #print("roll = %f pitch = %f yaw = %f" % (self.roll, self.pitch, self.yaw))
+                print("yaw = %f" % (self.yaw))
 
                 #print("accelx = %f, accely = %f accelz = %f" %(self.accelx, self.accely, self.accelz))
 

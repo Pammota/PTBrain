@@ -22,11 +22,10 @@ class Controller():
         self.timer_crt = 0
         self.pedestrian_present = False
         self.PIDController = PIDControl(60)
-        self.dt = 0.001
 
         self.executed = {"parking": False, "crosswalk": False}
 
-    def checkState(self, dt, OD_info, LD_info, DSFront_info=100):
+    def checkState(self, OD_info, LD_info, DSFront_info=100):
         self.timer_crt = time.time()
 
         self.setFlags(OD_info)
@@ -34,7 +33,6 @@ class Controller():
         self.passed_horiz_line = LD_info["horiz_line"]
         self.front_distances.append(DSFront_info)
         self.front_distances = self.front_distances[-10:]
-        self.dt = dt
 
         if self.state == "Lane Follow":
             if self.passed_horiz_line and not self.flags["crosswalk"]:
@@ -56,10 +54,12 @@ class Controller():
             if self.PIDController is not None and self.front_distance() > 100:
                 self.PIDController = None
                 print("DACTIVATED PID")
+
         elif self.state == "Intersection":
             if not self.ongoing_intersection:
                 self.state = "Lane Follow"
                 self.dir_idx += 1
+
         elif self.state == "Crosswalk":
             if not self.executed["crosswalk"]:
                 if self.timer_crt - self.timer_start > 3:
@@ -91,7 +91,7 @@ class Controller():
                 return [0, 0, 0, 0, 0, 0, 1]  #activate parking flag
             # if a PID is defined => we have a car ahead
             elif self.PIDController is not None:  # keep distance from the car in front
-                speed_off = self.PIDController.update(self.front_distance(), self.dt)
+                speed_off = self.PIDController.update(self.front_distance())
                 speed_off = np.clip(speed_off, -10, 10)
                 print("PID GIVEN SPEED = {}".format(speed_off))
                 return [self.base_speed + speed_off, self.theta, 0, 0, 0, 0, 0]
@@ -139,7 +139,7 @@ class Controller():
             self.executed["crosswalk"] = crosswalk
 
     def front_distance(self):
-        return sum(self.front_distances) / len(self.front_distances)
+        return np.median(self.front_distances)
 
     @staticmethod
     def getAngleCommand(theta):
