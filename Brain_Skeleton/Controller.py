@@ -92,7 +92,7 @@ class Controller():
             # if a PID is defined => we have a car ahead
             elif self.PIDController is not None:  # keep distance from the car in front
                 speed_off = self.PIDController.update(self.front_distance())
-                speed_off = np.clip(speed_off, -10, 10)
+                speed_off = np.clip(speed_off, -13, 13)
                 print("PID GIVEN SPEED = {}".format(speed_off))
                 return [self.base_speed + speed_off, self.theta, 0, 0, 0, 0, 0]
             return [self.base_speed, self.theta, 0, 0, 0, 0, 0]
