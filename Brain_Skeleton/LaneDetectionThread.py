@@ -313,7 +313,7 @@ class LaneDetectionThread(Thread):
 
             #print("INTERSECTION = {}".format(intersection))
 
-            theta_prev = (theta_prev // 3) * 3
+            #theta_prev = (theta_prev // 3) * 3
 
 
             end = time.time()
