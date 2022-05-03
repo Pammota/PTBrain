@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 
 class PIDControl():
-    def __init__(self, threshold, kp=0.31, ki=0.18, kd=0.1):
+    def __init__(self, threshold, kp=0.31, ki=0, kd=0):
 
         self.threshold = threshold
         self.kp = kp
