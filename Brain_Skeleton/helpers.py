@@ -10,14 +10,14 @@ def accept_box(x1, x2, y1, y2, w, h):
     if (x2 - x1) < w * 0.1 or (y2 - y1) < h * 0.1:  #No small boxes
         return False
 
-    if x2 < w * 0.65 or y1 > h * 0.65:  #No signs in the left half or bottom half
+    """if x2 < w * 0.65 or y1 > h * 0.65:  #No signs in the left half or bottom half
         return False
 
     if (y2 - y1) != 0 and (x2 - x1) / (y2 - y1) > 2:  #No asymm rect area
         return False
     
     if (x2 - x1) != 0 and (y2 - y1) / (x2 - x1) > 2:  #No asym rect area
-        return False
+        return False"""
 
     return True
 
