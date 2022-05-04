@@ -167,8 +167,8 @@ class PathTracking:
                 steering_angle = 23
             if steering_angle < -23:
                 steering_angle = -23
-            print("Steering angle = {}".format(steering_angle))
-            angle_command = Controller.getAngleCommand(steering_angle)
+            print("Steering angle = {}".format(-steering_angle))
+            angle_command = Controller.getAngleCommand(-steering_angle)
 
             self.outP_com.send((angle_command, speed_command))
 
