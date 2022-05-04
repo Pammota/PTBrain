@@ -484,7 +484,7 @@ class BrainThread(Thread):
             ref_thresh = 15
             final_thresh = 20
             pathTracking = PathTracking(self.outP_com, map=map, ref_points=ref_points, size_pixel=size_pixel, size_cm=size_cm,
-                                        x_car=x_car + x0, y_car=y_car - y0, theta_yaw_map=theta_yaw_map, yaw=yaw,
+                                        x_car=x_car + x0, y_car=y0 - y_car, theta_yaw_map=theta_yaw_map, yaw=yaw,
                                         v=v, dt=dt, ref_thresh=ref_thresh, final_thresh=final_thresh,
                                         end_point=end_point)
             pathTracking.run()
