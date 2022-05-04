@@ -100,6 +100,7 @@ class PathTracking:
             print("x_ref = {}. y_ref = {}".format(x_ref, y_ref))
             slope_car = math.tan(math.radians(self.theta_car))
             print("slope_car = {}".format(slope_car))
+            print("theta_perp_car = {} degrees".format((self.theta_car + 90) % 360))
             slope_perp_car = math.tan(math.radians((self.theta_car + 90) % 360))
             print("slope_perp_car = {}".format(slope_perp_car))
             print("eq_perp_car:")
@@ -146,7 +147,7 @@ class PathTracking:
         while self.distance((self.x_car, self.y_car), (self.x_end, self.y_end)) >= self.final_thresh:
 
             print("x_car = {}, y_car = {}".format(self.x_car, self.y_car))
-            print("heading_car = {}".format(math.radians(self.theta_car)))
+            print("heading_car = {} degree".format(self.theta_car))
             point_ref = self.get_ref_point()
             x_ref, y_ref = point_ref
 
