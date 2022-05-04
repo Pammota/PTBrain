@@ -91,8 +91,10 @@ class PathTracking:
         point_ref_min = None
         min_dist = 100000000
 
+        print(self.ref_points)
+
         for point_ref in self.ref_points:
-            print(point_ref)
+            # print(point_ref)
             x_ref, y_ref = point_ref
             slope_car = math.tan(math.radians(self.theta_car))
             slope_perp_car = math.tan(math.radians((self.theta_car + 90) // 360))
