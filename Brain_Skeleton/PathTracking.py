@@ -157,7 +157,7 @@ class PathTracking:
             point_ref = self.get_ref_point()
             x_ref, y_ref = point_ref
 
-            theta_ref = (math.atan((y_ref - self.y_car) / (x_ref - self.x_car)) + 360) % 360
+            theta_ref = (math.degrees(math.atan((y_ref - self.y_car) / (x_ref - self.x_car))) + 360) % 360
             print("theta_ref = {} degree".format(theta_ref))
             steering_angle = -int(theta_ref - self.theta_car)  # data goes to the brain
             if steering_angle > 23:
