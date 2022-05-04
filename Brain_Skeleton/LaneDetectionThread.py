@@ -289,8 +289,8 @@ class LaneDetectionThread(Thread):
             self.theta_yaw_map = 90 + math.degrees(slope_horiz)
             # print("theta_yaw_map = {}".format(theta_yaw_map))
 
-            self.x_offset = self.y_heading_car_cv - y
-            self.y_offset = self.height_ROI_IPM - x
+            self.x_offset = (self.y_heading_car_cv - y) * self.pixel_resolution
+            self.y_offset = (self.height_ROI_IPM - x) * self.pixel_resolution
             # print("x_offset = {} cm, y_offset = {} cm".format(x_offset * self.pixel_resolution, y_offset * self.pixel_resolution))
 
             return True
