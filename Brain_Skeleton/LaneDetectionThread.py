@@ -10,7 +10,7 @@ from utils import *
 
 class LaneDetectionThread(Thread):
 
-    def __init__(self, inP_img, outP_obj, brain):
+    def __init__(self, inP_img, outP_lane, brain):
         """
 
         :param inP_img: receives a preprocessed image from a pipe
@@ -18,7 +18,7 @@ class LaneDetectionThread(Thread):
         """
         super(LaneDetectionThread, self).__init__()
         self.inP_img = inP_img
-        self.outP_obj = outP_obj
+        self.outP_lane = outP_lane
         self.brain = brain
 
         #self.cap = cv2.VideoCapture(0)
