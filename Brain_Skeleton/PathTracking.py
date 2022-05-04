@@ -99,7 +99,7 @@ class PathTracking:
             x_ref, y_ref = point_ref
             print("x_ref = {}. y_ref = {}".format(x_ref, y_ref))
             slope_car = math.tan(math.radians(self.theta_car))
-            slope_perp_car = math.tan(math.radians((self.theta_car + 90) // 360))
+            slope_perp_car = math.tan(math.radians((self.theta_car + 90) % 360))
             print("eq_perp_car:")
             eq_perp_car = self.get_line_eq(slope_perp_car, (self.x_car, self.y_car))
             print("eq_ref:")
