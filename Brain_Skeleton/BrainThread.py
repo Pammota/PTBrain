@@ -461,6 +461,8 @@ class BrainThread(Thread):
         size_cm = 210
         ref_points = []
 
+        x0, y0 = 120, 30
+
         pathGenerator = PathGenerator()
 
         intersection = False
