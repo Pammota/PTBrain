@@ -44,9 +44,9 @@ class Map:
         # draw ref points
         for point in ref_points:
             x, y = self.get_point_map(point)
-            x_cv = int(abs(y / self.pixel_resolution - self.size_pixel))
-            y_cv = int(x / self.pixel_resolution)
-            if 0 <= x_cv < self.size_pixel and 0 <= y_cv < self.size_pixel:
+            # x_cv = int(abs(y / self.pixel_resolution - self.size_pixel))
+            # y_cv = int(x / self.pixel_resolution)
+            if 0 <= x < self.size_pixel and 0 <= y < self.size_pixel:
                 self.map[x_cv][y_cv] = 255
 
     def get_point_map(self, p):
