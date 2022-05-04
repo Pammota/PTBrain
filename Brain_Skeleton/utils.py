@@ -28,8 +28,10 @@ class Utils:
 
     def preprocessing(self, frame_ROI):
         frame_ROI_gray = cv2.cvtColor(frame_ROI, cv2.COLOR_BGR2GRAY)
-        frame_ROI_blurred = cv2.GaussianBlur(frame_ROI_gray, (5, 5), 0)
-        frame_ROI_canny = cv2.Canny(frame_ROI_blurred, 180, 255)
+        # frame_ROI_blurred = cv2.GaussianBlur(frame_ROI_gray, (5, 5), 0)
+        gaussian = cv2.GaussianBlur(frame_ROI_gray, (5,5), sigmaX=0)
+        contrast = cv2.convertScaleAbs(gaussian, alpha=1.6)
+        frame_ROI_canny = cv2.Canny(contrast, 180, 255)
         return frame_ROI_canny
 
     def estimate_lane(self, lines, height_ROI, frame_ROI, frame_ROI_IPM=None):
@@ -63,7 +65,7 @@ class Utils:
                 x2_cv = 0
                 y1_cv = int(coeff[1] * x1_cv + coeff[0])
                 y2_cv = int(coeff[1] * x2_cv + coeff[0])
-                # cv2.line(frame_ROI, (y1_cv, x1_cv), (y2_cv, x2_cv), (0, 255, 0), 3)
+                cv2.line(frame_ROI, (y1_cv, x1_cv), (y2_cv, x2_cv), (0, 255, 0), 3)
 
                 return [y1_cv, x1_cv, y2_cv, x2_cv]
             else:
@@ -76,6 +78,23 @@ class Utils:
         src_points = np.array([[[y1_cv, x1_cv], [y2_cv, x2_cv]]], dtype=np.float32)
         dest_points = cv2.perspectiveTransform(src_points, H)[0]
         return [int(dest_points[0][0]), int(dest_points[0][1]), int(dest_points[1][0]), int(dest_points[1][1])]
+
+    def get_line_eq(self, p1, p2):
+        y1, x1 = p1
+        y2, x2 = p2
+        if y1 != y2:
+            slope = float((x2 - x1) / (y2 - y1))
+        else:
+            slope = np.sign(y2 - y1) * 3000000
+        intercept = float(y1 - slope * x1)
+        return [intercept, slope]
+
+    def line_intersection(self, eq1, eq2):
+        b1, m1 = eq1
+        b2, m2 = eq2
+        y = (b1 - b2) / (m2 - m1)
+        x = m1 * y + b1
+        return int(y), int(x)
 
     def translation_IPM(self, line_IPM, width_road, left_lane=None):
         if left_lane:
