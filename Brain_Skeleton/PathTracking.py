@@ -66,6 +66,7 @@ class PathTracking:
     def __init__(self, outP_com, map=None, ref_points=None, size_pixel=None, size_cm=None,
                  x_car=None, y_car=None, theta_yaw_map=None, yaw=None, v=None, dt=None,
                  ref_thresh=None, final_thresh=None, end_point=None,
+                 imu_tracker=None
                  ):
         # info about the map
         self.map = Map(size_pixel=size_pixel, size_cm=size_cm, ref_points=ref_points)
@@ -87,6 +88,9 @@ class PathTracking:
         self.x_end, self.y_end = end_point
         self.ref_thresh = ref_thresh
         self.final_thresh = final_thresh
+
+        # IMU
+        self.imu_tracker = imu_tracker
 
     def get_ref_point(self):
         point_ref_min = None
@@ -155,14 +159,14 @@ class PathTracking:
 
             theta_ref = (math.atan((y_ref - self.y_car) / (x_ref - self.x_car)) + 360) // 360
 
-            steering_angle =  - (self.theta_car - theta_ref)  # data goes to the brain
+            steering_angle = - (self.theta_car - theta_ref)  # data goes to the brain
             angle_command = Controller.getAngleCommand(steering_angle)
 
             self.outP_com.send((angle_command, speed_command))
 
             self.map.draw_line((self.x_car, self.y_car), (x_ref, y_ref))
 
-            yaw = 0  # yaw data from IMU
+            yaw = self.imu_tracker.yaw  # yaw data from IMU
             yaw = (self.yaw_to_trigo(yaw) - self.theta_offset + 360) % 360
             self.theta_car = yaw
 
