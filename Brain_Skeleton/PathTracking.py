@@ -1,3 +1,5 @@
+import time
+
 import cv2
 import numpy as np
 import math
@@ -150,5 +152,6 @@ class PathTracking:
 
             self.x_car = self.x_car + self.v * math.cos(math.radians(self.theta_car)) * self.dt
             self.y_car = self.y_car + self.v * math.sin(math.radians(self.theta_car)) * self.dt
-
+            time.sleep(self.dt)
             cv2.imshow("Map", self.map)
+            cv2.waitKey(1)
