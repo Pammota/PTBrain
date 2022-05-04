@@ -114,6 +114,7 @@ class PathTracking:
                 d = self.distance((x_ref, y_ref), (self.x_car, self.y_car))
                 print("d = {} cm".format(d))
                 if d >= self.ref_thresh and d >= min_dist:
+                    print("FOUND REFERENCE POINT TO FOLLOW")
                     point_ref_min = point_ref
                     min_dist = d
 
