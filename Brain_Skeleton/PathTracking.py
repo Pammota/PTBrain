@@ -77,7 +77,7 @@ class PathTracking:
         # info about the car
         self.x_car = x_car
         self.y_car = y_car
-        print("x_car = {}, y_car = {}".format(self.x_car, self.y_car))
+        # print("x_car = {}, y_car = {}".format(self.x_car, self.y_car))
         self.theta_car = theta_yaw_map  # heading angle of the car wrt ot the map cs
         self.theta_offset = (theta_yaw_map - self.yaw_to_trigo(yaw) + 360) % 360
         self.v = v
@@ -99,10 +99,10 @@ class PathTracking:
             x_ref, y_ref = point_ref
             slope_car = math.tan(math.radians(self.theta_car))
             slope_perp_car = math.tan(math.radians((self.theta_car + 90) // 360))
-
+            print("eq_perp_car:")
             eq_perp_car = self.get_line_eq(slope_perp_car, (self.x_car, self.y_car))
+            print("eq_ref:")
             eq_ref = self.get_line_eq(slope_car, (x_ref, y_ref))
-
             x_int, y_int = self.line_intersection(eq_perp_car, eq_ref)
 
             if y_ref - y_int >= 0:
@@ -132,6 +132,7 @@ class PathTracking:
     def get_line_eq(self, slope, point):
         x, y = point
         c = y - slope * x
+        print("y = {} * x + {}".format(slope, c))
         return (slope, c)
 
     def run(self):
