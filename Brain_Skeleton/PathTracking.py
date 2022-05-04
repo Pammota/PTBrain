@@ -68,7 +68,7 @@ class PathTracking:
                  ref_thresh=None, final_thresh=None, end_point=None,
                  ):
         # info about the map
-        self.map = map(size_pixel=size_pixel, size_cm=size_cm, ref_points=ref_points)
+        self.map = Map(size_pixel=size_pixel, size_cm=size_cm, ref_points=ref_points)
         self.ref_points = ref_points
 
         #misc
