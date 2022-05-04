@@ -155,7 +155,7 @@ class PathTracking:
 
             theta_ref = (math.atan((y_ref - self.y_car) / (x_ref - self.x_car)) + 360) // 360
 
-            steering_angle = self.theta_car - theta_ref  # data goes to the brain
+            steering_angle =  - (self.theta_car - theta_ref)  # data goes to the brain
             angle_command = Controller.getAngleCommand(steering_angle)
 
             self.outP_com.send((angle_command, speed_command))
