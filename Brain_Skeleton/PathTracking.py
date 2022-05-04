@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 import math
-
+from Controller import Controller
 
 class PathGenerator:
 
@@ -58,13 +58,16 @@ class Map:
 
 class PathTracking:
 
-    def __init__(self, map=None, ref_points=None, size_pixel=None, size_cm=None,
+    def __init__(self, outP_com, map=None, ref_points=None, size_pixel=None, size_cm=None,
                  x_car=None, y_car=None, theta_yaw_map=None, yaw=None, v=None, dt=None,
                  ref_thresh=None, final_thresh=None, end_point=None,
                  ):
         # info about the map
         self.map = map(size_pixel=size_pixel, size_cm=size_cm, ref_points=ref_points)
         self.ref_points = ref_points
+
+        #misc
+        self.outP_com = outP_com
 
         # info about the car
         self.x_car = x_car
@@ -123,6 +126,9 @@ class PathTracking:
         return (slope, c)
 
     def run(self):
+
+        speed_command = Controller.getSpeedCommand(13)
+
         while self.distance((self.x_car, self.y_car), (self.x_end, self.y_end)) >= self.final_thresh:
 
             point_ref = self.get_ref_point()
@@ -131,6 +137,9 @@ class PathTracking:
             theta_ref = (math.atan((y_ref - self.y_car) / (x_ref - self.x_car)) + 360) // 360
 
             steering_angle = self.theta_car - theta_ref  # data goes to the brain
+            angle_command = Controller.getAngleCommand(steering_angle)
+
+            self.outP_com.send((angle_command, speed_command))
 
             self.map.draw_line((self.x_car, self.y_car), (x_ref, y_ref))
 
