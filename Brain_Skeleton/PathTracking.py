@@ -146,7 +146,7 @@ class PathTracking:
         while self.distance((self.x_car, self.y_car), (self.x_end, self.y_end)) >= self.final_thresh:
 
             print("x_car = {}, y_car = {}".format(self.x_car, self.y_car))
-            print("heading_car = {}".format(self.theta_car))
+            print("heading_car = {}".format(math.radians(self.theta_car)))
             point_ref = self.get_ref_point()
             x_ref, y_ref = point_ref
 
