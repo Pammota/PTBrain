@@ -148,7 +148,7 @@ class PathTracking:
 
     def run(self):
 
-        speed_command = Controller.getSpeedCommand(13)
+        speed_command = Controller.getSpeedCommand(self.v)
 
         while self.distance((self.x_car, self.y_car), (self.x_end, self.y_end)) >= self.final_thresh:
 

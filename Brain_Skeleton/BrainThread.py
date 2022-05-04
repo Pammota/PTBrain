@@ -225,7 +225,7 @@ class BrainThread(Thread):
 
         self.path_tracking(case=direction, x_car=x_offset, y_car=y_offset,
                            theta_yaw_map=theta_yaw_map, yaw=yaw,
-                           v=self.controller.base_speed,
+                           v=12,
                            dt=0.07)
 
         # if direction == "left":
