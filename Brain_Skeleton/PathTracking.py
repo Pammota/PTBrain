@@ -97,24 +97,24 @@ class PathTracking:
         for point_ref in self.ref_points:
             # print(point_ref)
             x_ref, y_ref = point_ref
-            print("x_ref = {}. y_ref = {}".format(x_ref, y_ref))
+            # print("x_ref = {}. y_ref = {}".format(x_ref, y_ref))
             slope_car = math.tan(math.radians(self.theta_car))
-            print("slope_car = {}".format(slope_car))
-            print("theta_perp_car = {} degrees".format((self.theta_car + 90) % 360))
+            # print("slope_car = {}".format(slope_car))
+            # print("theta_perp_car = {} degrees".format((self.theta_car + 90) % 360))
             slope_perp_car = math.tan(math.radians((self.theta_car + 90) % 360))
-            print("slope_perp_car = {}".format(slope_perp_car))
-            print("eq_perp_car:")
+            # print("slope_perp_car = {}".format(slope_perp_car))
+            # print("eq_perp_car:")
             eq_perp_car = self.get_line_eq(slope_perp_car, (self.x_car, self.y_car))
-            print("eq_ref:")
+            # print("eq_ref:")
             eq_ref = self.get_line_eq(slope_car, (x_ref, y_ref))
             x_int, y_int = self.line_intersection(eq_perp_car, eq_ref)
-            print("x_int = {}, y_int = {}".format(x_int, y_int))
+            # print("x_int = {}, y_int = {}".format(x_int, y_int))
 
             if y_ref - y_int >= 0:
                 d = self.distance((x_ref, y_ref), (self.x_car, self.y_car))
-                print("d = {} cm".format(d))
+                # print("d = {} cm".format(d))
                 if d >= self.ref_thresh and d <= min_dist:
-                    print("FOUND REFERENCE POINT TO FOLLOW")
+                    # print("FOUND REFERENCE POINT TO FOLLOW")
                     point_ref_min = point_ref
                     min_dist = d
 
@@ -139,7 +139,7 @@ class PathTracking:
     def get_line_eq(self, slope, point):
         x, y = point
         c = y - slope * x
-        print("y = {} * x + {}".format(slope, c))
+        # print("y = {} * x + {}".format(slope, c))
         return (slope, c)
 
     def run(self):
