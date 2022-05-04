@@ -1,3 +1,4 @@
+import cv2
 import numpy as np
 import math
 
@@ -40,14 +41,20 @@ class Map:
 
         # draw ref points
         for point in ref_points:
-            x, y = point
-            x, y = self.get_point_map(x, y)
+            x, y = self.get_point_map(point)
             self.map[int(abs(y / self.pixel_resolution - self.size_pixel))][int(x / self.pixel_resolution)] = 255
 
-    def get_point_map(self, x, y):
+    def get_point_map(self, p):
         # self.map[int(abs(y / self.pixel_resolution - self.size_pixel))][int(x / self.pixel_resolution)] = 255
+        x, y = p
         return int(x / self.pixel_resolution), int(abs(y / self.pixel_resolution - self.size_pixel))
 
+    def draw_line(self, p1, p2):
+        p1 = self.get_point_map(p1)
+        p2 = self.get_point_map(p2)
+        x1, y1 = p1
+        x2, y2 = p2
+        cv2.line(self.map, (x1, y1), (x2, y2), 255, 1)
 
 class PathTracking:
 
@@ -125,9 +132,14 @@ class PathTracking:
 
             steering_angle = self.theta_car - theta_ref  # data goes to the brain
 
+            self.map.draw_line((self.x_car, self.y_car), (x_ref, y_ref))
+
             yaw = 0  # yaw data from IMU
             yaw = (self.yaw_to_trigo(yaw) - self.theta_offset + 360) % 360
             self.theta_car = yaw
 
+
             self.x_car = self.x_car + self.v * math.cos(math.radians(self.theta_car)) * self.dt
             self.y_car = self.y_car + self.v * math.sin(math.radians(self.theta_car)) * self.dt
+
+            cv2.imshow("Map", self.map)

@@ -36,6 +36,8 @@ class BrainThread(Thread):
 
         # holds the threads managed by this object
         self.threads = []
+        self.laneDetectionThread = None
+        self.imuThread = None
 
         # constructs the video feed (from file if cameraSpoof exists, otherwise from camera
         self.cameraSpoof = cameraSpoof
@@ -216,19 +218,30 @@ class BrainThread(Thread):
             print("Currently stopped at the red traffic light at intersection.BRB")
             return
 
-        if direction == "left":
-            if self.cameraSpoof is None:
-                self.left_maneuver_routine()
-            print("Executing a left maneuver")
-        elif direction == "right":
-            if self.cameraSpoof is None:
-                self.right_maneuver_routine()
-            print("Executing a right maneuver")
-        elif direction == "forward":
-            self.forward_maneuver(theta)
-            print("Executing a forward maneuver")
-        else:
-            self.crosswalk_maneuver_routine()
+        x_offset = self.laneDetectionThread.x_offset
+        y_offset = self.laneDetectionThread.y_offset
+        theta_yaw_map = self.laneDetectionThread.theta_yaw_map
+        yaw = self.imuThread.yaw
+
+        self.path_tracking(case=direction, x_car=x_offset, y_car=y_offset,
+                           theta_yaw_map=theta_yaw_map, yaw=yaw,
+                           v=self.controller.base_speed,
+                           dt=0.13)
+
+        # if direction == "left":
+        #     if self.cameraSpoof is None:
+        #         self.path_tracking(case=direction, x_car=)
+        #         self.left_maneuver_routine()
+        #     print("Executing a left maneuver")
+        # elif direction == "right":
+        #     if self.cameraSpoof is None:
+        #         self.right_maneuver_routine()
+        #     print("Executing a right maneuver")
+        # elif direction == "forward":
+        #     self.forward_maneuver(theta)
+        #     print("Executing a forward maneuver")
+        # else:
+        #     self.crosswalk_maneuver_routine()
 
         self.last_intersection = self.num_frames
         self.controller.ongoing_intersection = False
@@ -362,14 +375,16 @@ class BrainThread(Thread):
 
         # adds threads
         #self.threads.append(ImageProcessingThread(inP_img, [outP_imgProc_lane, outP_imgProc_obj]))
-        self.threads.append(LaneDetectionThread(inP_brain_lane, outP_lane, self, show_lane=self.show_lane))
+        self.laneDetectionThread = LaneDetectionThread(inP_brain_lane, outP_lane, self, show_lane=self.show_lane)
+        self.threads.append(self.laneDetectionThread)
         self.threads.append(ObjectDetectionThread(inP_brain_obj, outP_obj, self))
         if self.cameraSpoof is None:
             self.threads.append(WriteThread(self.inP_com, self.serialComNucleo,
                                             zero_theta_command, zero_speed_command))
             #self.threads.append(ReadThread(self.serialComNucleo))
 
-        self.threads.append(IMU_tracking(self))
+        self.imuThread = IMU_tracking(self)
+        self.threads.append(self.imuThread)
 
         # starts all threads
         for thread in self.threads:
@@ -448,19 +463,24 @@ class BrainThread(Thread):
 
         pathGenerator = PathGenerator()
 
-        if case == "Left_Intersetion":
+        intersection = False
+
+        if case == "left":
             ref_points = pathGenerator.generate_circle_points(r=90, d=9, x_c=30, y_c=30, alpha_min=0, alpha_max=1.57)
             end_point = (30, 120)
-        if case == "Right_Intersection":
+            intersection = True
+        if case == "right":
             ref_points = pathGenerator.generate_circle_points(r=60, d=6, x_c=180, y_c=30, alpha_min=1.57, alpha_max=3.14)
             end_point = (180, 90)
-        if case == "Front_Intersection":
+            intersection = True
+        if case == "forward":
             ref_points = pathGenerator.generate_line_points(x1=120, y1=30, x2=120, y2=180, n=7)
             end_point = (120, 180)
-        if case != "No_Intesection":
+            intersection = True
+        if intersection == True:
             map = Map(size_pixel=size_pixel, size_cm=size_cm, ref_points=ref_points)
-            ref_thresh = None
-            final_thresh = None
+            ref_thresh = 15
+            final_thresh = 20
             pathTracking = PathTracking(map=map, ref_points=ref_points, size_pixel=size_pixel, size_cm=size_cm,
                                         x_car=x_car, y_car=y_car, theta_yaw_map=theta_yaw_map, yaw=yaw,
                                         v=v, dt=dt, ref_thresh=ref_thresh, final_thresh=final_thresh,

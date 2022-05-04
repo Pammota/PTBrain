@@ -22,6 +22,7 @@ class IMU_tracking(Thread):
 
         self.a_x = 0
         self.a_y = 0
+        self.yaw = 0
 
         self.theta = 0
         self.inner_map = Map()
@@ -35,8 +36,8 @@ class IMU_tracking(Thread):
 
             speed = self.brain.get_crt_speed()
 
-            self.a_x, self.a_y, yaw = self.imu.get_data()
-            self.theta = math.radians(yaw)
+            self.a_x, self.a_y, self.yaw = self.imu.get_data()
+            self.theta = math.radians(self.yaw)
 
             # self.a_x *= 9.87 # m / s ^ 2
             # self.a_y *= 9.87 # m / s ^ 2
@@ -77,7 +78,7 @@ class IMU_tracking(Thread):
 
             #print("v = {0:.5f}, a = {1:.5f}".format(self.v, math.sqrt(self.a_x**2 + self.a_y**2)))
 
-            self.inner_map.update_map(self.x, self.y, yaw)
+            self.inner_map.update_map(self.x, self.y, self.yaw)
             """image = self.inner_map.get_map()
             cv2.imshow("map", image)
             cv2.waitKey(1)"""
