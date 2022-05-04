@@ -28,7 +28,7 @@ class PIDControl():
         self.i += dt*err
         d = (err - self.prev_err)/dt
 
-        self.draw_graph(dt, err)
+        #self.draw_graph(dt, err)
         self.dtsum += dt
         self.prev_err = err
         self.timestamp = new_timestamp
