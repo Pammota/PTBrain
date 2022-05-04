@@ -1,30 +1,26 @@
 import numpy as np
 import config
 
-def size_threshold_max(x1, x2, y1, y2, w, h):
-    if (x2 - x1) > w * 0.35 or (y2 - y1) > h * 0.35:
+
+def accept_box(x1, x2, y1, y2, w, h):
+
+    if (x2 - x1) > w * 0.25 or (y2 - y1) > h * 0.25:  #No huge boxes
         return False
-    return True
 
-
-def size_threshold_min(x1, x2, y1, y2, w, h):
-    if (x2 - x1) < w * 0.12 and (y2 - y1) < h * 0.12:
+    if (x2 - x1) < w * 0.1 or (y2 - y1) < h * 0.1:  #No small boxes
         return False
-    return True
 
-def accept_box(boxes, box, tolerance):
-    """
-    Eliminate duplicate bounding boxes.
-    """
-    box_index = boxes.index(box)
+    if x2 < w * 0.65 or y1 > h * 0.65:  #No signs in the left half or bottom half
+        return False
 
-    for idx in range(box_index):
-        other_box = boxes[idx]
-        if abs(center(other_box, "x") - center(box, "x")) < tolerance and abs(
-                center(other_box, "y") - center(box, "y")) < tolerance:
-            return False
+    if (y2 - y1) != 0 and (x2 - x1) / (y2 - y1) > 2:  #No asymm rect area
+        return False
+    
+    if (x2 - x1) != 0 and (y2 - y1) / (x2 - x1) > 2:  #No asym rect area
+        return False
 
     return True
+
 
 def center(box, coord_type):
     """
