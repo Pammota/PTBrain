@@ -375,7 +375,7 @@ class BrainThread(Thread):
 
         # adds threads
         #self.threads.append(ImageProcessingThread(inP_img, [outP_imgProc_lane, outP_imgProc_obj]))
-        self.laneDetectionThread = LaneDetectionThread(inP_brain_lane, outP_lane, self, show_lane=self.show_lane)
+        self.laneDetectionThread = LaneDetectionThread(inP_brain_lane, outP_lane, self)
         self.threads.append(self.laneDetectionThread)
         self.threads.append(ObjectDetectionThread(inP_brain_obj, outP_obj, self))
         if self.cameraSpoof is None:
