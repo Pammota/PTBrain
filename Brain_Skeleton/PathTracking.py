@@ -47,7 +47,7 @@ class Map:
             # x_cv = int(abs(y / self.pixel_resolution - self.size_pixel))
             # y_cv = int(x / self.pixel_resolution)
             if 0 <= x < self.size_pixel and 0 <= y < self.size_pixel:
-                self.map[x][y] = 255
+                self.map[y][x] = 255
 
     def get_point_map(self, p):
         # self.map[int(abs(y / self.pixel_resolution - self.size_pixel))][int(x / self.pixel_resolution)] = 255
