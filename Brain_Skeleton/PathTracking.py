@@ -112,6 +112,7 @@ class PathTracking:
 
             if y_ref - y_int >= 0:
                 d = self.distance((x_ref, y_ref), (self.x_car, self.y_car))
+                print("d = {} cm".format(d))
                 if d >= self.ref_thresh and d >= min_dist:
                     point_ref_min = point_ref
                     min_dist = d
