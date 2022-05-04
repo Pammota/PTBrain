@@ -77,6 +77,7 @@ class PathTracking:
         # info about the car
         self.x_car = x_car
         self.y_car = y_car
+        print("x_car = {}, y_car = {}".format(self.x_car, self.y_car))
         self.theta_car = theta_yaw_map  # heading angle of the car wrt ot the map cs
         self.theta_offset = (theta_yaw_map - self.yaw_to_trigo(yaw) + 360) % 360
         self.v = v
@@ -91,7 +92,7 @@ class PathTracking:
         point_ref_min = None
         min_dist = 100000000
 
-        print(self.ref_points)
+        # print(self.ref_points)
 
         for point_ref in self.ref_points:
             # print(point_ref)
