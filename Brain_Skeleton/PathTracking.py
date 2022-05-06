@@ -80,6 +80,8 @@ class PathTracking:
         self.y_car = y_car
         # print("x_car = {}, y_car = {}".format(self.x_car, self.y_car))
         self.theta_car = theta_yaw_map  # heading angle of the car wrt ot the map cs
+        print("theta_yaw_map = {}".format(theta_yaw_map))
+        print("yaw in trigo cs = {}".format(self.yaw_to_trigo(yaw)))
         self.theta_offset = (theta_yaw_map - self.yaw_to_trigo(yaw) + 360) % 360
         self.v = v
         self.dt = dt
@@ -176,6 +178,7 @@ class PathTracking:
 
             yaw = self.imu_tracker.yaw  # yaw data from IMU
             yaw = (self.yaw_to_trigo(yaw) + self.theta_offset + 360) % 360
+            print("yaw transformed = {}".format(yaw))
             self.theta_car = yaw
 
 
