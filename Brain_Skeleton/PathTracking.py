@@ -175,7 +175,7 @@ class PathTracking:
             self.map.draw_line((self.x_car, self.y_car), (x_ref, y_ref))
 
             yaw = self.imu_tracker.yaw  # yaw data from IMU
-            yaw = (self.yaw_to_trigo(yaw) - self.theta_offset + 10 + 360) % 360
+            yaw = (self.yaw_to_trigo(yaw) - self.theta_offset + 360) % 360
             self.theta_car = yaw
 
 
