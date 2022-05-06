@@ -226,7 +226,7 @@ class BrainThread(Thread):
         self.path_tracking(case=direction, x_car=x_offset, y_car=y_offset,
                            theta_yaw_map=theta_yaw_map, yaw=yaw,
                            v=14,
-                           dt=0.05)
+                           dt=0.06)
 
         # if direction == "left":
         #     if self.cameraSpoof is None:
