@@ -151,7 +151,7 @@ class PathTracking:
         speed_command = Controller.getSpeedCommand(self.v)
 
         while self.distance((self.x_car, self.y_car), (self.x_end, self.y_end)) >= self.final_thresh:
-
+            print("final_distance = {} cm".format(self.distance((self.x_car, self.y_car), (self.x_end, self.y_end))))
             print("x_car = {}, y_car = {}".format(self.x_car, self.y_car))
             print("heading_car = {} degree".format(self.theta_car))
             point_ref = self.get_ref_point()
