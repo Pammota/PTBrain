@@ -190,6 +190,8 @@ class PathTracking:
         #     cv2.waitKey(1)
 
         while self.distance((self.x_car, self.y_car), (self.x_end, self.y_end)) >= self.final_thresh:
+            print("x_car = {}, y_car = {}".format(self.x_car, self.y_car))
+            print("theta car = {}".format(self.theta_car))
             point_ref = self.get_ref_point()
             x_ref, y_ref = point_ref
             self.map.draw_line((self.x_car, self.y_car), (x_ref, y_ref))
@@ -201,6 +203,7 @@ class PathTracking:
                 steering_angle = 23
             if steering_angle < -23:
                 steering_angle = -23
+            print("steering angle = {}".format(steering_angle))
 
             angle_command = Controller.getAngleCommand(int(steering_angle))
             self.outP_com.send((angle_command, speed_command))
