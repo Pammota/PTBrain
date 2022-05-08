@@ -26,27 +26,32 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
 
-import socket
-import os
+# Module imports
+import time
+# Module required for getting semaphore broadcast messages
+import vehicletovehicle
 
-class ServerConfig:
-    """ ServerConfig contains all data for creating and running the server. 
-    """
-    def __init__(self,broadcast_ip,negotiation_port,carClientPort):
-        self.negotiation_port=negotiation_port
-        self.broadcast_ip=broadcast_ip
-        self.carClientPort = carClientPort
-        self.localip = ServerConfig.getlocalip()
+## Method for running the listener example.
+#  @param none
+def runListener():
 
-    @staticmethod
-    def getlocalip():
-        if os.name == "nt":
-            hostname = socket.gethostname()
-            return socket.gethostbyname(hostname)
+    # Get time stamp when starting tester
+    start_time = time.time()
+    # Create listener object
+    vehicle = vehicletovehicle.vehicletovehicle()
+    # Start the listener
+    vehicle.start()
 
+    # Wait until 60 seconds passed
+    while (time.time()-start_time < 60):
+        # Clear the screen
+        print("\033c")
+        print("Example program that gets the info of the last car infos\n")
+        # Print each received msg
+        print("ID " + vehicle.ID + ", code " + vehicle.timestamp + ", coor " + vehicle.pos + ", angle " + vehicle.ang)
+        time.sleep(0.5)
+    # Stop the listener
+    vehicle.stop()
 
-        gw = os.popen("ip -4 route show default").read().split()
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        s.connect((gw[2], 0))
-        return s.getsockname()[0]
+if __name__ == "__main__":
+    runListener()

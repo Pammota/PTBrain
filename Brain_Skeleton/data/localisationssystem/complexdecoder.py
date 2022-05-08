@@ -26,27 +26,18 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
 
-import socket
-import os
+import json
 
-class ServerConfig:
-    """ ServerConfig contains all data for creating and running the server. 
-    """
-    def __init__(self,broadcast_ip,negotiation_port,carClientPort):
-        self.negotiation_port=negotiation_port
-        self.broadcast_ip=broadcast_ip
-        self.carClientPort = carClientPort
-        self.localip = ServerConfig.getlocalip()
+class ComplexDecoder(json.JSONDecoder):
+	""" Json decoder for complex numbers. The decodeable message consists of two float number and a type marking, like below:
+			{'type':'complex','real':1.0,'imag':1/0}
+		It will return a complex number object.
+	"""
+	def __init__(self,*args,**kwargs):
+		super(ComplexDecoder,self).__init__(object_hook=self.object_hook,*args,**kwargs)
 
-    @staticmethod
-    def getlocalip():
-        if os.name == "nt":
-            hostname = socket.gethostname()
-            return socket.gethostbyname(hostname)
-
-
-        gw = os.popen("ip -4 route show default").read().split()
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        s.connect((gw[2], 0))
-        return s.getsockname()[0]
+	def object_hook(self,dct):
+		# Checking the parameters of dictionary. 
+		if 'type' in dct and dct['type'] == 'complex' :	
+			return complex(dct['real'],dct['imag'])
+		return dct

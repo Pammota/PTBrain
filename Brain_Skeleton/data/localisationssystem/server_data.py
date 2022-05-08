@@ -26,27 +26,38 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
 
-import socket
-import os
+import sys
+sys.path.insert(0,'.')
 
-class ServerConfig:
-    """ ServerConfig contains all data for creating and running the server. 
-    """
-    def __init__(self,broadcast_ip,negotiation_port,carClientPort):
-        self.negotiation_port=negotiation_port
-        self.broadcast_ip=broadcast_ip
-        self.carClientPort = carClientPort
-        self.localip = ServerConfig.getlocalip()
+"""ServerData class contains all parameter of server. It need to connect to the server.
+The parameters is updated by other class, like ServerListener and SubscribeToServer
+"""
+class ServerData:
 
-    @staticmethod
-    def getlocalip():
-        if os.name == "nt":
-            hostname = socket.gethostname()
-            return socket.gethostbyname(hostname)
+	def __init__(self, server_IP = None, beacon_port = 12345):
+		#: ip address of server 
+		self.__server_ip = server_IP 
+		#: flag to mark, that the server is new. It becomes false, when the client subscribed on the server.
+		self.is_new_server = False
+		#: port, where the beacon server send broadcast messages
+		self.__beacon_port = beacon_port
+		#: port, where the server listen the car clients
+		self.carSubscriptionPort = None
+		#: connection, which used to communicate with the server
+		self.socket = None
 
+	
+	@property
+	def beacon_port(self):
+		return self.__beacon_port
 
-        gw = os.popen("ip -4 route show default").read().split()
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        s.connect((gw[2], 0))
-        return s.getsockname()[0]
+	@property
+	def serverip(self):
+		return self.__server_ip
+
+	@serverip.setter
+	def serverip(self, server_ip):
+		if self.__server_ip != server_ip:
+			self.__server_ip = server_ip
+			self.is_new_server = False
+	

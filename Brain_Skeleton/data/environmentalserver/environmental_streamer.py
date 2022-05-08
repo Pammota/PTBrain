@@ -26,27 +26,54 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
 
+import sys
+sys.path.insert(0,'.')
+
 import socket
-import os
-
-class ServerConfig:
-    """ ServerConfig contains all data for creating and running the server. 
-    """
-    def __init__(self,broadcast_ip,negotiation_port,carClientPort):
-        self.negotiation_port=negotiation_port
-        self.broadcast_ip=broadcast_ip
-        self.carClientPort = carClientPort
-        self.localip = ServerConfig.getlocalip()
-
-    @staticmethod
-    def getlocalip():
-        if os.name == "nt":
-            hostname = socket.gethostname()
-            return socket.gethostbyname(hostname)
+import json
+import time
 
 
-        gw = os.popen("ip -4 route show default").read().split()
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        s.connect((gw[2], 0))
-        return s.getsockname()[0]
+
+class EnvironmentalStreamer:
+	
+	def __init__(self,server_data):
+		"""EnvironmentalStreamer aims to send all message to the server. 
+		"""
+		
+		self.__server_data = server_data 
+		self.socket_pos = None
+		
+		self.sent = False
+
+	def stop(self):
+		self.sent = False
+		
+	def stream(self, obstacle_id, x, y):
+		""" 
+		After the subscription on the server, it's publishing the messages on the 
+		previously initialed socket.
+		"""
+		if self.__server_data.socket != None: 
+			try:
+				data = {'OBS': obstacle_id, 'x': x, "y": y}
+				msg = json.dumps((data))
+				try:
+					self.__server_data.socket.sendall(msg.encode('utf-8'))
+				except:
+					self.__server_data.socket.sendall(msg)
+				time.sleep(0.25)
+				self.sent = True
+			except Exception as e:
+				self.__server_data.socket.close()
+				self.__server_data.is_new_server = False
+				self.__server_data.socket = None
+				print("Sending data to server " + str(self.__server_data.serverip) + " failed with error: " + str(e))
+				self.__server_data.serverip = None
+			finally: 
+				pass
+			
+		else:
+			self.__server_data.is_new_server = False
+			self.__server_data.socket = None
+			self.__server_data.serverip = None

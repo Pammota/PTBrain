@@ -28,7 +28,7 @@
 
 import json
 import threading
-import SocketServer
+import socketserver
 import socket
 import time
 
@@ -56,8 +56,8 @@ class CarClientServerThread(threading.Thread):
 
 
 
-class CarClientServer (SocketServer.ThreadingTCPServer,object):
-    """ It has role to serve the car client with coordination of detected robots. It's a subclass of 'SocketServer.ThreadingTCPServer',
+class CarClientServer (socketserver.ThreadingTCPServer,object):
+    """ It has role to serve the car client with coordination of detected robots. It's a subclass of 'socketserver.ThreadingTCPServer',
     so it creates a new thread for communicating the client. The server use a private key for authentication itself and has a dictionary named 
     '_carMap', which contains the last detected coordinate and time.stamp for reach car identification number. The identification number of car 
     is equal with id of Aruco marker placed on robot. The client requests are handled by objects of 'CarClientHandler' class. 
@@ -109,14 +109,14 @@ class CarClientServer (SocketServer.ThreadingTCPServer,object):
         self.isRunning = False
         super(CarClientServer,self).shutdown()
 
-class CarClientHandler(SocketServer.BaseRequestHandler):
+class CarClientHandler(socketserver.BaseRequestHandler):
     """CarClientHandler responds for a client. Firstly it requests a identification number of robot and the information related this id
     will be sent to client. After receiving the id of robot, it will send a message and a signature, which can help for authenticating the server.
     While the connection is alive and the process isn't stopped, the handler will send the last coordinate in each second, where the robot was detected.
     
     Parameters
     ----------
-    SocketServer : [type]
+    socketserver : [type]
         [description]
     """
 

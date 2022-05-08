@@ -26,27 +26,37 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
 
-import socket
-import os
+# Module imports
+import time
+# Module required for getting semaphore broadcast messages
+import trafficlights
 
-class ServerConfig:
-    """ ServerConfig contains all data for creating and running the server. 
-    """
-    def __init__(self,broadcast_ip,negotiation_port,carClientPort):
-        self.negotiation_port=negotiation_port
-        self.broadcast_ip=broadcast_ip
-        self.carClientPort = carClientPort
-        self.localip = ServerConfig.getlocalip()
+## Method for running the listener example.
+#  @param none
+def runListener():
 
-    @staticmethod
-    def getlocalip():
-        if os.name == "nt":
-            hostname = socket.gethostname()
-            return socket.gethostbyname(hostname)
+    # Semaphore colors list
+    colors = ['red','yellow','green']   
 
+    # Get time stamp when starting tester
+    start_time = time.time()
+    # Create listener object
+    Semaphores = trafficlights.trafficlights()
+    # Start the listener
+    Semaphores.start()
+    # Wait until 60 seconds passed
+    while (time.time()-start_time < 60):
+        # Clear the screen
+        print("\033c")
+        print("Example program that gets the states of each\nsemaphore from their broadcast messages\n")
+        # Print each semaphore's data
+        print("S1 color " + colors[Semaphores.s1_state] + ", code " + str(Semaphores.s1_state) + ".")
+        print("S2 color " + colors[Semaphores.s2_state] + ", code " + str(Semaphores.s2_state) + ".")
+        print("S3 color " + colors[Semaphores.s3_state] + ", code " + str(Semaphores.s3_state) + ".")
+        print("S4 color " + colors[Semaphores.s4_state] + ", code " + str(Semaphores.s4_state) + ".")
+        time.sleep(0.5)
+    # Stop the listener
+    Semaphores.stop()
 
-        gw = os.popen("ip -4 route show default").read().split()
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        s.connect((gw[2], 0))
-        return s.getsockname()[0]
+if __name__ == "__main__":
+    runListener()
