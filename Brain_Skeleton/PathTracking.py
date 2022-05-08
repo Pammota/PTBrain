@@ -193,8 +193,10 @@ class PathTracking:
             point_ref = self.get_ref_point()
             x_ref, y_ref = point_ref
             self.map.draw_line((self.x_car, self.y_car), (x_ref, y_ref))
-
-            steering_angle = math.degrees(math.atan((y_ref - self.y_car) / (x_ref - self.x_car)))
+            if self.x_car == self.x_ref:
+                steering_angle = 0
+            else:
+                steering_angle = math.degrees(math.atan((y_ref - self.y_car) / (x_ref - self.x_car)))
             if steering_angle > 23:
                 steering_angle = 23
             if steering_angle < -23:
