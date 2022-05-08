@@ -151,7 +151,17 @@ class PathTracking:
 
     def get_theta_ref(self, p_ref):
         x_ref, y_ref = p_ref
-        # case 1
+
+        if x_ref == self.x_car and y_ref > self.y_car:
+            return 90
+        if x_ref == self.x_car and y_ref < self.y_car:
+            return 270
+
+        if y_ref == self.y_car and x_ref < y_ref:
+            return 180
+        if y_ref == self.y_car and x_ref > y_ref:
+            return 0
+
         if x_ref < self.x_car and y_ref > self.y_car:
             return 180 + math.degrees(math.atan((y_ref - self.y_car) / (x_ref - self.x_car)))
         if x_ref > self.x_car and y_ref > self.y_car:
@@ -210,17 +220,13 @@ class PathTracking:
             self.map.draw_line((self.x_car, self.y_car), (x_ref, y_ref))
 
             theta_ref = self.get_theta_ref(point_ref) % 360
+            print("theta ref = {}".format(theta_ref))
+
             steering_angle = self.theta_car - theta_ref
-
-
-            # if self.x_car == x_ref:
-            #     steering_angle = 0
-            # else:
-            #     steering_angle = math.degrees(math.atan((y_ref - self.y_car) / (x_ref - self.x_car)))
-            # if steering_angle > 23:
-            #     steering_angle = 23
-            # if steering_angle < -23:
-            #     steering_angle = -23
+            if steering_angle > 23:
+                steering_angle = 23
+            if steering_angle < -23:
+                steering_angle = -23
             print("steering angle = {}".format(steering_angle))
 
             angle_command = Controller.getAngleCommand(-int(steering_angle))
