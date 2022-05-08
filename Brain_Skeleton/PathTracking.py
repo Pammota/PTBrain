@@ -222,7 +222,7 @@ class PathTracking:
             theta_ref = self.get_theta_ref(point_ref) % 360
             print("theta ref = {}".format(theta_ref))
 
-            steering_angle = (theta_ref - self.theta_car) * 1.3
+            steering_angle = (theta_ref - self.theta_car) * 1.5
             if steering_angle > 23:
                 steering_angle = 23
             if steering_angle < -23:
