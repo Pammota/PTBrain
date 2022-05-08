@@ -66,7 +66,7 @@ class PathTracking:
     def __init__(self, outP_com, map=None, ref_points=None, size_pixel=None, size_cm=None,
                  x_car=None, y_car=None, theta_yaw_map=None, yaw=None, v=None, dt=None,
                  ref_thresh=None, final_thresh=None, end_point=None,
-                 imu_tracker=None
+                 imu_tracker=None, L=None
                  ):
         # info about the map
         self.map = Map(size_pixel=size_pixel, size_cm=size_cm, ref_points=ref_points)
@@ -85,6 +85,7 @@ class PathTracking:
         self.theta_offset = (self.yaw_to_trigo(yaw) - theta_yaw_map + 360) % 360
         self.v = v
         self.dt = dt
+        self.L = L
 
         # destination info
         self.x_end, self.y_end = end_point
@@ -152,38 +153,64 @@ class PathTracking:
 
         speed_command = Controller.getSpeedCommand(self.v)
 
+        # while self.distance((self.x_car, self.y_car), (self.x_end, self.y_end)) >= self.final_thresh:
+        #     print("final_distance = {} cm".format(self.distance((self.x_car, self.y_car), (self.x_end, self.y_end))))
+        #     print("x_car = {}, y_car = {}".format(self.x_car, self.y_car))
+        #     print("heading_car = {} degree".format(self.theta_car))
+        #     point_ref = self.get_ref_point()
+        #     x_ref, y_ref = point_ref
+        #
+        #     theta_ref = (math.degrees(math.atan((y_ref - self.y_car) / (x_ref - self.x_car))) + 360) % 360
+        #     # print("theta_ref = {} degree".format(theta_ref))
+        #     if x_ref < self.x_car:
+        #         theta_ref = (theta_ref + 180) % 360
+        #     print("theta_ref = {} degree".format(theta_ref))
+        #     steering_angle = int(theta_ref - self.theta_car)  # data goes to the brain
+        #     if steering_angle > 23:
+        #         steering_angle = 23
+        #     if steering_angle < -23:
+        #         steering_angle = -23
+        #     print("Steering angle = {}".format(-steering_angle))
+        #     angle_command = Controller.getAngleCommand(-steering_angle)
+        #
+        #     self.outP_com.send((angle_command, speed_command))
+        #
+        #     self.map.draw_line((self.x_car, self.y_car), (x_ref, y_ref))
+        #
+        #     yaw = self.imu_tracker.yaw  # yaw data from IMU
+        #     yaw = (self.yaw_to_trigo(yaw) - self.theta_offset + 360) % 360
+        #     print("yaw transformed = {}".format(yaw))
+        #     self.theta_car = yaw
+        #
+        #
+        #     self.x_car = self.x_car + self.v * math.cos(math.radians(self.theta_car + 5)) * self.dt
+        #     self.y_car = self.y_car + self.v * math.sin(math.radians(self.theta_car)) * self.dt
+        #     time.sleep(self.dt)
+        #     cv2.imshow("Map", self.map.map)
+        #     cv2.waitKey(1)
+
         while self.distance((self.x_car, self.y_car), (self.x_end, self.y_end)) >= self.final_thresh:
-            print("final_distance = {} cm".format(self.distance((self.x_car, self.y_car), (self.x_end, self.y_end))))
-            print("x_car = {}, y_car = {}".format(self.x_car, self.y_car))
-            print("heading_car = {} degree".format(self.theta_car))
             point_ref = self.get_ref_point()
             x_ref, y_ref = point_ref
+            self.map.draw_line((self.x_car, self.y_car), (x_ref, y_ref))
 
-            theta_ref = (math.degrees(math.atan((y_ref - self.y_car) / (x_ref - self.x_car))) + 360) % 360
-            # print("theta_ref = {} degree".format(theta_ref))
-            if x_ref < self.x_car:
-                theta_ref = (theta_ref + 180) % 360
-            print("theta_ref = {} degree".format(theta_ref))
-            steering_angle = int(theta_ref - self.theta_car)  # data goes to the brain
+            steering_angle = math.degrees(math.atan((y_ref - self.y_car) / (x_ref - self.x_car)))
             if steering_angle > 23:
                 steering_angle = 23
             if steering_angle < -23:
                 steering_angle = -23
-            print("Steering angle = {}".format(-steering_angle))
-            angle_command = Controller.getAngleCommand(-steering_angle)
 
+            angle_command = Controller.getAngleCommand(int(steering_angle))
             self.outP_com.send((angle_command, speed_command))
 
-            self.map.draw_line((self.x_car, self.y_car), (x_ref, y_ref))
-
-            yaw = self.imu_tracker.yaw  # yaw data from IMU
-            yaw = (self.yaw_to_trigo(yaw) - self.theta_offset + 360) % 360
-            print("yaw transformed = {}".format(yaw))
-            self.theta_car = yaw
-
-
-            self.x_car = self.x_car + self.v * math.cos(math.radians(self.theta_car + 5)) * self.dt
-            self.y_car = self.y_car + self.v * math.sin(math.radians(self.theta_car)) * self.dt
+            self.x_car = self.x_car + self.v * math.cos(math.radians(self.theta_car - steering_angle)) * self.dt
+            self.y_car = self.y_car + self.v * math.sin(math.radians(self.theta_car - steering_angle)) * self.dt
+            self.theta_car = float(self.theta_car + self.v * math.tan(-steering_angle) / self.L * self.dt)
             time.sleep(self.dt)
             cv2.imshow("Map", self.map.map)
             cv2.waitKey(1)
+
+
+
+
+
