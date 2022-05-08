@@ -468,7 +468,7 @@ class BrainThread(Thread):
         intersection = False
 
         if case == "left":
-            ref_points = pathGenerator.generate_circle_points(r=90, d=18, x_c=30, y_c=30, alpha_min=0, alpha_max=1.57)
+            ref_points = pathGenerator.generate_circle_points(r=90, d=9, x_c=30, y_c=30, alpha_min=0, alpha_max=1.57)
             end_point = (30, 120)
             intersection = True
         if case == "right":
