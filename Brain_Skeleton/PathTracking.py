@@ -149,6 +149,19 @@ class PathTracking:
         # print("y = {} * x + {}".format(slope, c))
         return (slope, c)
 
+    def get_theta_ref(self, p_ref):
+        x_ref, y_ref = p_ref
+        # case 1
+        if x_ref < self.x_car and y_ref > self.y_car:
+            return 180 + math.degrees(math.atan((y_ref - self.y_car) / (x_ref - self.x_car)))
+        if x_ref > self.x_car and y_ref > self.y_car:
+            return math.degrees(math.atan((y_ref - self.y_car) / (x_ref - self.x_car)))
+        if x_ref < self.x_car and y_ref < self.y_car:
+            return 180 + math.degrees(math.atan((y_ref - self.y_car) / (x_ref - self.x_car)))
+        return 360 + math.degrees(math.atan((y_ref - self.y_car) / (x_ref - self.x_car)))
+
+
+
     def run(self):
 
         speed_command = Controller.getSpeedCommand(self.v)
@@ -195,15 +208,10 @@ class PathTracking:
             point_ref = self.get_ref_point()
             x_ref, y_ref = point_ref
             self.map.draw_line((self.x_car, self.y_car), (x_ref, y_ref))
-            # print("theta_ref = {} degree".format(theta_ref))
-            if x_ref == self.x_car:
-                theta_ref = 90
-            else:
-                theta_ref = (math.degrees(math.atan((y_ref - self.y_car) / (x_ref - self.x_car))) + 360) % 360
-                if x_ref < self.x_car:
-                    theta_ref = (theta_ref + 180) % 360
-            print("theta_ref = {} degree".format(theta_ref))
-            steering_angle = int(theta_ref - self.theta_car)  # data goes to the brain
+
+            theta_ref = self.get_theta_ref(point_ref) % 360
+            steering_angle = self.theta_car - theta_ref
+
 
             # if self.x_car == x_ref:
             #     steering_angle = 0
@@ -218,9 +226,9 @@ class PathTracking:
             angle_command = Controller.getAngleCommand(-int(steering_angle))
             self.outP_com.send((angle_command, speed_command))
 
-            self.x_car = self.x_car + self.v * math.cos(math.radians(self.theta_car - steering_angle)) * self.dt
-            self.y_car = self.y_car + self.v * math.sin(math.radians(self.theta_car - steering_angle)) * self.dt
-            self.theta_car = float(self.theta_car + self.v * math.tan(math.radians(-steering_angle)) / self.L * self.dt)
+            self.x_car = self.x_car + self.v * math.cos(math.radians(self.theta_car + steering_angle)) * self.dt
+            self.y_car = self.y_car + self.v * math.sin(math.radians(self.theta_car + steering_angle)) * self.dt
+            self.theta_car = float(self.theta_car + self.v * math.tan(math.radians(steering_angle)) / self.L * self.dt)
             time.sleep(self.dt)
             cv2.imshow("Map", self.map.map)
             cv2.waitKey(1)
