@@ -43,6 +43,7 @@ class vehicletovehicle(Thread):
         
         Class used for running port listener algorithm 
         """
+        super(vehicletovehicle, self).__init__()
         super(vehicletovehicle,self).start()
 
         # Values extracted from message
