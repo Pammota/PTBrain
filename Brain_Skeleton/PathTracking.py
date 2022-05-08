@@ -195,17 +195,27 @@ class PathTracking:
             point_ref = self.get_ref_point()
             x_ref, y_ref = point_ref
             self.map.draw_line((self.x_car, self.y_car), (x_ref, y_ref))
-            if self.x_car == x_ref:
-                steering_angle = 0
+            # print("theta_ref = {} degree".format(theta_ref))
+            if x_ref == self.x_car:
+                theta_ref = 90
             else:
-                steering_angle = math.degrees(math.atan((y_ref - self.y_car) / (x_ref - self.x_car)))
-            if steering_angle > 23:
-                steering_angle = 23
-            if steering_angle < -23:
-                steering_angle = -23
+                theta_ref = (math.degrees(math.atan((y_ref - self.y_car) / (x_ref - self.x_car))) + 360) % 360
+                if x_ref < self.x_car:
+                    theta_ref = (theta_ref + 180) % 360
+            print("theta_ref = {} degree".format(theta_ref))
+            steering_angle = int(theta_ref - self.theta_car)  # data goes to the brain
+
+            # if self.x_car == x_ref:
+            #     steering_angle = 0
+            # else:
+            #     steering_angle = math.degrees(math.atan((y_ref - self.y_car) / (x_ref - self.x_car)))
+            # if steering_angle > 23:
+            #     steering_angle = 23
+            # if steering_angle < -23:
+            #     steering_angle = -23
             print("steering angle = {}".format(steering_angle))
 
-            angle_command = Controller.getAngleCommand(int(steering_angle))
+            angle_command = Controller.getAngleCommand(-int(steering_angle))
             self.outP_com.send((angle_command, speed_command))
 
             self.x_car = self.x_car + self.v * math.cos(math.radians(self.theta_car - steering_angle)) * self.dt
