@@ -383,8 +383,8 @@ class BrainThread(Thread):
                                             zero_theta_command, zero_speed_command))
             #self.threads.append(ReadThread(self.serialComNucleo))
 
-        self.imuThread = IMU_tracking(self)
-        self.threads.append(self.imuThread)
+        """self.imuThread = IMU_tracking(self)
+        self.threads.append(self.imuThread)"""
 
         # starts all threads
         for thread in self.threads:
