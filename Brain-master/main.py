@@ -46,7 +46,7 @@ from src.utils.camerastreamer.CameraStreamerProcess         import CameraStreame
 from src.utils.remotecontrol.RemoteControlReceiverProcess   import RemoteControlReceiverProcess
 
 # =============================== CONFIG =================================================
-enableStream        =  True
+enableStream        =  False
 enableCameraSpoof   =  False 
 enableRc            =  True
 
