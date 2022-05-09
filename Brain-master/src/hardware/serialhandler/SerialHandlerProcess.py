@@ -50,11 +50,11 @@ class SerialHandlerProcess(WorkerProcess):
         """
         super(SerialHandlerProcess,self).__init__(inPs, outPs)
 
-        devFile = '/dev/ttyACM0'
+        devFile = '/dev/ttyACM1'
         logFile = 'historyFile.txt'
         
         # comm init       
-        self.serialCom = serial.Serial(devFile,256000,timeout=0.1)
+        self.serialCom = serial.Serial(devFile, 19200, timeout=0.1)
         self.serialCom.flushInput()
         self.serialCom.flushOutput()
 
