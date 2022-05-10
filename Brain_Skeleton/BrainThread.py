@@ -222,6 +222,8 @@ class BrainThread(Thread):
 
         time.sleep(0.1)
 
+        imuThread = IMU_tracking(self)
+
         x_offsets = []
         y_offsets = []
         thetas = []
@@ -241,13 +243,14 @@ class BrainThread(Thread):
         x_offset = np.median([x_off for x_off in x_offsets if x_off is not None])
         y_offset = np.median([y_off for y_off in y_offsets if y_off is not None])
         theta_yaw_map = np.median([tym for tym in thetas if tym is not None])
-        #yaw = self.imuThread.yaw
+        yaw = imuThread.yaw
 
         self.path_tracking(case=direction, x_car=x_offset, y_car=y_offset,
                            theta_yaw_map=theta_yaw_map, yaw=0,
                            v=14,
                            dt=0.05, L=25.8)
 
+        IMU_tracking.stop()
         self.last_intersection = self.num_frames
         self.controller.ongoing_intersection = False
 

@@ -29,10 +29,12 @@ class IMU_tracking(Thread):
         self.imu = imu()
         self.imu.start()
 
+        self._running = True
+
     def run(self):
 
         dt = 0
-        while True:
+        while self._running:
 
             speed = self.brain.get_crt_speed()
 
@@ -85,3 +87,7 @@ class IMU_tracking(Thread):
 
             time.sleep(config.IMU_SAMPLING_FREQUENCY*2)
             dt = config.IMU_SAMPLING_FREQUENCY*2  # s
+
+    def stop(self):
+        self.imu.stop()
+        self._running = False
