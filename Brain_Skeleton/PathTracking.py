@@ -66,7 +66,7 @@ class PathTracking:
     def __init__(self, outP_com, map=None, ref_points=None, size_pixel=None, size_cm=None,
                  x_car=None, y_car=None, theta_yaw_map=None, yaw=None, v=None, dt=None,
                  ref_thresh=None, final_thresh=None, end_point=None,
-                 imu_tracker=None, L=None
+                 imu_tracker=None, L=None, isForward=None
                  ):
         # info about the map
         self.map = Map(size_pixel=size_pixel, size_cm=size_cm, ref_points=ref_points)
@@ -91,6 +91,7 @@ class PathTracking:
         self.x_end, self.y_end = end_point
         self.ref_thresh = ref_thresh
         self.final_thresh = final_thresh
+        self.isForward = isForward
 
         # IMU
         self.imu_tracker = imu_tracker
@@ -234,7 +235,13 @@ class PathTracking:
 
             self.x_car = self.x_car + self.v * math.cos(math.radians(self.theta_car + steering_angle)) * self.dt
             self.y_car = self.y_car + self.v * math.sin(math.radians(self.theta_car + steering_angle)) * self.dt
-            self.theta_car = float(self.theta_car + math.degrees(self.v * math.tan(math.radians(steering_angle)) / self.L * self.dt))
+
+            if self.isForward == True:
+                self.theta_car = float(self.theta_car + math.degrees(self.v * math.tan(math.radians(steering_angle)) / self.L * self.dt))
+            else:
+                yaw = 0  # data from brain
+                yaw = (self.yaw_to_trigo(yaw) - self.theta_offset + 360) % 360
+                self.theta_car = yaw
             time.sleep(self.dt)
             cv2.imshow("Map", self.map.map)
             cv2.waitKey(1)

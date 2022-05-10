@@ -474,19 +474,23 @@ class BrainThread(Thread):
         pathGenerator = PathGenerator()
 
         intersection = False
+        isForward = False
 
         if case == "left":
             ref_points = pathGenerator.generate_circle_points(r=90, d=9, x_c=30, y_c=30, alpha_min=0, alpha_max=1.57)
             end_point = (30, 120)
             intersection = True
+            isForward = False
         if case == "right":
             ref_points = pathGenerator.generate_circle_points(r=60, d=6, x_c=180, y_c=30, alpha_min=1.57, alpha_max=3.14)
             end_point = (180, 90)
             intersection = True
+            isForward = False
         if case == "forward":
             ref_points = pathGenerator.generate_line_points(x1=120, y1=30, x2=120, y2=180, n=7)
             end_point = (120, 180)
             intersection = True
+            isForward = True
         if intersection == True:
             map = Map(size_pixel=size_pixel, size_cm=size_cm, ref_points=ref_points)
             ref_thresh = 10
@@ -494,5 +498,5 @@ class BrainThread(Thread):
             pathTracking = PathTracking(self.outP_com, map=map, ref_points=ref_points, size_pixel=size_pixel, size_cm=size_cm,
                                         x_car=x_car + x0, y_car=y0 - y_car, theta_yaw_map=theta_yaw_map, yaw=yaw,
                                         v=v, dt=dt, ref_thresh=ref_thresh, final_thresh=final_thresh,
-                                        end_point=end_point, imu_tracker=self.imuThread, L=L)
+                                        end_point=end_point, imu_tracker=self.imuThread, L=L, isForward=isForward)
             pathTracking.run()
