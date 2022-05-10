@@ -236,7 +236,7 @@ class PathTracking:
             self.x_car = self.x_car + self.v * math.cos(math.radians(self.theta_car + steering_angle)) * self.dt
             self.y_car = self.y_car + self.v * math.sin(math.radians(self.theta_car + steering_angle)) * self.dt
 
-            if self.isForward == True:
+            if self.isForward == False:
                 self.theta_car = float(self.theta_car + math.degrees(self.v * math.tan(math.radians(steering_angle)) / self.L * self.dt))
             else:
                 yaw = self.imu_tracker.yaw  # data from brain
