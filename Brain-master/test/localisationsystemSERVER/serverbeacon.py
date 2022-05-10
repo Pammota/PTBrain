@@ -25,7 +25,7 @@
 # CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
-
+import json
 from threading import Thread
 import socket
 import time
@@ -58,9 +58,10 @@ class ServerBeaconThread(Thread):
 			self.logger.info(self.name+' started')
 			
 			# Sending the message periodically
-			msg = bytes(str(self.serverConfig.carClientPort))
+			msg = bytes(str(self.serverConfig.carClientPort), encoding='utf-8')
+			#message = json.dumps(msg)
 			while self.runningThread:
-				beacon.sendto( msg , (self.serverConfig.broadcast_ip, self.serverConfig.negotiation_port))
+				beacon.sendto( msg, (self.serverConfig.broadcast_ip, self.serverConfig.negotiation_port))
 				time.sleep(self.sleepDuration)
 			# Close the connection
 			beacon.close()

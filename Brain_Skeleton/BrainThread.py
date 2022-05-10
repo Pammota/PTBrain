@@ -202,11 +202,13 @@ class BrainThread(Thread):
         self.terminate()
 
     def intersection_maneuver_routine(self, theta, stop=False, sem_red=False, direction="forward"):
+
+        if self.cameraSpoof is None:
+            theta_command = Controller.getAngleCommand(0)
+            speed_command = Controller.getSpeedCommand(0)
+            self.outP_com.send((theta_command, speed_command))
+
         if stop == 1:
-            if self.cameraSpoof is None:
-                theta_command = Controller.getAngleCommand(0)
-                speed_command = Controller.getSpeedCommand(0)
-                self.outP_com.send((theta_command, speed_command))
             print("Stopped at the STOP sign at intersection.BRB")
             time.sleep(3)
 
@@ -218,30 +220,33 @@ class BrainThread(Thread):
             print("Currently stopped at the red traffic light at intersection.BRB")
             return
 
-        x_offset = self.laneDetectionThread.x_offset
-        y_offset = self.laneDetectionThread.y_offset
-        theta_yaw_map = self.laneDetectionThread.theta_yaw_map
-        yaw = self.imuThread.yaw
+        time.sleep(0.1)
+
+        x_offsets = []
+        y_offsets = []
+        thetas = []
+
+        for i in range(5):
+            grabbed, self.frame = self.camera.read()
+            frame = copy.deepcopy(self.frame)
+
+            self.outP_brain_lane.send(True)
+            time_start, lane_info, left_line, right_line, road_line = self.inP_lane.recv()
+            self.show_image(frame, [], lane_info, left_line, right_line, road_line)
+
+            x_offsets.append(self.laneDetectionThread.x_offset)
+            y_offsets.append(self.laneDetectionThread.y_offset)
+            thetas.append(self.laneDetectionThread.theta_yaw_map)
+
+        x_offset = np.median([x_off for x_off in x_offsets if x_off is not None])
+        y_offset = np.median([y_off for y_off in y_offsets if y_off is not None])
+        theta_yaw_map = np.median([tym for tym in thetas if tym is not None])
+        #yaw = self.imuThread.yaw
 
         self.path_tracking(case=direction, x_car=x_offset, y_car=y_offset,
-                           theta_yaw_map=theta_yaw_map, yaw=yaw,
+                           theta_yaw_map=theta_yaw_map, yaw=0,
                            v=14,
                            dt=0.05, L=25.8)
-
-        # if direction == "left":
-        #     if self.cameraSpoof is None:
-        #         self.path_tracking(case=direction, x_car=)
-        #         self.left_maneuver_routine()
-        #     print("Executing a left maneuver")
-        # elif direction == "right":
-        #     if self.cameraSpoof is None:
-        #         self.right_maneuver_routine()
-        #     print("Executing a right maneuver")
-        # elif direction == "forward":
-        #     self.forward_maneuver(theta)
-        #     print("Executing a forward maneuver")
-        # else:
-        #     self.crosswalk_maneuver_routine()
 
         self.last_intersection = self.num_frames
         self.controller.ongoing_intersection = False
@@ -406,9 +411,9 @@ class BrainThread(Thread):
     def _kill_threads(self):
 
         if self.laneDetectionThread_working:
-            _, _ = self.inP_lane.recv()
+            _, _, _, _, _ = self.inP_lane.recv()
         if self.objectDetectionThread_working:
-            _, _ = self.inP_obj.recv()
+            _, _, _ = self.inP_obj.recv()
 
         self.outP_brain_lane.send(None)
         self.outP_brain_obj.send(None)

@@ -122,15 +122,16 @@ class CarClientHandler(socketserver.BaseRequestHandler):
 
     def handle(self):
         # receiving car id from client 
-        data = str(self.request.recv(1024)) 
+        data = str(self.request.recv(1024))[2:-1]
         carId = int(data)
         
         # Authentication
         timestamp = time.time()
-        msg = "Conneted! " + str(timestamp).encode('utf-8')
-        signature = sign_data(self.server.private_key,msg)
+        msg = "Conneted! " + str(timestamp)
+        signature = sign_data(self.server.private_key, msg)
         
-        # Authentication of server        
+        # Authentication of server
+        msg = msg.encode('utf-8')
         self.request.sendall(msg)
         self.request.sendall(signature)
         time.sleep(0.1)
