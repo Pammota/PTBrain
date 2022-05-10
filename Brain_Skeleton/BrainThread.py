@@ -246,11 +246,11 @@ class BrainThread(Thread):
         yaw = imuThread.yaw
 
         self.path_tracking(case=direction, x_car=x_offset, y_car=y_offset,
-                           theta_yaw_map=theta_yaw_map, yaw=0,
+                           theta_yaw_map=theta_yaw_map, yaw=yaw,
                            v=14,
                            dt=0.05, L=25.8)
 
-        IMU_tracking.stop()
+        imuThread.stop()
         self.last_intersection = self.num_frames
         self.controller.ongoing_intersection = False
 
