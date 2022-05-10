@@ -230,7 +230,10 @@ class PathTracking:
                 steering_angle = -23
             print("steering angle = {}".format(steering_angle))
 
-            angle_command = Controller.getAngleCommand(-int(steering_angle * 1.5))
+            if self.isForward == True:
+                angle_command = Controller.getAngleCommand(-int(steering_angle * 2.))
+            else:
+                angle_command = Controller.getAngleCommand(-int(steering_angle * 1.5))
             self.outP_com.send((angle_command, speed_command))
 
             self.x_car = self.x_car + self.v * math.cos(math.radians(self.theta_car + steering_angle)) * self.dt
