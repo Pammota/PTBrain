@@ -250,7 +250,7 @@ class BrainThread(Thread):
                            v=14,
                            dt=0.05, L=25.8)
 
-        IMU_tracking.stop()
+        imuThread.stop()
         self.last_intersection = self.num_frames
         self.controller.ongoing_intersection = False
 
