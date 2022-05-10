@@ -248,7 +248,7 @@ class BrainThread(Thread):
         self.path_tracking(case=direction, x_car=x_offset, y_car=y_offset,
                            theta_yaw_map=theta_yaw_map, yaw=yaw,
                            v=14,
-                           dt=0.05, L=25.8)
+                           dt=0.05, L=25.8, imuTracker=imuThread)
 
         imuThread.stop()
         self.last_intersection = self.num_frames
@@ -462,7 +462,8 @@ class BrainThread(Thread):
 
     def path_tracking(self, case=None,
                         x_car=None, y_car=None, theta_yaw_map=None,
-                      yaw=None, v=None, dt=None, L=None
+                      yaw=None, v=None, dt=None, L=None,
+                      imuTracker=None
                       ):
 
         size_pixel = 500
@@ -498,5 +499,5 @@ class BrainThread(Thread):
             pathTracking = PathTracking(self.outP_com, map=map, ref_points=ref_points, size_pixel=size_pixel, size_cm=size_cm,
                                         x_car=x_car + x0, y_car=y0 - y_car, theta_yaw_map=theta_yaw_map, yaw=yaw,
                                         v=v, dt=dt, ref_thresh=ref_thresh, final_thresh=final_thresh,
-                                        end_point=end_point, imu_tracker=self.imuThread, L=L, isForward=isForward)
+                                        end_point=end_point, imu_tracker=imuTracker, L=L, isForward=isForward)
             pathTracking.run()
