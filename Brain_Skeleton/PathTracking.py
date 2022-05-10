@@ -239,7 +239,4 @@ class PathTracking:
             cv2.imshow("Map", self.map.map)
             cv2.waitKey(1)
 
-
-
-
-
+        cv2.destroyWindow("Map")
