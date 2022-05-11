@@ -517,7 +517,7 @@ class BrainThread(Thread):
             ref_thresh = 10
             final_thresh = 10
             ref_points = pathGenerator.generate_circle_points(r=47, d=6, x_c=145, y_c=10, alpha_min=1.57, alpha_max=3.14)
-            ref_points.append(145, 57)
+            ref_points.append((145, 57))
             end_point = (145, 57)
             intersection = True
             isForward = False
