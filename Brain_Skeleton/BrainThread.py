@@ -528,8 +528,8 @@ class BrainThread(Thread):
         if case == "roundabout_forward":
             # info for roundabout
             x0, y0 = 117, 10
-            ref_thresh = 15
-            final_thresh = 20
+            ref_thresh = 10
+            final_thresh = 15
             isForward = False
             size_pixel = 500
             size_cm = 234
@@ -538,7 +538,7 @@ class BrainThread(Thread):
             for point in ref_points_aux:
                 ref_points.append(point)
             ref_points_aux = pathGenerator.generate_circle_points(r=67, d=13, x_c=99, y_c=117, alpha_min=4.95,
-                                                                  alpha_max=6.28)
+                                                                  alpha_max=6)
             for point in ref_points_aux:
                 ref_points.append(point)
 
