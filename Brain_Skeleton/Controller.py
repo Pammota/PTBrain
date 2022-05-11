@@ -16,7 +16,7 @@ class Controller():
                  "sem_green": False, "priority": False, "crosswalk": False, "stop": False}
         self.flags_history = []
         self.state = "Lane Follow"
-        self.directions = ["roundabout_forward", "left", "right", "forward", "stop", "stop", "stop"]
+        self.directions = ["left", "right", "right", "left", "forward", "stop", "stop"]
         self.dir_idx = 0
         self.had_parking = False
         self.base_speed = 13
@@ -78,7 +78,6 @@ class Controller():
         elif self.state == "Intersection":
             if not self.ongoing_intersection:
                 self.state = "Lane Follow"
-                self.dir_idx += 1
 
         elif self.state == "Crosswalk":
             if not self.executed["crosswalk"]:

@@ -251,6 +251,7 @@ class BrainThread(Thread):
                            dt=0.05, L=25.8, imuTracker=imuThread)
 
         imuThread.stop()
+        self.controller.dir_idx += 1
         self.last_intersection = self.num_frames
         self.controller.ongoing_intersection = False
 
@@ -503,6 +504,8 @@ class BrainThread(Thread):
         #     intersection = True
         #     isForward = True
 
+        if case == "stop":
+            self.terminate()
         if case == "left":
             ref_thresh = 5
             final_thresh = 10
