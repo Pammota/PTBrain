@@ -15,7 +15,6 @@ ag.add_argument('-l', '--show_lane', required=False)
 ag.add_argument('-s', '--stop_car', required=False)
 #ag.add_argument('-m', '--run_mode', required=False)
 args = vars(ag.parse_args())
-imuthread = imu()
 
 if args['path_to_vid'] is None:
     if args['stop_car'] is None:
@@ -28,7 +27,6 @@ else:
     else:
         brain = BrainThread(cameraSpoof=args['path_to_vid'], stop_car=args['stop_car'])
 brain.start()
-imuthread.start()
 
 blocker = Event()
 
