@@ -1,6 +1,6 @@
 import time
 
-from data.v2x import V2X
+#from data.v2x import V2X
 from PathPlanner import PathPlanner
 
 import numpy as np
@@ -32,13 +32,13 @@ class Controller():
 
         self.executed = {"parking": False, "crosswalk": False}
 
-        self.env_conn = V2X()
+        self.env_conn = None #V2X()
 
         self.coord = None
         self.veh_data = None
         self.sem_data = None
 
-        self.pathPlanner = self.__localize()
+        #self.pathPlanner = self.__localize()
 
 
     def checkState(self, OD_info, LD_info, DSFront_info=100):
