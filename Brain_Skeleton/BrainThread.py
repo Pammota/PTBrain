@@ -482,22 +482,30 @@ class BrainThread(Thread):
         isForward = False
 
         if case == "left":
+            ref_thresh = 10
+            final_thresh = 20
             ref_points = pathGenerator.generate_circle_points(r=90, d=9, x_c=30, y_c=30, alpha_min=0, alpha_max=1.57)
             end_point = (30, 120)
             intersection = True
             isForward = False
         if case == "right":
+            ref_thresh = 10
+            final_thresh = 20
             ref_points = pathGenerator.generate_circle_points(r=60, d=6, x_c=180, y_c=30, alpha_min=1.57, alpha_max=3.14)
             end_point = (180, 90)
             intersection = True
             isForward = False
         if case == "forward":
+            ref_thresh = 10
+            final_thresh = 20
             ref_points = pathGenerator.generate_line_points(x1=120, y1=30, x2=120, y2=180, n=7)
             end_point = (120, 180)
             intersection = True
             isForward = True
         if case == "roundabout_forward":
             # info for roundabout
+            ref_thresh = 5
+            final_thresh = 10
             isForward = False
             size_pixel = 500
             size_cm = 234
