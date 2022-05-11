@@ -551,7 +551,7 @@ class BrainThread(Thread):
             # for i in range(0,len(ref_points)):
             #     x, y = ref_points[i]
             #     ref_points_aux.append((x-i, y))
-            ref_points = ref_points_aux
+            # ref_points = ref_points_aux
             ref_points.append((117, 40))
             ref_points.append((117, 30))
             ref_points.append((117, 20))
