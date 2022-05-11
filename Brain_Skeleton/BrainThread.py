@@ -533,11 +533,11 @@ class BrainThread(Thread):
             isForward = False
             size_pixel = 500
             size_cm = 234
-            ref_points_aux = pathGenerator.generate_circle_points(r=67, d=13, x_c=99, y_c=117, alpha_min=0,
+            ref_points_aux = pathGenerator.generate_circle_points(r=67, d=20, x_c=99, y_c=117, alpha_min=0,
                                                                   alpha_max=1.32)
             for point in ref_points_aux:
                 ref_points.append(point)
-            ref_points_aux = pathGenerator.generate_circle_points(r=67, d=13, x_c=99, y_c=117, alpha_min=4.95,
+            ref_points_aux = pathGenerator.generate_circle_points(r=67, d=20, x_c=99, y_c=117, alpha_min=4.95,
                                                                   alpha_max=6)
             for point in ref_points_aux:
                 ref_points.append(point)
@@ -552,6 +552,7 @@ class BrainThread(Thread):
             intersection = True
             end_point = (117, 224)
             ref_points.append(end_point)
+
 
 
         if intersection == True:
