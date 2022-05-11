@@ -538,7 +538,7 @@ class BrainThread(Thread):
             isForward = False
             size_pixel = 500
             size_cm = 234
-            ref_points_aux = pathGenerator.generate_circle_points(r=70, d=10, x_c=79, y_c=97, alpha_min=0,
+            ref_points_aux = pathGenerator.generate_circle_points(r=60, d=10, x_c=99, y_c=117, alpha_min=0,
                                                                   alpha_max=1.04)
             for point in ref_points_aux:
                 ref_points.append(point)
@@ -546,9 +546,9 @@ class BrainThread(Thread):
                                                                   alpha_max=6.28)
             for point in ref_points_aux:
                 ref_points.append(point)
-            ref_points = [(117, 40), (140, 80), (140, 120), (87, 184), (67, 214)]
+            # ref_points = [(117, 40), (140, 80), (140, 120), (87, 184), (67, 214)]
             ref_points.append((117, 40))
-            # ref_points.append((117, 214))
+            ref_points.append((117, 214))
 
 
             # ref_points_aux = pathGenerator.generate_line_points(x1=135, y1=10, x2=135, y2=40, n=3)
