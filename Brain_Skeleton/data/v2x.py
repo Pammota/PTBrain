@@ -9,7 +9,7 @@ from vehicletovehicle.vehicletovehicle import vehicletovehicle
 COLORS = ['sem_red', 'sem_yellow', 'sem_green']
 
 class V2X():
-    def __init__(self, ID = 120):
+    def __init__(self, ID = 21):
 
         ### initialize communication threads
 
@@ -45,7 +45,7 @@ class V2X():
         returns the id, timestamp recieved, position and orientation of another car
         """
         (ID, timestamp, pos, ang) = self.v2x.ID, self.v2x.timestamp, self.v2x.pos, self.v2x.ang
-        return ID, timestamp, pos, ang
+        return {"ID": ID, "timestamp": timestamp, "pos": pos, "and": ang}
 
 
     def get_sem_data(self):

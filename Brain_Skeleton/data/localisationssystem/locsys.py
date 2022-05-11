@@ -87,7 +87,11 @@ class LocalisationSystem(Thread):
         dictionary
             coordinate and timestamp
         """
-        return self.__position_listener.coor
+
+        coords = self.__position_listener.coor
+
+        print("Coordinates are: {}, {}".format(coords['coor'][0], coords['coor'][1]))
+        return self.coords
 
     def ID(self):
         return self.__subscriber.ID()

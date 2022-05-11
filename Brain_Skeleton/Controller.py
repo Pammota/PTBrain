@@ -1,7 +1,14 @@
 import time
 
+from data.v2x import V2X
+from PathPlanner import PathPlanner
+
 import numpy as np
 from PIDControl import PIDControl
+
+
+RANDOM_POSITION = False
+
 
 class Controller():
     def __init__(self):
@@ -25,6 +32,15 @@ class Controller():
 
         self.executed = {"parking": False, "crosswalk": False}
 
+        self.env_conn = V2X()
+
+        self.coord = None
+        self.veh_data = None
+        self.sem_data = None
+
+        self.pathPlanner = self.__localize()
+
+
     def checkState(self, OD_info, LD_info, DSFront_info=100):
         self.timer_crt = time.time()
 
@@ -33,6 +49,10 @@ class Controller():
         self.passed_horiz_line = LD_info["horiz_line"]
         self.front_distances.append(DSFront_info)
         self.front_distances = self.front_distances[-7:]
+
+        self.coord = self.env_conn.get_position()
+        self.veh_data = self.env_conn.get_vehicles_data()
+        self.sem_data = self.env_conn.get_sem_data()
 
         if self.state == "Lane Follow":
             if self.passed_horiz_line and not self.flags["crosswalk"]:
@@ -133,13 +153,28 @@ class Controller():
             self.thetas = []
 
     def setExecuted(self, parking=None, crosswalk=None):
-        if parking is not None:
-            self.executed["parking"] = parking
         if crosswalk is not None:
             self.executed["crosswalk"] = crosswalk
 
     def front_distance(self):
         return np.median(self.front_distances)
+
+
+    def __localize(self):
+        if not RANDOM_POSITION:
+            return PathPlanner(["0", "A", "B", "D", "A", "0"])
+
+        start_con_time = time.time()
+
+        while time.time() - start_con_time < 60:
+            try:
+                self.coord = self.env_conn.get_position()
+
+
+            except:
+                pass
+
+        return PathPlanner(["0", "A", "B", "D", "A", "0"])
 
     @staticmethod
     def getAngleCommand(theta):
