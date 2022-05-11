@@ -223,6 +223,7 @@ class BrainThread(Thread):
         time.sleep(0.1)
 
         imuThread = IMU_tracking(self)
+        imuThread.run()
 
         x_offsets = []
         y_offsets = []
