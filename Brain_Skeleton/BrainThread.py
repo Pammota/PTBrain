@@ -527,30 +527,31 @@ class BrainThread(Thread):
 
         if case == "roundabout_forward":
             # info for roundabout
-            x0, y0 = 135, 10
+            x0, y0 = 117, 10
             ref_thresh = 15
-            final_thresh = 15
+            final_thresh = 20
             isForward = False
             size_pixel = 500
             size_cm = 234
-            ref_points_aux = pathGenerator.generate_circle_points(r=70, d=10, x_c=117, y_c=117, alpha_min=0,
+            ref_points_aux = pathGenerator.generate_circle_points(r=67, d=10, x_c=99, y_c=117, alpha_min=0,
                                                                   alpha_max=1.32)
             for point in ref_points_aux:
                 ref_points.append(point)
-            ref_points_aux = pathGenerator.generate_circle_points(r=70, d=10, x_c=117, y_c=117, alpha_min=4.95,
+            ref_points_aux = pathGenerator.generate_circle_points(r=67, d=10, x_c=99, y_c=117, alpha_min=4.95,
                                                                   alpha_max=6.28)
             for point in ref_points_aux:
                 ref_points.append(point)
 
-            ref_points_aux = pathGenerator.generate_line_points(x1=135, y1=10, x2=135, y2=40, n=3)
-            for point in ref_points_aux:
-                ref_points.append(point)
-
-            ref_points_aux = pathGenerator.generate_line_points(x1=135, y1=224, x2=135, y2=194, n=3)
-            for point in ref_points_aux:
-                ref_points.append(point)
+            # ref_points_aux = pathGenerator.generate_line_points(x1=135, y1=10, x2=135, y2=40, n=3)
+            # for point in ref_points_aux:
+            #     ref_points.append(point)
+            #
+            # ref_points_aux = pathGenerator.generate_line_points(x1=135, y1=224, x2=135, y2=194, n=3)
+            # for point in ref_points_aux:
+            #     ref_points.append(point)
             intersection = True
-            end_point = (135, 234)
+            end_point = (117, 224)
+            ref_points.append(end_point)
 
 
         if intersection == True:
