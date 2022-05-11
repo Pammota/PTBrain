@@ -214,21 +214,21 @@ class PathTracking:
         #     cv2.waitKey(1)
 
         while self.distance((self.x_car, self.y_car), (self.x_end, self.y_end)) >= self.final_thresh:
-            print("x_car = {}, y_car = {}".format(self.x_car, self.y_car))
+            # print("x_car = {}, y_car = {}".format(self.x_car, self.y_car))
             print("theta car = {}".format(self.theta_car))
             point_ref = self.get_ref_point()
             x_ref, y_ref = point_ref
             self.map.draw_line((self.x_car, self.y_car), (x_ref, y_ref))
 
             theta_ref = self.get_theta_ref(point_ref) % 360
-            print("theta ref = {}".format(theta_ref))
+            # print("theta ref = {}".format(theta_ref))
 
             steering_angle = theta_ref - self.theta_car
             if steering_angle > 23:
                 steering_angle = 23
             if steering_angle < -23:
                 steering_angle = -23
-            print("steering angle = {}".format(steering_angle))
+            # print("steering angle = {}".format(steering_angle))
 
             if self.isForward == True:
                 angle_command = Controller.getAngleCommand(-int(steering_angle * 2.))
