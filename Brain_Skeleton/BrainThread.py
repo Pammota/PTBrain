@@ -409,6 +409,9 @@ class BrainThread(Thread):
 
         print("Stopped car")
 
+        self.controller.env_conn.stop()
+
+        time.sleep(0.1)
         self._kill_threads()
 
     def _kill_threads(self):
