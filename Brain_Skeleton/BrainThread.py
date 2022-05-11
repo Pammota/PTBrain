@@ -547,6 +547,11 @@ class BrainThread(Thread):
             for point in ref_points_aux:
                 ref_points.append(point)
             # ref_points = [(117, 40), (140, 80), (140, 120), (87, 184), (67, 214)]
+            ref_points_aux = []
+            for i in range(0,len(ref_points)):
+                x, y = ref_points[i]
+                ref_points_aux.append((x-i, y))
+            ref_points = ref_points_aux
             ref_points.append((117, 40))
             ref_points.append((117, 30))
             ref_points.append((117, 20))
@@ -564,7 +569,7 @@ class BrainThread(Thread):
             # for point in ref_points_aux:
             #     ref_points.append(point)
             intersection = True
-            end_point = (87, 224)
+            end_point = (117, 224)
             # ref_points.append(end_point)
 
 
