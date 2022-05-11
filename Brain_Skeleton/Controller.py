@@ -50,9 +50,9 @@ class Controller():
         self.front_distances.append(DSFront_info)
         self.front_distances = self.front_distances[-7:]
 
-        self.coord = self.env_conn.get_position()
+        """self.coord = self.env_conn.get_position()
         self.veh_data = self.env_conn.get_vehicles_data()
-        self.sem_data = self.env_conn.get_sem_data()
+        self.sem_data = self.env_conn.get_sem_data()"""
 
         if self.state == "Lane Follow":
             if self.passed_horiz_line and not self.flags["crosswalk"]:
