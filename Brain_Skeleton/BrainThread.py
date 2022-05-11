@@ -471,59 +471,82 @@ class BrainThread(Thread):
 
         # info for intersection
         size_pixel = 500
-        size_cm = 210
+        size_cm = 155
         ref_points = []
 
-        x0, y0 = 120, 30
+        x0, y0 = 98, 10
 
         pathGenerator = PathGenerator()
 
         intersection = False
         isForward = False
 
+        # if case == "left":
+        #     ref_thresh = 10
+        #     final_thresh = 20
+        #     ref_points = pathGenerator.generate_circle_points(r=90, d=9, x_c=30, y_c=30, alpha_min=0, alpha_max=1.57)
+        #     end_point = (30, 120)
+        #     intersection = True
+        #     isForward = False
+        # if case == "right":
+        #     ref_thresh = 10
+        #     final_thresh = 20
+        #     ref_points = pathGenerator.generate_circle_points(r=40, d=6, x_c=180, y_c=30, alpha_min=1.57, alpha_max=3.14)
+        #     end_point = (180, 90)
+        #     intersection = True
+        #     isForward = False
+        # if case == "forward":
+        #     ref_thresh = 10
+        #     final_thresh = 20
+        #     ref_points = pathGenerator.generate_line_points(x1=120, y1=30, x2=120, y2=180, n=7)
+        #     end_point = (120, 180)
+        #     intersection = True
+        #     isForward = True
+
         if case == "left":
-            ref_thresh = 10
-            final_thresh = 20
-            ref_points = pathGenerator.generate_circle_points(r=90, d=9, x_c=30, y_c=30, alpha_min=0, alpha_max=1.57)
-            end_point = (30, 120)
+            ref_thresh = 5
+            final_thresh = 10
+            ref_points = pathGenerator.generate_circle_points(r=88, d=9, x_c=10, y_c=10, alpha_min=0, alpha_max=1.57)
+            end_point = (10, 98)
             intersection = True
             isForward = False
         if case == "right":
             ref_thresh = 10
             final_thresh = 20
-            ref_points = pathGenerator.generate_circle_points(r=60, d=6, x_c=180, y_c=30, alpha_min=1.57, alpha_max=3.14)
-            end_point = (180, 90)
+            ref_points = pathGenerator.generate_circle_points(r=47, d=6, x_c=145, y_c=10, alpha_min=1.57, alpha_max=3.14)
+            end_point = (145, 57)
             intersection = True
             isForward = False
         if case == "forward":
             ref_thresh = 10
             final_thresh = 20
-            ref_points = pathGenerator.generate_line_points(x1=120, y1=30, x2=120, y2=180, n=7)
-            end_point = (120, 180)
+            ref_points = pathGenerator.generate_line_points(x1=98, y1=10, x2=98, y2=145, n=7)
+            end_point = (98, 145)
             intersection = True
             isForward = True
+
         if case == "roundabout_forward":
             # info for roundabout
-            # x0, y0 = 135, 10
-            ref_thresh = 5
-            final_thresh = 10
+            x0, y0 = 135, 10
+            ref_thresh = 15
+            final_thresh = 15
             isForward = False
             size_pixel = 500
             size_cm = 234
-            ref_points_aux = pathGenerator.generate_circle_points(r=70, d=7, x_c=117, y_c=117, alpha_min=0,
+            ref_points_aux = pathGenerator.generate_circle_points(r=70, d=10, x_c=117, y_c=117, alpha_min=0,
                                                                   alpha_max=1.32)
             for point in ref_points_aux:
                 ref_points.append(point)
-            ref_points_aux = pathGenerator.generate_circle_points(r=70, d=7, x_c=117, y_c=117, alpha_min=4.95,
+            ref_points_aux = pathGenerator.generate_circle_points(r=70, d=10, x_c=117, y_c=117, alpha_min=4.95,
                                                                   alpha_max=6.28)
             for point in ref_points_aux:
                 ref_points.append(point)
 
-            ref_points_aux = pathGenerator.generate_line_points(x1=135, y1=10, x2=135, y2=40, n=5)
+            ref_points_aux = pathGenerator.generate_line_points(x1=135, y1=10, x2=135, y2=40, n=3)
             for point in ref_points_aux:
                 ref_points.append(point)
 
-            ref_points_aux = pathGenerator.generate_line_points(x1=135, y1=224, x2=135, y2=194, n=5)
+            ref_points_aux = pathGenerator.generate_line_points(x1=135, y1=224, x2=135, y2=194, n=3)
             for point in ref_points_aux:
                 ref_points.append(point)
             intersection = True
