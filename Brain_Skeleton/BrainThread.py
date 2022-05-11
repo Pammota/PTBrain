@@ -466,6 +466,7 @@ class BrainThread(Thread):
                       imuTracker=None
                       ):
 
+        # info for intersection
         size_pixel = 500
         size_cm = 210
         ref_points = []
@@ -492,6 +493,31 @@ class BrainThread(Thread):
             end_point = (120, 180)
             intersection = True
             isForward = True
+        if case == "roundabout_forward":
+            # info for roundabout
+            isForward = False
+            size_pixel = 500
+            size_cm = 234
+            ref_points_aux = pathGenerator.generate_circle_points(r=70, d=7, x_c=117, y_c=117, alpha_min=0,
+                                                                  alpha_max=1.32)
+            for point in ref_points_aux:
+                ref_points.append(point)
+            ref_points_aux = pathGenerator.generate_circle_points(r=70, d=7, x_c=117, y_c=117, alpha_min=4.95,
+                                                                  alpha_max=6.28)
+            for point in ref_points_aux:
+                ref_points.append(point)
+
+            ref_points_aux = pathGenerator.generate_line_points(x1=135, y1=10, x2=135, y2=40, n=5)
+            for point in ref_points_aux:
+                ref_points.append(point)
+
+            ref_points_aux = pathGenerator.generate_line_points(x1=135, y1=224, x2=135, y2=194, n=5)
+            for point in ref_points_aux:
+                ref_points.append(point)
+            intersection = True
+            end_point = (135, 234)
+
+
         if intersection == True:
             map = Map(size_pixel=size_pixel, size_cm=size_cm, ref_points=ref_points)
             ref_thresh = 10
