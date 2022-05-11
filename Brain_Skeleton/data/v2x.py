@@ -1,10 +1,10 @@
 import os
 import time
 
-from environmental import EnvironmentalHandler
-from locsys import LocalisationSystem
-from trafficlights import trafficlights
-from vehicletovehicle import vehicletovehicle
+from data.environmentalserver.environmental import EnvironmentalHandler
+from data.localisationssystem.locsys import LocalisationSystem
+from data.trafficlights.trafficlights import trafficlights
+from data.vehicletovehicle import vehicletovehicle
 
 COLORS = ['sem_red', 'sem_yellow', 'sem_green']
 
