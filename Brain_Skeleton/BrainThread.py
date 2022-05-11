@@ -548,7 +548,7 @@ class BrainThread(Thread):
                 ref_points.append(point)
             ref_points = [(117, 40), (140, 80), (140, 120), (87, 184), (67, 214)]
             ref_points.append((117, 40))
-            ref_points.append((117, 214))
+            # ref_points.append((117, 214))
 
 
             # ref_points_aux = pathGenerator.generate_line_points(x1=135, y1=10, x2=135, y2=40, n=3)
