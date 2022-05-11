@@ -1,10 +1,10 @@
 import os
 import time
 
-from environmentalserver.environmental import EnvironmentalHandler
-from localisationssystem.locsys import LocalisationSystem
-from trafficlights.trafficlights import trafficlights
-from vehicletovehicle.vehicletovehicle import vehicletovehicle
+from Brain_Skeleton.data.environmentalserver.environmental import EnvironmentalHandler
+from Brain_Skeleton.data.localisationssystem.locsys import LocalisationSystem
+from Brain_Skeleton.data.trafficlights.trafficlights import trafficlights
+from Brain_Skeleton.data.vehicletovehicle.vehicletovehicle import vehicletovehicle
 
 COLORS = ['sem_red', 'sem_yellow', 'sem_green']
 
