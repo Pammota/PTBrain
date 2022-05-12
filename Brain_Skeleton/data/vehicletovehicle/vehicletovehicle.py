@@ -51,11 +51,11 @@ class vehicletovehicle(Thread):
         self.timestamp = 0.0
         self.pos = complex(0, 0)
         self.ang = complex(0, 0)
+        self.__running = True
 
         self._init_socket()
 
         # Flag indincating thread state
-        self.__running = True
 
     def _init_socket(self):
         # Communication parameters, create and bind socket
