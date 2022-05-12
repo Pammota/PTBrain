@@ -27,10 +27,10 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
 
 from threading import Thread
-import Brain_Skeleton.data.environmentalserver.server_listener as server_listener
-import Brain_Skeleton.data.environmentalserver.server_subscriber as server_subscriber
-import Brain_Skeleton.data.environmentalserver.environmental_streamer as environmental_streamer
-import Brain_Skeleton.data.environmentalserver.server_data as server_data
+import data.environmentalserver.server_listener as server_listener
+import data.environmentalserver.server_subscriber as server_subscriber
+import data.environmentalserver.environmental_streamer as environmental_streamer
+import data.environmentalserver.server_data as server_data
 
 import time
 import random
