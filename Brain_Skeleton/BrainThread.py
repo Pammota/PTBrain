@@ -560,12 +560,12 @@ class BrainThread(Thread):
             #     x, y = ref_points[i]
             #     ref_points_aux.append((x-i, y))
             # ref_points = ref_points_aux
-            ref_points_aux = pathGenerator.generate_line_points(x1=117, y1=20, x2=117, y2=55, n=3)
-            for point in ref_points_aux:
-                ref_points.append(point)
-            ref_points_aux = pathGenerator.generate_line_points(x1=117, y1=179, x2=117, y2=224, n=3)
-            for point in ref_points_aux:
-                ref_points.append(point)
+            # ref_points_aux = pathGenerator.generate_line_points(x1=117, y1=20, x2=117, y2=55, n=3)
+            # for point in ref_points_aux:
+            #     ref_points.append(point)
+            # ref_points_aux = pathGenerator.generate_line_points(x1=117, y1=179, x2=117, y2=224, n=3)
+            # for point in ref_points_aux:
+            #     ref_points.append(point)
             # ref_points.append((117, 40))
             # ref_points.append((117, 30))
             # ref_points.append((117, 20))
@@ -590,8 +590,8 @@ class BrainThread(Thread):
 
         if intersection == True:
             map = Map(size_pixel=size_pixel, size_cm=size_cm, ref_points=ref_points)
-            ref_thresh = 10
-            final_thresh = 20
+            # ref_thresh = 10
+            # final_thresh = 20
             pathTracking = PathTracking(self.outP_com, map=map, ref_points=ref_points, size_pixel=size_pixel, size_cm=size_cm,
                                         x_car=x_car + x0, y_car=y0 - y_car, theta_yaw_map=theta_yaw_map, yaw=yaw,
                                         v=v, dt=dt, ref_thresh=ref_thresh, final_thresh=final_thresh,
