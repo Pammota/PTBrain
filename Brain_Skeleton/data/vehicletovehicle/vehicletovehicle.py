@@ -45,7 +45,6 @@ class vehicletovehicle(Thread):
         """
         super(vehicletovehicle, self).__init__()
         self.__running = True
-        super(vehicletovehicle, self).start()
 
         # Values extracted from message
         self.ID = 0
@@ -55,6 +54,8 @@ class vehicletovehicle(Thread):
         self.sock = None
 
         self._init_socket()
+
+        super(vehicletovehicle, self).start()
 
         # Flag indincating thread state
 
