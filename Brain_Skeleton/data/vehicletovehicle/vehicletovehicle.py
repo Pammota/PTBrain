@@ -84,7 +84,7 @@ class vehicletovehicle(Thread):
 
                 self.ang = complex(data['rot'])
             except Exception as e:
-                print("Receiving data failed with error: " + str(e))
+                print("Receiving veh data failed with error: " + str(e))
 
     ## Method for stopping listener process.
     #  @param self          The object pointer.

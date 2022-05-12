@@ -78,7 +78,7 @@ class trafficlights(Thread):
                     self.s4_state=state
 
             except Exception as e:
-                print("Receiving data failed with error: " + str(e))
+                print("Receiving sem data failed with error: " + str(e))
 
     
     def stop(self):

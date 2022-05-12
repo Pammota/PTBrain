@@ -37,8 +37,10 @@ class V2X():
         """
         streams a message containing an obstacle_id and its position to the environmental server
         """
-        self.env.stream(obstacle_id, x, y)
-
+        try:
+            self.env.stream(obstacle_id, x, y)
+        except Exception as e:
+            print("Could not stream data. This is not an error.")
 
     def get_vehicles_data(self):
         """
