@@ -266,7 +266,7 @@ class Controller():
                     if fulfilled is not None:
                         self.tasks_list = [task for task in self.tasks_list if task not in fulfilled]
                     tasks_list = self.tasks_list
-                    pathPlanner = PathPlanner(tasks_list, starting_points=starting_points)
+                    pathPlanner = PathPlanner(tasks_list=tasks_list, starting_points=starting_points)
                     return pathPlanner
             except Exception as e:
                 print(str(e))
