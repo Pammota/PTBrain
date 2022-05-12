@@ -539,11 +539,11 @@ class BrainThread(Thread):
             isForward = True
             size_pixel = 500
             size_cm = 234
-            ref_points_aux = pathGenerator.generate_circle_points(r=67, d=23, x_c=99, y_c=117, alpha_min=0,
+            ref_points_aux = pathGenerator.generate_circle_points(r=67, d=10, x_c=99, y_c=117, alpha_min=0,
                                                                   alpha_max=1.04)
             for point in ref_points_aux:
                 ref_points.append(point)
-            ref_points_aux = pathGenerator.generate_circle_points(r=67, d=23, x_c=99, y_c=117, alpha_min=5.23,
+            ref_points_aux = pathGenerator.generate_circle_points(r=67, d=10, x_c=99, y_c=117, alpha_min=5.23,
                                                                   alpha_max=6.28)
             for point in ref_points_aux:
                 ref_points.append(point)
@@ -560,12 +560,18 @@ class BrainThread(Thread):
             #     x, y = ref_points[i]
             #     ref_points_aux.append((x-i, y))
             # ref_points = ref_points_aux
-            ref_points.append((117, 40))
-            ref_points.append((117, 30))
-            ref_points.append((117, 20))
-            ref_points.append((117, 204))
-            ref_points.append((117, 194))
-            ref_points.append((117, 184))
+            ref_points_aux = pathGenerator.generate_line_points(x1=117, y1=20, x2=117, y2=50, n=8)
+            for point in ref_points_aux:
+                ref_points.append(point)
+            ref_points_aux = pathGenerator.generate_line_points(x1=140, y1=184, x2=117, y2=204 n=8)
+            for point in ref_points_aux:
+                ref_points.append(point)
+            # ref_points.append((117, 40))
+            # ref_points.append((117, 30))
+            # ref_points.append((117, 20))
+            # ref_points.append((117, 204))
+            # ref_points.append((117, 194))
+            # ref_points.append((117, 184))
             # ref_points.append((87, 214))
 
 
