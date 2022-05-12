@@ -235,7 +235,7 @@ class Controller():
 
         start_con_time = time.time()
 
-        while time.time() - start_con_time < 60:
+        while time.time() - start_con_time < 5:
             try:
                 self.coord = self.env_conn.get_position()
                 starting_points = self.graph.get_closest_id(self.coord)
