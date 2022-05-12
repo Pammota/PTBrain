@@ -257,7 +257,6 @@ class BrainThread(Thread):
         self.last_intersection = self.num_frames
         self.controller.ongoing_intersection = False
 
-
     def crosswalk_maneuver_routine(self):
         print("Finished track")
         self.hardcoded_move(0, 0, 10, 0.2)
