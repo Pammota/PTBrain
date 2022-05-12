@@ -27,16 +27,17 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
 
 from threading import Thread
-import Brain_Skeleton.data.environmentalserver.server_listener
-import Brain_Skeleton.data.environmentalserver.server_subscriber
-import Brain_Skeleton.data.environmentalserver.environmental_streamer
+import data.environmentalserver.server_listener as server_listener
+import data.environmentalserver.server_subscriber as server_subscriber
+import data.environmentalserver.environmental_streamer as environmental_streamer
+import data.environmentalserver.server_data as server_data
 
 import time
 import random
 
 class EnvironmentalHandler(Thread):
     
-    def __init__(self, ID = 120):
+    def __init__(self, ID):
         """ EnvironmentalHandler targets to connect on the server and to send messages, which incorporates 
         the coordinate of the encountered obstacles on the race track. It has two main state, the setup state and the streaming state. 
         In the setup state, it creates the connection with server. It's sending the messages to the server in the streaming

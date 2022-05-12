@@ -1,13 +1,14 @@
 import time
 
-#from data.v2x import V2X
+from data.v2x import V2X
 from PathPlanner import PathPlanner
 
 import numpy as np
 from PIDControl import PIDControl
+from GraphPars import GraphPars
 
 
-RANDOM_POSITION = False
+RANDOM_POSITION = True
 
 
 class Controller():
@@ -16,10 +17,10 @@ class Controller():
                  "sem_green": False, "priority": False, "crosswalk": False, "stop": False}
         self.flags_history = []
         self.state = "Lane Follow"
-        self.directions = ["roundabout_forward", "forward", "left", "right", "left", "right", "right", "stop"]
+        self.directions = ["forward", "stop", "stop", "stop"]
         self.dir_idx = 0
         self.had_parking = False
-        self.base_speed = 17
+        self.base_speed = 13
         self.theta = 0
         self.thetas = []
         self.passed_horiz_line = False
@@ -29,16 +30,23 @@ class Controller():
         self.timer_crt = 0
         self.pedestrian_present = False
         self.PIDController = None
+        self.passed_one_intersection = False
 
         self.executed = {"parking": False, "crosswalk": False}
 
-        self.env_conn = None #V2X()
+        self.env_conn = V2X()
 
         self.coord = None
         self.veh_data = None
         self.sem_data = None
 
-        #self.pathPlanner = self.__localize()
+        self.graph = GraphPars()
+
+        self.tasks_list = ["parking", "crosswalk", "semaphore"]
+        self.pathPlanner = self.__localize(None)
+        print(self.pathPlanner.nodes_list)
+        self.v1 = None
+        self.v2 = None
 
 
     def checkState(self, OD_info, LD_info, DSFront_info=100):
@@ -50,9 +58,16 @@ class Controller():
         self.front_distances.append(DSFront_info)
         self.front_distances = self.front_distances[-7:]
 
-        """self.coord = self.env_conn.get_position()
-        self.veh_data = self.env_conn.get_vehicles_data()
-        self.sem_data = self.env_conn.get_sem_data()"""
+        try:
+            self.coord = self.env_conn.get_position()
+            self.veh_data = self.env_conn.get_vehicles_data()
+            self.sem_data = self.env_conn.get_sem_data()
+        except:
+            self.coord = None
+            self.veh_data = None
+            self.sem_data = None
+
+        direction, self.v1, self.v2 = self.pathPlanner.current()
 
         if self.state == "Lane Follow":
             if self.passed_horiz_line and not self.flags["crosswalk"]:
@@ -60,28 +75,33 @@ class Controller():
                     self.state = "Terminate"
                 else:
                     #self.setExecuted(parking=False, crosswalk=False)
-                    self.state = "Intersection"
-                    self.ongoing_intersection = True
+                    if self.validate_intersection():
+                        self.state = "Intersection"
+                        self.passed_one_intersection = True
+                        self.ongoing_intersection = True
             if self.passed_horiz_line and self.flags["crosswalk"] and not self.executed["crosswalk"]:
                 self.state = "Crosswalk"
                 self.timer_start = time.time()
 
             # if there is a car ahead and not PID defined, define a PID
-            if self.PIDController is None and self.front_distance() < 100:
+            if self.PIDController is None and self.front_distance() < 50:
                 self.PIDController = PIDControl(40)
                 print("ACTIVATED PID!!!")
             # if there is no car ahead and a PID defined, undefine the PID
-            if self.PIDController is not None and self.front_distance() > 100:
+            if self.PIDController is not None and self.front_distance() > 70:
                 self.PIDController = None
                 print("DACTIVATED PID")
 
         elif self.state == "Intersection":
             if not self.ongoing_intersection:
                 self.state = "Lane Follow"
+                self.dir_idx += 1
 
         elif self.state == "Crosswalk":
             if not self.executed["crosswalk"]:
-                if self.timer_crt - self.timer_start > 3:
+                if not self.passed_one_intersection:
+                    self.__localize(["crosswalk"])
+                if self.timer_crt - self.timer_start > 5:
                     if self.front_distance() > 60:
                         print("Stopped at the crosswalk")
                         self.setExecuted(crosswalk=True)
@@ -95,6 +115,7 @@ class Controller():
                         self.pedestrian_present = False
                         self.timer_start = time.time()
                 elif self.timer_crt - self.timer_start > 2:
+                    self.env_conn.env.send(4, self.coord[0], self.coord[1])
                     self.state = "Lane Follow"
 
 
@@ -103,10 +124,13 @@ class Controller():
             if self.flags["parking"]:
                 print("set had_parking to True")
                 self.had_parking = True
+                self.env_conn.env.send(3, self.coord[0], self.coord[1])
             elif self.had_parking is True and not self.flags["parking"] and not self.executed["parking"]:
                 self.setExecuted(parking=True)
                 print("Set had_parking to false")
                 self.had_parking = False
+                if not self.passed_one_intersection:
+                    self.__localize(["parking"])
                 return [0, 0, 0, 0, 0, 0, 1]  #activate parking flag
             # if a PID is defined => we have a car ahead
             elif self.PIDController is not None:  # keep distance from the car in front
@@ -117,15 +141,24 @@ class Controller():
             return [self.base_speed, self.theta, 0, 0, 0, 0, 0]
 
         if self.state == "Intersection":
+            try:
+                direction, self.v1, self.v2 = self.pathPlanner.current()
+            except:
+                direction = self.directions[self.dir_idx]
+
+            self.validate_sem()
+            self.send_sign_data()
+
+            if direction.split("_")[0] == "roundabout" and not self.passed_one_intersection:
+                self.__localize(["roundabout"])
+
             if self.flags["stop"]:
-                self.ongoing_intersection = False
-                return [0, self.theta, 1, 0, self.directions[self.dir_idx], 0, 0]
+                return [0, self.theta, 1, 0, direction, 0, 0]
             else:
-                if self.flags["sem_red"]:
-                    return [0, self.theta, 0, 1, self.directions[self.dir_idx], 0, 0]
+                if self.flags["sem_red"] or self.flags["sem_yellow"]:
+                    return [0, self.theta, 0, 1, direction, 0, 0]
                 else:
-                    self.ongoing_intersection = False
-                    return [0, self.theta, 0, 0, self.directions[self.dir_idx], 0, 0]
+                    return [0, self.theta, 0, 0, direction, 0, 0]
 
         if self.state == "Crosswalk":
             if self.executed["crosswalk"]:
@@ -159,17 +192,62 @@ class Controller():
         return np.median(self.front_distances)
 
 
-    def __localize(self):
+    def send_sign_data(self):
+        if self.flags["sem_red"] or self.flags["sem_yellow"] or self.flags["sem_green"]:
+            self.env_conn.env.send(9, self.coord[0], self.coord[1])
+        if self.flags["stop"]:
+            self.env_conn.env.send(1, self.coord[0], self.coord[1])
+        if self.flags["priority"]:
+            self.env_conn.env.send(2, self.coord[0], self.coord[1])
+        if self.v2 == "J":
+            self.env_conn.env.send(7, self.coord[0], self.coord[1])
+
+    def validate_sem(self):
+
+        if self.sem_data is None:
+            return
+        if self.v1 == "B" and self.v2 == "E":  ## sem with id 1
+            sem_color = self.sem_data[1]
+        else:
+            if self.v1 == "D" and self.v2 == "E":  ## sem with id 2
+                sem_color = self.sem_data[2]
+            else:
+                if self.v1 == "F" and self.v2 == "E":  ## sem with id 4
+                    sem_color = self.sem_data[4]
+                else:
+                    if self.v1 == "0" and self.v2 == "A":
+                        sem_color = self.sem_data[3]  ## default is the variable sem (at the initial point)
+                    else:
+                        sem_color = None
+        self.flags["sem_red"] = False
+        self.flags["sem_yellow"] = False
+        self.flags["sem_green"] = False
+        if sem_color is not None:
+            self.flags[sem_color] = True
+
+    def validate_intersection(self):
+        return self.graph.validate_intersection(self.coord)
+
+
+    def __localize(self, fulfilled=None):
         if not RANDOM_POSITION:
             return PathPlanner(["0", "A", "B", "D", "A", "0"])
 
         start_con_time = time.time()
 
-        while time.time() - start_con_time < 60:
+        while time.time() - start_con_time < 5:
             try:
                 self.coord = self.env_conn.get_position()
+                starting_points = self.graph.get_closest_id(self.coord)
 
-
+                if self.coord is not None:
+                    if starting_points[1] == "E":
+                        self.tasks_list.remove("parking")
+                    if fulfilled is not None:
+                        self.tasks_list = [task for task in self.tasks_list if task not in fulfilled]
+                    tasks_list = self.tasks_list
+                    pathPlanner = PathPlanner(tasks_list, starting_points=starting_points)
+                return pathPlanner
             except:
                 pass
 

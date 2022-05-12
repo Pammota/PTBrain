@@ -4,12 +4,12 @@ import time
 from data.environmentalserver.environmental import EnvironmentalHandler
 from data.localisationssystem.locsys import LocalisationSystem
 from data.trafficlights.trafficlights import trafficlights
-from data.vehicletovehicle import vehicletovehicle
+from data.vehicletovehicle.vehicletovehicle import vehicletovehicle
 
 COLORS = ['sem_red', 'sem_yellow', 'sem_green']
 
 class V2X():
-    def __init__(self, ID = 21):
+    def __init__(self, ID = 88):
 
         ### initialize communication threads
 

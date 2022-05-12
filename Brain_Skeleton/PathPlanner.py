@@ -73,7 +73,7 @@ def compute_direction(edge, next_edge):
 
 
 class PathPlanner:
-    def __init__(self, nodes_list=None, tasks_list=None):
+    def __init__(self, nodes_list=None, tasks_list=None, starting_points=None):
 
         self.image = cv2.imread("track.png")
 
@@ -85,7 +85,7 @@ class PathPlanner:
         self.num_sections = 0
 
         if nodes_list is None:
-            self.construct_nodes_list(tasks_list)
+            self.construct_nodes_list(tasks_list, starting_points)
 
         self.node_idx = 0
 
@@ -165,12 +165,15 @@ class PathPlanner:
         cv2.waitKey(0)
         cv2.destroyAllWindows()"""
 
-    def shortest_path_unweighted(self, starting_point, graph):
+    def shortest_path_unweighted(self, starting_points, graph):
 
-        queue = [starting_point]
+        queue = [starting_points[1]]
         dest = None
 
-        graph["nodes"][starting_point].prev = "-"
+        graph["nodes"][starting_points[0]].prev = "-"
+        graph["nodes"][starting_points[0]].passed = True
+
+        graph["nodes"][starting_points[1]].prev = starting_points[0]
 
         while (len(queue) > 0):
             try:
@@ -188,10 +191,10 @@ class PathPlanner:
                             continue
                         queue.append(neighb)
                         graph["nodes"][neighb].prev = crt_node
-                        graph["nodes"][crt_node].passed = True
 
                         if graph["nodes"][neighb].final == True:
                             dest = neighb
+                graph["nodes"][crt_node].passed = True
 
                 if dest is not None:
                     break
@@ -271,7 +274,7 @@ class PathPlanner:
             base_graph["edges"].update(upper_graph["edges"])
         return base_graph
 
-    def construct_nodes_list(self, tasks_list):
+    def construct_nodes_list(self, tasks_list, starting_points):
 
         graph = {"nodes": copy.deepcopy(self.nodes),
                  "edges": copy.deepcopy(self.edges)}
@@ -283,7 +286,7 @@ class PathPlanner:
 
         graph = self.develop_level(graph, tasks_list)
 
-        self.nodes_list = self.shortest_path_unweighted("0", graph)
+        self.nodes_list = self.shortest_path_unweighted(starting_points, graph)
 
     def current(self):
         crt_node = self.nodes[self.nodes_list[self.node_idx]]
@@ -301,12 +304,30 @@ class PathPlanner:
         else:
             direction = "stop"
             edge = None
-        print(direction)
-        cv2.imshow("next edge", self.image)
-        cv2.waitKey(0)
-        return direction, self.nodes_list[self.node_idx], edge
+        #print(direction)
+        """ cv2.imshow("next edge", self.image)
+        cv2.waitKey(0)"""
+        return direction, self.nodes_list[self.node_idx] ,self.nodes_list[min(self.node_idx + 1, len(self.nodes_list) - 1)]
 
     def next(self):
         if self.node_idx < len(self.nodes_list) - 1:
             self.node_idx += 1
         return self.current()
+
+if __name__ == "__main__":
+    pp = PathPlanner(tasks_list=["parking", "semaphore", "crosswalk"], starting_points=["J", "G"])
+
+    print("INITIALIZING!! Car starts! (waits for the semaphore, goes straight forward)")
+
+    direction = None
+
+    while direction != "stop":
+        direction, prev, next = pp.current()
+
+        print(direction)
+        print("Edge {}-{}".format(prev, next))
+        print("----------TAKING THE NEXT STEP!-----------")
+
+        pp.next()
+
+print("FINISHED TRACK")

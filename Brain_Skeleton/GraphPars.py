@@ -16,8 +16,6 @@ class GraphPars():
             ID, d0, d1 = self.parse_node(node)
             self.V[ID] = [d0, d1]
 
-        print(self.V)
-
 
         for edge in graph.edges():
             d2 = self.parse_edge(edge)
@@ -90,13 +88,70 @@ class GraphPars():
             return "A", "B"
         if position in ["80", "92", "93", "94", "68"]:
             return "A", "D"
-
         if position in ["44", "89", "79"]:
             return "B", "A"
         if position in ["42", "98", "99", "100", "4"]:
             return "B", "E"
         if position in ["40", "90", "54"]:
             return "B", "C"
+        if position in ["51", "104", "105", "106", "36"]:
+            return "C", "F"
+        if position in ["53", "91", "41"]:
+            return "C", "B"
+        if position in ["52", "107", "108", "109", "35"]:
+            return "F", "C"
+        if position in ["33", "113", "6"]:
+            return "F", "E"
+        if position in ["31", "114", "115", "116", "117", "118","27"]:
+            return "F", "I"
+        if position in["3", "101", "102", "103", "43"]:
+            return "E", "B"
+        if position in ["1", "111", "70"]:
+            return "E", "D"
+        if position in ["7", "8", "15", "16"] or (int(position) <= 143 and int(position) >= 134):
+            return "E", "H"
+        if position in ["5", "112", "34"]:
+            return "E", "F"
+        if position in ["81", "97", "96", "95", "67"]:
+            return "D", "A"
+        if position in ["71", "124", "125", "126", "127", "128", "59"]:
+            return "D", "G"
+        if position in ["69", "110", "2"]:
+            return "D", "E"
+        if position in ["72", "129", "130", "131", "132", "133", "58"]:
+            return "G", "D"
+        if position in ["62"] or (int(position) >= 148 and int(position) <= 171) or (int(position) >= 198 and int(position) <= 230):
+            return "G", "J"
+        if position in ["60", "144", "14"]:
+            return "G", "H"
+        if position in ["13", "145", "61"]:
+            return "H", "G"
+        if position in ["17", "146", "25"]:
+            return "H", "I"
+        if position in ["26", "32", "119", "120", "121", "122", "123"]:
+            return "I", "F"
+        if position in ["24", "147", "18"]:
+            return "I", "H"
+        if position in ["22"] or (int(position) >= 288 and int(position) <= 301):
+            return "I", "J"
+        if position in ["23"] or (int(position) >= 272 and int(position) <= 287):
+            return "J", "I"
+        if position in ["63"] or (int(position) >= 172 and int(position) <= 197) or (int(position) >= 231 and int(position) <= 266):
+            return "J", "G"
+
+
+
+    def validate_intersection(self, coords):
+        position = self.get_closest_id(coords)
+
+        if position not in ["86", "87", "87", "45", "79", "89", "90", "54", "41", "91", "97", "81",
+                            "94", "68", "103", "43", "4", "100", "52", "109", "36",
+                            "106", "6", "113", "112", "34", "2", "110", "70", "111", "72", "133", "128",
+                            "59", "63", "197", "61", "145", "144", "14", "18", "147", "146",
+                            "25", "27", "118", "23", "287", "32", "123", "300",
+                            "301", "229", "230", "341", "342", "466", "467", "468"]:
+            return False
+        return True
 
 if __name__ == "__main__":
     gp = GraphPars()

@@ -43,22 +43,24 @@ class vehicletovehicle(Thread):
         
         Class used for running port listener algorithm 
         """
-        super(vehicletovehicle,self).start()
+        super(vehicletovehicle, self).__init__()
+        self.__running = True
+        super(vehicletovehicle, self).start()
 
         # Values extracted from message
         self.ID = 0
         self.timestamp = 0.0
-        self.pos = complex(0,0)
-        self.ang = complex(0,0)
+        self.pos = complex(0, 0)
+        self.ang = complex(0, 0)
+        self.sock = None
 
         self._init_socket()
 
         # Flag indincating thread state
-        self.__running = True
 
     def _init_socket(self):
         # Communication parameters, create and bind socket
-        self.PORT = 50007
+        self.PORT = 50009
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) #(internet, UDP)
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)

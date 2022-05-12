@@ -34,7 +34,7 @@ import traceback
 
 import socket
 
-from utils import load_public_key,verify_data
+from data.localisationssystem.utils import load_public_key,verify_data
 
 class ServerSubscriber:
 	""" It has role to subscribe on the server, to create a connection and verify the server authentication.
@@ -51,7 +51,7 @@ class ServerSubscriber:
 		#: for testing purposes, with the provided simulated localisation system, use the "publickey_server_test.pem"
 		#: At Bosch location, during the competition and during the testing on the track, please use the "publickey_server.pem"
 # 		self.__public_key = load_public_key('publickey_server.pem')
-		self.__public_key = load_public_key('publickey_server_test.pem')
+		self.__public_key = load_public_key('data/localisationssystem/publickey_server.pem')
 
 	def ID(self):
 		return self.__carId
