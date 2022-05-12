@@ -72,7 +72,7 @@ class GraphPars():
 
 
     def get_closest_id(self, coords):
-        a, b = coords.items()
+        a, b = coords['x'], coords['y']
         distances = {ID : math.sqrt((a - x)**2 + (b - y)**2) for ID, [x, y] in self.V.items()}
 
         return min(distances, key=distances.get)
