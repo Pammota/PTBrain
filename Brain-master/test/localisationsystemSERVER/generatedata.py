@@ -55,7 +55,7 @@ class GenerateData(threading.Thread):
         #: inferior value of car id number
         self.__startCarid = 1
         #: superior value of car id number
-        self.__endCarid = 40
+        self.__endCarid = 120
     
     def run(self):
         """ Actualize the car client server data with the new coordinates. 

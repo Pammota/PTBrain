@@ -70,6 +70,7 @@ class PositionListener:
 					
 					coor = json.loads((msg),cls=ComplexDecoder)
 					self.coor = coor
+					print("Coordinatess from pos listener are: " + self.coor[0])
 				except socket.timeout:
 					print("position listener socket_timeout")
 					# the socket was created successfully, but it wasn't received any message. Car with id wasn't detected before. 

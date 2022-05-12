@@ -154,8 +154,9 @@ class CarClientHandler(socketserver.BaseRequestHandler):
                     msg = json.dumps((data),cls=ComplexEncoder)
                     self.server.logger.info('Sending message {} to client {} '.format(msg,self.client_address))
                     self.request.sendall(msg.encode('utf-8'))
-                
+                    print("successfully sent the message")
                 time.sleep(0.25)
-                
+
         except Exception as e:
+            print("Did not manage to send a position")
             self.server.logger.warning("Close serving for {}. Error: {}".format(self.client_address,e))
