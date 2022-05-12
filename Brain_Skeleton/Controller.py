@@ -37,7 +37,7 @@ class Controller():
         self.env_conn = V2X()
         self.env_conn.start()
 
-        self.coord = None
+        self.coords = None
         self.veh_data = None
         self.sem_data = None
 
@@ -60,9 +60,9 @@ class Controller():
         self.front_distances = self.front_distances[-7:]
 
         try:
-            self.coord = self.env_conn.get_position()
+            self.coords = self.env_conn.get_position()
         except:
-            self.coord = None
+            self.coords = None
 
         try:
             self.veh_data = self.env_conn.get_vehicles_data()
@@ -121,7 +121,7 @@ class Controller():
                         self.pedestrian_present = False
                         self.timer_start = time.time()
                 elif self.timer_crt - self.timer_start > 2:
-                    self.env_conn.stream(4, self.coord[0], self.coord[1])
+                    self.env_conn.stream(4, self.coords[0], self.coords[1])
                     self.state = "Lane Follow"
 
 
@@ -130,7 +130,7 @@ class Controller():
             if self.flags["parking"]:
                 print("set had_parking to True")
                 self.had_parking = True
-                self.env_conn.stream(3, self.coord[0], self.coord[1])
+                self.env_conn.stream(3, self.coords[0], self.coords[1])
             elif self.had_parking is True and not self.flags["parking"] and not self.executed["parking"]:
                 self.setExecuted(parking=True)
                 print("Set had_parking to false")
@@ -203,13 +203,13 @@ class Controller():
 
     def send_sign_data(self):
         if self.flags["sem_red"] or self.flags["sem_yellow"] or self.flags["sem_green"]:
-            self.env_conn.stream(9, self.coord[0], self.coord[1])
+            self.env_conn.stream(9, self.coords[0], self.coords[1])
         if self.flags["stop"]:
-            self.env_conn.stream(1, self.coord[0], self.coord[1])
+            self.env_conn.stream(1, self.coords[0], self.coords[1])
         if self.flags["priority"]:
-            self.env_conn.stream(2, self.coord[0], self.coord[1])
+            self.env_conn.stream(2, self.coords[0], self.coords[1])
         if self.v2 == "J":
-            self.env_conn.stream(7, self.coord[0], self.coord[1])
+            self.env_conn.stream(7, self.coords[0], self.coords[1])
 
     def validate_sem(self):
 
@@ -236,7 +236,7 @@ class Controller():
 
     def validate_intersection(self):
         try:
-            valid = self.graph.validate_intersection(self.coord)
+            valid = self.graph.validate_intersection(self.coords)
             return valid
         except:
             pass
@@ -260,7 +260,7 @@ class Controller():
                 starting_points = self.graph.get_starting_position(self.coords)
                 print(starting_points)
 
-                if self.coord is not None:
+                if self.coords is not None:
                     if starting_points[1] == "E":
                         self.tasks_list.remove("semaphore")
                     if fulfilled is not None:
