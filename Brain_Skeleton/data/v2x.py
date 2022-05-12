@@ -29,7 +29,7 @@ class V2X():
         """
         returns a complex number which represents the coordinates of the car
         """
-        return self.gps.coor()
+        return self.gps.coor()[0]
 
 
     def stream(self, obstacle_id, x, y):
