@@ -52,6 +52,7 @@ class vehicletovehicle(Thread):
         self.timestamp = 0.0
         self.pos = complex(0, 0)
         self.ang = complex(0, 0)
+        self.sock = None
 
         self._init_socket()
 
@@ -59,7 +60,7 @@ class vehicletovehicle(Thread):
 
     def _init_socket(self):
         # Communication parameters, create and bind socket
-        self.PORT = 50007
+        self.PORT = 50009
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) #(internet, UDP)
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
