@@ -246,10 +246,15 @@ class BrainThread(Thread):
         theta_yaw_map = np.median([tym for tym in thetas if tym is not None])
         yaw = imuThread.yaw
 
-        self.path_tracking(case=direction, x_car=x_offset, y_car=y_offset,
-                           theta_yaw_map=theta_yaw_map, yaw=yaw,
-                           v=14,
-                           dt=0.05, L=25.8, imuTracker=imuThread)
+        try:
+            self.path_tracking(case=direction, x_car=x_offset, y_car=y_offset,
+                               theta_yaw_map=theta_yaw_map, yaw=yaw,
+                               v=14,
+                               dt=0.05, L=25.8, imuTracker=imuThread)
+        except KeyboardInterrupt:
+            self.terminate()
+        except Exception as e:
+            print(str(e))
 
         imuThread.stop()
         self.controller.dir_idx += 1
