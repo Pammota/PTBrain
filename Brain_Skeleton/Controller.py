@@ -253,11 +253,11 @@ class Controller():
                 time.sleep(0.03)
                 self.coords = self.env_conn.get_position()
 
-                if self.coord is None:
+                if self.coords is None:
                     print("COORDS ARE None")
                 else:
-                    print(self.coord)
-                starting_points = self.graph.get_starting_position(self.coord)
+                    print(self.coords)
+                starting_points = self.graph.get_starting_position(self.coords)
                 print(starting_points)
 
                 if self.coord is not None:

@@ -30,6 +30,7 @@ class V2X():
         returns a complex number which represents the coordinates of the car
         """
         coords_complex = self.gps.coor()[0]
+        print("In V2x: {}".format(coords_complex))
         return {"x": coords_complex.real, "y": coords_complex.imag}
 
 
