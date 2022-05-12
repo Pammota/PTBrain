@@ -41,10 +41,10 @@ class trafficlights(Thread):
         super(trafficlights, self).__init__()
         
         # Semaphore states
-        self.s1_state=0 
-        self.s2_state=0 
-        self.s3_state=0 
-        self.s4_state=0 
+        self.s1_state=2
+        self.s2_state=2
+        self.s3_state=2
+        self.s4_state=2
 
         self._init_socket()
 

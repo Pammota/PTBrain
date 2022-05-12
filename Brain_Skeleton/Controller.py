@@ -161,8 +161,6 @@ class Controller():
             if direction.split("_")[0] == "roundabout" and not self.passed_one_intersection:
                 self.__localize(["roundabout"])
 
-            print(self.flags)
-
             if self.flags["stop"]:
                 return [0, self.theta, 1, 0, direction, 0, 0]
             else:
@@ -218,8 +216,6 @@ class Controller():
 
         if self.sem_data is None:
             return
-        else:
-            print(self.sem_data)
         if self.v1 == "B" and self.v2 == "E":  ## sem with id 1
             sem_color = self.sem_data[1]
         else:
