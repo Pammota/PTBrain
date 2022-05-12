@@ -253,6 +253,7 @@ class BrainThread(Thread):
 
         imuThread.stop()
         self.controller.dir_idx += 1
+        self.controller.pathPlanner.next()
         self.last_intersection = self.num_frames
         self.controller.ongoing_intersection = False
 
