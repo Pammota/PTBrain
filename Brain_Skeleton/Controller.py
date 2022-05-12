@@ -226,8 +226,11 @@ class Controller():
             self.flags[sem_color] = True
 
     def validate_intersection(self):
-        return self.graph.validate_intersection(self.coord)
-
+        try:
+            valid = self.graph.validate_intersection(self.coord)
+            return valid
+        except:
+            return True
 
     def __localize(self, fulfilled=None):
         if not RANDOM_POSITION:
