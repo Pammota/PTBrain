@@ -91,7 +91,7 @@ class LocalisationSystem(Thread):
         coords = self.__position_listener.coor
 
         #print("Coordinates are: {}, {}".format(coords['coor'][0], coords['coor'][1]))
-        return coords
+        return coords['coor']
 
     def ID(self):
         return self.__subscriber.ID()
