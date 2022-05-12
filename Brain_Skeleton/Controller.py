@@ -251,7 +251,8 @@ class Controller():
         while time.time() - start_con_time < 3:
             try:
                 time.sleep(0.03)
-                self.coord = self.env_conn.get_position()
+                self.coords = self.env_conn.get_position()
+
                 if self.coord is None:
                     print("COORDS ARE None")
                 else:
