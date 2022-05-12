@@ -95,7 +95,6 @@ class Controller():
         elif self.state == "Intersection":
             if not self.ongoing_intersection:
                 self.state = "Lane Follow"
-                self.dir_idx += 1
 
         elif self.state == "Crosswalk":
             if not self.executed["crosswalk"]:
@@ -141,10 +140,10 @@ class Controller():
             return [self.base_speed, self.theta, 0, 0, 0, 0, 0]
 
         if self.state == "Intersection":
-            try:
+            """try:
                 direction, self.v1, self.v2 = self.pathPlanner.current()
-            except:
-                direction = self.directions[self.dir_idx]
+            except:"""
+            direction = self.directions[self.dir_idx]
 
             self.validate_sem()
             self.send_sign_data()
