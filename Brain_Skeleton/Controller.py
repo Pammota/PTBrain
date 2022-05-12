@@ -8,7 +8,7 @@ from PIDControl import PIDControl
 from GraphPars import GraphPars
 
 
-RANDOM_POSITION = False
+RANDOM_POSITION = True
 
 
 class Controller():
@@ -57,9 +57,14 @@ class Controller():
         self.front_distances.append(DSFront_info)
         self.front_distances = self.front_distances[-7:]
 
-        self.coord = self.env_conn.get_position()
-        self.veh_data = self.env_conn.get_vehicles_data()
-        self.sem_data = self.env_conn.get_sem_data()
+        try:
+            self.coord = self.env_conn.get_position()
+            self.veh_data = self.env_conn.get_vehicles_data()
+            self.sem_data = self.env_conn.get_sem_data()
+        except:
+            self.coord = None
+            self.veh_data = None
+            self.sem_data = None
 
         direction, self.v1, self.v2 = self.pathPlanner.current()
 
@@ -198,6 +203,8 @@ class Controller():
 
     def validate_sem(self):
 
+        if self.sem_data is None:
+            return
         if self.v1 == "B" and self.v2 == "E":  ## sem with id 1
             sem_color = self.sem_data[1]
         else:
@@ -211,9 +218,9 @@ class Controller():
                         sem_color = self.sem_data[3]  ## default is the variable sem (at the initial point)
                     else:
                         sem_color = None
-                        self.flags["sem_red"] = False
-                        self.flags["sem_yellow"] = False
-                        self.flags["sem_green"] = False
+        self.flags["sem_red"] = False
+        self.flags["sem_yellow"] = False
+        self.flags["sem_green"] = False
         if sem_color is not None:
             self.flags[sem_color] = True
 
