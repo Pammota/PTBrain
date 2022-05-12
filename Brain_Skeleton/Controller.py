@@ -248,9 +248,9 @@ class Controller():
 
         start_con_time = time.time()
 
-        while time.time() - start_con_time < 1:
+        while time.time() - start_con_time < 3:
             try:
-                time.sleep(0.01)
+                time.sleep(0.03)
                 self.coord = self.env_conn.get_position()
                 if self.coord is None:
                     print("COORDS ARE None")
