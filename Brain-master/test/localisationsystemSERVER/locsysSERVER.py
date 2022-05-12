@@ -59,7 +59,7 @@ class LocalizationSystemServer:
 
         try:
             while(True):
-                time.sleep(2.0)
+                time.sleep(20.0)
         except KeyboardInterrupt:
             pass
             
