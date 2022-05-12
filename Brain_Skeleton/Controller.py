@@ -76,8 +76,6 @@ class Controller():
 
         direction, self.v1, self.v2 = self.pathPlanner.current()
 
-        print(self.state)
-
         if self.state == "Lane Follow":
             if self.passed_horiz_line and not self.flags["crosswalk"]:
                 if self.dir_idx > len(self.directions):
@@ -123,16 +121,19 @@ class Controller():
                         self.pedestrian_present = False
                         self.timer_start = time.time()
                 elif self.timer_crt - self.timer_start > 2:
-                    self.env_conn.stream(4, self.coords[0], self.coords[1])
+                    self.env_conn.stream(4, self.coords)
                     self.state = "Lane Follow"
 
 
     def takeAction(self):
+
+        print(self.state)
+
         if self.state == "Lane Follow":
             if self.flags["parking"]:
                 print("set had_parking to True")
                 self.had_parking = True
-                self.env_conn.stream(3, self.coords[0], self.coords[1])
+                self.env_conn.stream(3, self.coords)
             elif self.had_parking is True and not self.flags["parking"] and not self.executed["parking"]:
                 self.setExecuted(parking=True)
                 print("Set had_parking to false")
@@ -202,13 +203,13 @@ class Controller():
 
     def send_sign_data(self):
         if self.flags["sem_red"] or self.flags["sem_yellow"] or self.flags["sem_green"]:
-            self.env_conn.stream(9, self.coords[0], self.coords[1])
+            self.env_conn.stream(9, self.coords)
         if self.flags["stop"]:
-            self.env_conn.stream(1, self.coords[0], self.coords[1])
+            self.env_conn.stream(1, self.coords)
         if self.flags["priority"]:
-            self.env_conn.stream(2, self.coords[0], self.coords[1])
+            self.env_conn.stream(2, self.coords)
         if self.v2 == "J":
-            self.env_conn.stream(7, self.coords[0], self.coords[1])
+            self.env_conn.stream(7, self.coords)
 
     def validate_sem(self):
 

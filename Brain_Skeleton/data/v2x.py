@@ -33,12 +33,12 @@ class V2X():
         return {"x": coords_complex.real, "y": coords_complex.imag}
 
 
-    def stream(self, obstacle_id, x, y):
+    def stream(self, obstacle_id, coords):
         """
         streams a message containing an obstacle_id and its position to the environmental server
         """
         try:
-            self.env.stream(obstacle_id, x, y)
+            self.env.stream(obstacle_id, coords['x'], coords['y'])
         except Exception as e:
             print("Could not stream data. This is not an error.")
 
