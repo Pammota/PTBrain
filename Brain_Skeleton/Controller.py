@@ -76,6 +76,7 @@ class Controller():
             self.sem_data = None
 
         direction, self.v1, self.v2 = self.pathPlanner.current()
+        print(direction, self.v1, self.v2)
 
         if self.state == "Lane Follow":
             if self.passed_horiz_line and not self.flags["crosswalk"]:
