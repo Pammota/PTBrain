@@ -534,7 +534,7 @@ class BrainThread(Thread):
             # info for roundabout
             x0, y0 = 117, 10
             v = 10
-            ref_thresh = 5
+            ref_thresh = 10
             final_thresh = 10
             isForward = True
             size_pixel = 500
@@ -560,10 +560,10 @@ class BrainThread(Thread):
             #     x, y = ref_points[i]
             #     ref_points_aux.append((x-i, y))
             # ref_points = ref_points_aux
-            ref_points_aux = pathGenerator.generate_line_points(x1=117, y1=20, x2=117, y2=55, n=8)
+            ref_points_aux = pathGenerator.generate_line_points(x1=117, y1=20, x2=117, y2=55, n=3)
             for point in ref_points_aux:
                 ref_points.append(point)
-            ref_points_aux = pathGenerator.generate_line_points(x1=117, y1=179, x2=117, y2=224, n=8)
+            ref_points_aux = pathGenerator.generate_line_points(x1=117, y1=179, x2=117, y2=224, n=3)
             for point in ref_points_aux:
                 ref_points.append(point)
             # ref_points.append((117, 40))
