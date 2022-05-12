@@ -534,7 +534,7 @@ class BrainThread(Thread):
             # info for roundabout
             x0, y0 = 117, 10
             ref_thresh = 1
-            final_thresh = 5
+            final_thresh = 20
             isForward = True
             size_pixel = 500
             size_cm = 234
