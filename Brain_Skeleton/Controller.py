@@ -44,6 +44,7 @@ class Controller():
 
         self.tasks_list = ["parking", "crosswalk", "semaphore"]
         self.pathPlanner = self.__localize(None)
+        print(self.pathPlanner.nodes_list)
         self.v1 = None
         self.v2 = None
 
