@@ -65,10 +65,10 @@ class V2X():
         self.sems.stop()
         self.v2x.stop()
 
-if __name__ == "__main__":
+"""if __name__ == "__main__":
     v2x = V2X()
     v2x.start()
 
     time.sleep(2)
 
-    v2x.stop()
+    v2x.stop()"""
