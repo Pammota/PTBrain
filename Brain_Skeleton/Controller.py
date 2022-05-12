@@ -35,6 +35,7 @@ class Controller():
         self.executed = {"parking": False, "crosswalk": False}
 
         self.env_conn = V2X()
+        self.env_conn.start()
 
         self.coord = None
         self.veh_data = None
