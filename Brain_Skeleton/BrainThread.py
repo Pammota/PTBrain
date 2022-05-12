@@ -538,12 +538,18 @@ class BrainThread(Thread):
             isForward = True
             size_pixel = 500
             size_cm = 234
-            ref_points_aux = pathGenerator.generate_circle_points(r=67, d=10, x_c=99, y_c=117, alpha_min=0,
-                                                                  alpha_max=1.04)
+            # ref_points_aux = pathGenerator.generate_circle_points(r=67, d=10, x_c=99, y_c=117, alpha_min=0,
+            #                                                       alpha_max=1.04)
+            # for point in ref_points_aux:
+            #     ref_points.append(point)
+            # ref_points_aux = pathGenerator.generate_circle_points(r=67, d=10, x_c=99, y_c=117, alpha_min=5.23,
+            #                                                       alpha_max=6.28)
+            # for point in ref_points_aux:
+            #     ref_points.append(point)
+            ref_points_aux = pathGenerator.generate_line_points(x1=117, y1=40, x2=140, y2=80, n=3)
             for point in ref_points_aux:
                 ref_points.append(point)
-            ref_points_aux = pathGenerator.generate_circle_points(r=67, d=10, x_c=99, y_c=117, alpha_min=5.23,
-                                                                  alpha_max=6.28)
+            ref_points_aux = pathGenerator.generate_line_points(x1=140, y1=120, x2=117, y2=184, n=3)
             for point in ref_points_aux:
                 ref_points.append(point)
             # ref_points = [(117, 40), (140, 80), (140, 120), (87, 184), (67, 214)]
@@ -551,13 +557,13 @@ class BrainThread(Thread):
             # for i in range(0,len(ref_points)):
             #     x, y = ref_points[i]
             #     ref_points_aux.append((x-i, y))
-            ref_points = ref_points_aux
-            ref_points.append((117, 40))
-            ref_points.append((117, 30))
-            ref_points.append((117, 20))
-            ref_points.append((117, 204))
-            ref_points.append((117, 194))
-            ref_points.append((117, 184))
+            # ref_points = ref_points_aux
+            # ref_points.append((117, 40))
+            # ref_points.append((117, 30))
+            # ref_points.append((117, 20))
+            # ref_points.append((117, 204))
+            # ref_points.append((117, 194))
+            # ref_points.append((117, 184))
             # ref_points.append((87, 214))
 
 
