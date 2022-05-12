@@ -61,6 +61,7 @@ class Controller():
 
         try:
             self.coords = self.env_conn.get_position()
+            print(self.coords)
         except:
             self.coords = None
 
