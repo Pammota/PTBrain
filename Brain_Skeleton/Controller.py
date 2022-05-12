@@ -61,7 +61,6 @@ class Controller():
 
         try:
             self.coords = self.env_conn.get_position()
-            print(self.coords)
         except:
             self.coords = None
 
@@ -76,7 +75,8 @@ class Controller():
             self.sem_data = None
 
         direction, self.v1, self.v2 = self.pathPlanner.current()
-        print(direction, self.v1, self.v2)
+
+        print(self.state)
 
         if self.state == "Lane Follow":
             if self.passed_horiz_line and not self.flags["crosswalk"]:
@@ -159,9 +159,6 @@ class Controller():
 
             if direction.split("_")[0] == "roundabout" and not self.passed_one_intersection:
                 self.__localize(["roundabout"])
-
-            print(self.dir_idx)
-            print(direction)
 
             if self.flags["stop"]:
                 return [0, self.theta, 1, 0, direction, 0, 0]
