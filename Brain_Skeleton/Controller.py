@@ -230,7 +230,8 @@ class Controller():
             valid = self.graph.validate_intersection(self.coord)
             return valid
         except:
-            return True
+            pass
+        return True
 
     def __localize(self, fulfilled=None):
         if not RANDOM_POSITION:
