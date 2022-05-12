@@ -16,8 +16,6 @@ class GraphPars():
             ID, d0, d1 = self.parse_node(node)
             self.V[ID] = [d0, d1]
 
-        print(self.V)
-
 
         for edge in graph.edges():
             d2 = self.parse_edge(edge)

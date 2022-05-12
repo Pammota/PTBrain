@@ -26,7 +26,7 @@ class DistanceSensor(Thread):
             rec_number = rec_numbers[0]
         except IndexError:
             rec_number = 3
-        print(rec_number)
+        #print(rec_number)
         return rec_number
 
     def run(self):
