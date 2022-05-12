@@ -9,7 +9,7 @@ from vehicletovehicle.vehicletovehicle import vehicletovehicle
 COLORS = ['sem_red', 'sem_yellow', 'sem_green']
 
 class V2X():
-    def __init__(self, ID = 21):
+    def __init__(self, ID = 81):
 
         ### initialize communication threads
 

@@ -252,6 +252,7 @@ class BrainThread(Thread):
 
         imuThread.stop()
         self.last_intersection = self.num_frames
+        self.controller.pathPlanner.next()
         self.controller.ongoing_intersection = False
 
 
@@ -480,6 +481,12 @@ class BrainThread(Thread):
         intersection = False
         isForward = False
 
+        if case == "stop":
+            theta_command = self.controller.getAngleCommand(0)
+            speed_command = self.controller.getSpeedCommand(0)
+            self.outP_com.send((theta_command, speed_command))
+            time.sleep(0)
+            self.terminate()
         if case == "left":
             ref_points = pathGenerator.generate_circle_points(r=90, d=9, x_c=30, y_c=30, alpha_min=0, alpha_max=1.57)
             end_point = (30, 120)

@@ -76,7 +76,7 @@ class ObjectDetectionThread(Thread):
             label_text = config.CLASSES[label]["LABEL"]
             color = config.CLASSES[label]["COLOR"]
 
-            if label_text != "Crosswalk" and score < config.DETECTION_SCORE_THRESHOLD*100:
+            if score < config.DETECTION_SCORE_THRESHOLD*100:
                 continue
 
             if color and label_text and accept_box(x1, x2, y1, y2, image.shape[0], image.shape[1]) :# and accept_box(boxes, box, 5.0):
