@@ -535,7 +535,7 @@ class BrainThread(Thread):
             x0, y0 = 117, 10
             v = 10
             ref_thresh = 15
-            final_thresh = 5
+            final_thresh = 10
             isForward = True
             size_pixel = 500
             size_cm = 234
