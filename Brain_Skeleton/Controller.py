@@ -8,7 +8,7 @@ from PIDControl import PIDControl
 from GraphPars import GraphPars
 
 
-RANDOM_POSITION = True
+RANDOM_POSITION = False
 
 
 class Controller():
@@ -231,7 +231,7 @@ class Controller():
 
     def __localize(self, fulfilled=None):
         if not RANDOM_POSITION:
-            return PathPlanner(["0", "A", "B", "D", "A", "0"])
+            return PathPlanner(["I", "J", "G", "A", "0", "0"])
 
         start_con_time = time.time()
 
