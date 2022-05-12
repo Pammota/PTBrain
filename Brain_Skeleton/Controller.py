@@ -202,14 +202,14 @@ class Controller():
 
 
     def send_sign_data(self):
-        if self.flags["sem_red"] or self.flags["sem_yellow"] or self.flags["sem_green"]:
-            self.env_conn.stream(9, self.coords)
-        if self.flags["stop"]:
-            self.env_conn.stream(1, self.coords)
-        if self.flags["priority"]:
-            self.env_conn.stream(2, self.coords)
-        if self.v2 == "J":
-            self.env_conn.stream(7, self.coords)
+            if self.flags["sem_red"] or self.flags["sem_yellow"] or self.flags["sem_green"]:
+                self.env_conn.stream(9, self.coords)
+            if self.flags["stop"]:
+                self.env_conn.stream(1, self.coords)
+            if self.flags["priority"]:
+                self.env_conn.stream(2, self.coords)
+            if self.v2 == "J":
+                self.env_conn.stream(7, self.coords)
 
     def validate_sem(self):
 
