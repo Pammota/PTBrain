@@ -539,7 +539,7 @@ class BrainThread(Thread):
             isForward = True
             size_pixel = 500
             size_cm = 234
-            ref_points_aux = pathGenerator.generate_circle_points(r=55, d=10, x_c=99, y_c=117, alpha_min=0,
+            ref_points_aux = pathGenerator.generate_circle_points(r=55, d=20, x_c=99, y_c=117, alpha_min=0,
                                                                   alpha_max=1.04)
             for point in ref_points_aux:
                 ref_points.append(point)
