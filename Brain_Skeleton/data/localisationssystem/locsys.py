@@ -27,10 +27,10 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
 
 from threading import Thread
-import server_data
-import server_listener
-import server_subscriber
-import position_listener
+import data.localisationssystem.server_data as server_data
+import data.localisationssystem.server_listener as server_listener
+import data.localisationssystem.server_subscriber as server_subscriber
+import data.localisationssystem.position_listener as position_listener
 
 import time
 
@@ -91,7 +91,7 @@ class LocalisationSystem(Thread):
         coords = self.__position_listener.coor
 
         print("Coordinates are: {}, {}".format(coords['coor'][0], coords['coor'][1]))
-        return self.coords
+        return coords
 
     def ID(self):
         return self.__subscriber.ID()
@@ -104,7 +104,7 @@ class LocalisationSystem(Thread):
         self.__position_listener.stop()
 
 if __name__ == '__main__':
-    LocalisationSystem = LocalisationSystem(4)
+    LocalisationSystem = LocalisationSystem(88)
     LocalisationSystem.start()
     
     time.sleep(5)

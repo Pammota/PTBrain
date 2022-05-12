@@ -6,6 +6,9 @@ import argparse
 import config
 import time
 import os
+import sys
+
+sys.path.append('.')
 
 ag = argparse.ArgumentParser()
 
