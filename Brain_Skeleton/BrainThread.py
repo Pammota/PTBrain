@@ -533,16 +533,16 @@ class BrainThread(Thread):
         if case == "roundabout_forward":
             # info for roundabout
             x0, y0 = 117, 10
-            ref_thresh = 10
+            ref_thresh = 15
             final_thresh = 5
             isForward = True
             size_pixel = 500
             size_cm = 234
-            ref_points_aux = pathGenerator.generate_circle_points(r=50, d=2, x_c=99, y_c=117, alpha_min=0,
+            ref_points_aux = pathGenerator.generate_circle_points(r=50, d=10, x_c=99, y_c=117, alpha_min=0,
                                                                   alpha_max=1.04)
             for point in ref_points_aux:
                 ref_points.append(point)
-            ref_points_aux = pathGenerator.generate_circle_points(r=50, d=2, x_c=99, y_c=117, alpha_min=5.23,
+            ref_points_aux = pathGenerator.generate_circle_points(r=50, d=10, x_c=99, y_c=117, alpha_min=5.23,
                                                                   alpha_max=6.28)
             for point in ref_points_aux:
                 ref_points.append(point)
