@@ -23,7 +23,6 @@ class V2X():
         self.env.start()
         self.gps.start()
         self.sems.start()
-        self.v2x.start()
 
 
     def get_position(self):
@@ -65,10 +64,10 @@ class V2X():
         self.sems.stop()
         self.v2x.stop()
 
-if __name__ == "__main__":
+"""if __name__ == "__main__":
     v2x = V2X()
     v2x.start()
 
     time.sleep(2)
 
-    v2x.stop()
+    v2x.stop()"""

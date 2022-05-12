@@ -61,11 +61,17 @@ class Controller():
 
         try:
             self.coord = self.env_conn.get_position()
-            self.veh_data = self.env_conn.get_vehicles_data()
-            self.sem_data = self.env_conn.get_sem_data()
         except:
             self.coord = None
+
+        try:
+            self.veh_data = self.env_conn.get_vehicles_data()
+        except:
             self.veh_data = None
+
+        try:
+            self.sem_data = self.env_conn.get_sem_data()
+        except:
             self.sem_data = None
 
         direction, self.v1, self.v2 = self.pathPlanner.current()
@@ -151,6 +157,9 @@ class Controller():
 
             if direction.split("_")[0] == "roundabout" and not self.passed_one_intersection:
                 self.__localize(["roundabout"])
+
+            print(self.dir_idx)
+            print(direction)
 
             if self.flags["stop"]:
                 return [0, self.theta, 1, 0, direction, 0, 0]
@@ -242,7 +251,12 @@ class Controller():
         while time.time() - start_con_time < 5:
             try:
                 self.coord = self.env_conn.get_position()
+                if self.coord is None:
+                    print("COORDS ARE None")
+                else:
+                    print(self.coord)
                 starting_points = self.graph.get_closest_id(self.coord)
+                print(starting_points)
 
                 if self.coord is not None:
                     if starting_points[1] == "E":
