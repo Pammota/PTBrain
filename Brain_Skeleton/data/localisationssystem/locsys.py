@@ -89,8 +89,6 @@ class LocalisationSystem(Thread):
         """
 
         coords = self.__position_listener.coor
-
-        print("In locsys: {}".format(coords['coor']))
         return coords['coor']
 
     def ID(self):
