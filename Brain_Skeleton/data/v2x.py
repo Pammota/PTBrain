@@ -23,7 +23,6 @@ class V2X():
         self.env.start()
         self.gps.start()
         self.sems.start()
-        self.v2x.start()
 
 
     def get_position(self):
