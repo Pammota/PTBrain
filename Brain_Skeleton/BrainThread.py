@@ -526,7 +526,7 @@ class BrainThread(Thread):
         if case == "forward":
             ref_thresh = 10
             final_thresh = 20
-            ref_points = pathGenerator.generate_line_points(x1=98, y1=10, x2=98, y2=145, n=7)
+            ref_points = pathGenerator.generate_line_points(x1=98, y1=10, x2=98, y2=145, n=3)
             end_point = (98, 145)
             intersection = True
             isForward = True
