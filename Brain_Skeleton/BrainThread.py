@@ -149,12 +149,12 @@ class BrainThread(Thread):
             self.controller.checkState(obj_info, lane_info, DSFront_info)
 
             action = self.controller.takeAction()
+            if action is None:
+                break
             self.speed = action[ACTION_SPEED]
 
             self.show_image(frame, bboxes, lane_info, left_line, right_line, road_line)
 
-            if action is None:
-                break
 
             if action[ACTION_CROSSWALK] != 0:
                 if self.cameraSpoof is None:
