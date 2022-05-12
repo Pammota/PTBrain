@@ -8,7 +8,7 @@ from PIDControl import PIDControl
 from GraphPars import GraphPars
 
 
-RANDOM_POSITION = False
+RANDOM_POSITION = True
 
 
 class Controller():
