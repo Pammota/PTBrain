@@ -248,7 +248,7 @@ class Controller():
 
         start_con_time = time.time()
 
-        while time.time() - start_con_time < 5:
+        while time.time() - start_con_time < 1:
             try:
                 self.coord = self.env_conn.get_position()
                 if self.coord is None:
@@ -266,8 +266,8 @@ class Controller():
                     tasks_list = self.tasks_list
                     pathPlanner = PathPlanner(tasks_list, starting_points=starting_points)
                 return pathPlanner
-            except:
-                pass
+            except Exception as e:
+                print(str(e))
 
         return PathPlanner(["0", "A", "B", "D", "A", "0"])
 
