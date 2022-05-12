@@ -256,17 +256,17 @@ class Controller():
                     print("COORDS ARE None")
                 else:
                     print(self.coord)
-                starting_points = self.graph.get_closest_id(self.coord)
+                starting_points = self.graph.get_starting_position(self.coord)
                 print(starting_points)
 
                 if self.coord is not None:
                     if starting_points[1] == "E":
-                        self.tasks_list.remove("parking")
+                        self.tasks_list.remove("semaphore")
                     if fulfilled is not None:
                         self.tasks_list = [task for task in self.tasks_list if task not in fulfilled]
                     tasks_list = self.tasks_list
                     pathPlanner = PathPlanner(tasks_list, starting_points=starting_points)
-                return pathPlanner
+                    return pathPlanner
             except Exception as e:
                 print(str(e))
 
