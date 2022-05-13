@@ -169,8 +169,7 @@ class BrainThread(Thread):
                 else:
                     time.sleep(2)
                 print("Performing parking routine.BRB")
-            elif action[ACTION_DIRECTION] != 0 and ((self.num_frames - self.last_intersection > 10)\
-                    or self.last_intersection == 0):
+            elif action[ACTION_DIRECTION] != 0:
                 self.intersection_maneuver_routine(action[ACTION_ANGLE], action[ACTION_STOP], action[ACTION_RED], action[ACTION_DIRECTION])
             else:
                 theta_command = Controller.getAngleCommand(action[ACTION_ANGLE])
@@ -260,6 +259,7 @@ class BrainThread(Thread):
         self.controller.dir_idx += 1
         self.controller.pathPlanner.next()
         self.last_intersection = self.num_frames
+        self.controller.passed_horiz_line = False
         self.controller.ongoing_intersection = False
 
     def crosswalk_maneuver_routine(self):

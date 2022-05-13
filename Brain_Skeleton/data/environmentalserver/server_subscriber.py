@@ -59,9 +59,9 @@ class ServerSubscriber:
 		#: The given example connects with the id 120 and the same key is saved with "120_publickey.pem"
 
 		#: self.__public_key = load_public_key('publickey_server.pem')
-		self.__public_key = load_public_key('data/environmentalserver/publickey_server_test.pem')
+		self.__public_key = load_public_key('data/environmentalserver/publickey_server.pem')
 		#: self.__private_key = load_private_key('privateckey_client.pem')
-		self.__private_key = load_private_key('data/environmentalserver/privatekey_client_test.pem')
+		self.__private_key = load_private_key('data/environmentalserver/privatekey_client.pem')
 
 	def ID(self):
 		return self.__carId

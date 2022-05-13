@@ -44,6 +44,7 @@ class Controller():
         self.graph = GraphPars()
 
         self.tasks_list = ["parking", "crosswalk", "semaphore"]
+        self.pathPlanner = None
         self.pathPlanner = self.__localize(None)
         print(self.pathPlanner.nodes_list)
         self.v1 = None
@@ -78,16 +79,15 @@ class Controller():
 
         if self.state == "Lane Follow":
             if self.passed_horiz_line and not self.flags["crosswalk"]:
-                if self.dir_idx > len(self.directions):
-                    self.state = "Terminate"
-                else:
-                    #self.setExecuted(parking=False, crosswalk=False)
-                    if self.validate_intersection():
-                        self.state = "Intersection"
-                        self.passed_one_intersection = True
-                        self.ongoing_intersection = True
+                #self.setExecuted(parking=False, crosswalk=False)
+                if self.validate_intersection():
+                    self.state = "Intersection"
+                    self.passed_one_intersection = True
+                    self.ongoing_intersection = True
             if self.passed_horiz_line and self.flags["crosswalk"] and not self.executed["crosswalk"]:
                 self.state = "Crosswalk"
+                """if not self.passed_one_intersection:
+                    self.__localize(["crosswalk"])"""
                 self.timer_start = time.time()
 
             # if there is a car ahead and not PID defined, define a PID
@@ -102,11 +102,10 @@ class Controller():
         elif self.state == "Intersection":
             if not self.ongoing_intersection:
                 self.state = "Lane Follow"
+                self.passed_horiz_line = False
 
         elif self.state == "Crosswalk":
             if not self.executed["crosswalk"]:
-                if not self.passed_one_intersection:
-                    self.__localize(["crosswalk"])
                 if self.timer_crt - self.timer_start > 5:
                     if self.front_distance() > 60:
                         print("Stopped at the crosswalk")
@@ -136,8 +135,8 @@ class Controller():
             elif self.had_parking is True and not self.flags["parking"] and not self.executed["parking"]:
                 self.setExecuted(parking=True)
                 self.had_parking = False
-                if not self.passed_one_intersection:
-                    self.__localize(["parking"])
+                """if not self.passed_one_intersection:
+                    self.__localize(["parking"])"""
                 return [0, 0, 0, 0, 0, 0, 1]  #activate parking flag
             # if a PID is defined => we have a car ahead
             elif self.PIDController is not None:  # keep distance from the car in front
@@ -156,8 +155,8 @@ class Controller():
             self.validate_sem()
             self.send_sign_data()
 
-            if direction.split("_")[0] == "roundabout" and not self.passed_one_intersection:
-                self.__localize(["roundabout"])
+            """if direction.split("_")[0] == "roundabout" and not self.passed_one_intersection:
+                self.__localize(["roundabout"])"""
 
             if self.flags["stop"]:
                 return [0, self.theta, 1, 0, direction, 0, 0]
@@ -210,7 +209,6 @@ class Controller():
                 self.env_conn.stream(7, self.coords)
 
     def validate_sem(self):
-
 
         if self.sem_data is None:
             return
