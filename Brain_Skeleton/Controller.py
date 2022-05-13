@@ -17,7 +17,7 @@ class Controller():
                  "sem_green": False, "priority": False, "crosswalk": False, "stop": False}
         self.flags_history = []
         self.state = "Lane Follow"
-        self.directions = ["roundabout_forward", "right", "right", "forward", "left", "right", "stop", "stop"]
+        self.directions = ["right", "right", "forward", "left", "right", "stop", "stop"]
         self.dir_idx = 0
         self.had_parking = False
         self.base_speed = 13
@@ -126,6 +126,8 @@ class Controller():
 
 
     def takeAction(self):
+
+        print(self.state)
 
         if self.state == "Lane Follow":
             if self.flags["parking"]:
