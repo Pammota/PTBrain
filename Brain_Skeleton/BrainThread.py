@@ -249,7 +249,7 @@ class BrainThread(Thread):
             self.terminate()
         except Exception as e:
             print(str(e))
-            traceback.print_stack()
+            print(traceback.format_exc())
 
         imuThread.stop()
         self.controller.dir_idx += 1
