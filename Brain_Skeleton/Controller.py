@@ -268,7 +268,7 @@ class Controller():
             except Exception as e:
                 print(str(e))
 
-        return PathPlanner(["F", "E", "B", "A", "D", "G", "H"])
+        return PathPlanner(["I", "J", "G", "H"])
 
     @staticmethod
     def getAngleCommand(theta):
