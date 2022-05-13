@@ -58,7 +58,6 @@ class EnvironmentalHandler(Thread):
         self.__environmental_streamer = environmental_streamer.EnvironmentalStreamer(self.__server_data)
         
         self.__running = True
-        self.setup()
 
     def setup(self):
         """Actualize the server's data and create a new socket with it.
