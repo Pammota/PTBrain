@@ -394,7 +394,6 @@ class BrainThread(Thread):
             #self.threads.append(ReadThread(self.serialComNucleo))
         
         self.threads.append(self.cameraThread)
-        self.cameraThread.start()
 
         """self.imuThread = IMU_tracking(self)
         self.threads.append(self.imuThread)"""
