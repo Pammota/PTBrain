@@ -94,8 +94,8 @@ class CarClientHandler(socketserver.BaseRequestHandler):
 
     def handle(self):
         # receiving car id from client 
-        data = str(self.request.recv(1024)) 
-        self.carId = int(data)
+        data = str(self.request.recv(1024))
+        self.carId = int(data[2:-1])
         
         # receiving signature from the client
         signature = self.request.recv(4096)
