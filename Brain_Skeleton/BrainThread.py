@@ -538,7 +538,7 @@ class BrainThread(Thread):
         if case == "roundabout_forward":
             # info for roundabout
             x0, y0 = 117, 10
-            v = 9
+            v = 13
             ref_thresh = 15
             final_thresh = 10
             isForward = False
