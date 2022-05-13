@@ -18,10 +18,10 @@ class Controller():
 
         self.flags_history = []
         self.state = "Lane Follow"
-        self.directions = ["left", "forward", "left", "right", "left", "right", "right", "stop", "stop"]
+        self.directions = ["front", "roundabout_forward", "left", "left", "right", "left", "right", "right", "stop", "stop"]
         self.dir_idx = 0
         self.had_parking = False
-        self.base_speed = 40
+        self.base_speed = 14
         self.theta = 0
         self.thetas = []
         self.passed_horiz_line = False
@@ -246,7 +246,7 @@ class Controller():
 
     def __localize(self, fulfilled=None):
         if not RANDOM_POSITION:
-            return PathPlanner(["A", "B", "E", "H", "I", "0"])
+            return PathPlanner(["I", "J", "G", "H"])
 
         start_con_time = time.time()
 
@@ -273,7 +273,7 @@ class Controller():
             except Exception as e:
                 print(str(e))
 
-        return PathPlanner(["F", "E", "B", "A", "D", "G", "H"])
+        return PathPlanner(["F", "I", "J", "G"])
 
     @staticmethod
     def getAngleCommand(theta):

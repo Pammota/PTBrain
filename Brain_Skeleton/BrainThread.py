@@ -1,4 +1,5 @@
 import copy
+import traceback
 from threading import Thread
 from multiprocessing import Pipe
 from LaneDetectionThread import LaneDetectionThread
@@ -242,12 +243,13 @@ class BrainThread(Thread):
         try:
             self.path_tracking(case=direction, x_car=x_offset, y_car=y_offset,
                                theta_yaw_map=theta_yaw_map, yaw=yaw,
-                               v=20,
+                               v=15,
                                dt=0.05, L=25.8, imuTracker=imuThread)
         except KeyboardInterrupt:
             self.terminate()
         except Exception as e:
             print(str(e))
+            print(traceback.format_exc())
 
         imuThread.stop()
         self.controller.dir_idx += 1
@@ -513,17 +515,19 @@ class BrainThread(Thread):
             x0, y0 = 105, 10
             ref_thresh = 5
             final_thresh = 15
-            ref_points = pathGenerator.generate_circle_points(r=95, d=9, x_c=10, y_c=10, alpha_min=0, alpha_max=1.57)
+            ref_points = pathGenerator.generate_circle_points(r=95, d=9, x_c=10, y_c=13, alpha_min=0, alpha_max=1.57)
             end_point = (10, 103)
             intersection = True
             isForward = False
         if case == "right":
             ref_thresh = 10
             final_thresh = 10
-            ref_points = pathGenerator.generate_circle_points(r=47, d=6, x_c=145, y_c=10, alpha_min=1.57, alpha_max=3.14)
+            ref_points = pathGenerator.generate_circle_points(r=47, d=6, x_c=145, y_c=10, alpha_min=1.57,
+                                                              alpha_max=3.14)
             ref_points.append((145, 57))
-            ref_points.append((155, 67))
-            end_point = (155, 57)
+            # ref_points.append((155, 77))
+            end_point = (155, 65)
+            # end_point = (155, 57)
             intersection = True
             isForward = False
         if case == "forward":
@@ -593,11 +597,13 @@ class BrainThread(Thread):
             # trapez tracking
 
             ref_points.append((117, 40))
-            ref_points.append((137, 75))
+            ref_points.append((145, 70))
+            ref_points.append((143, 90))
+            # ref_points.append(())
             # ref_points.append((147, 107))
             ref_points.append((130, 127))
-            ref_points.append((117, 159))
-            ref_points.append((97, 194))
+            ref_points.append((105, 159))
+            ref_points.append((87, 194))
 
 
 
@@ -610,7 +616,7 @@ class BrainThread(Thread):
             # for point in ref_points_aux:
             #     ref_points.append(point)
             intersection = True
-            end_point = (97, 224)
+            end_point = (80, 194)
             # ref_points.append(end_point)
 
 
