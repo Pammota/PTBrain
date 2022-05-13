@@ -85,7 +85,7 @@ class ServerListener:
 					# server was found 
 					self.__server_data.is_new_server=True
 				except socket.timeout as e:
-					print("cannot find server")
+					print("cannot find environ server")
 					# Cannot find the server. Need to repeat the process.
 					pass
 				except ValueError as e:
