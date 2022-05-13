@@ -260,6 +260,7 @@ class BrainThread(Thread):
         self.controller.dir_idx += 1
         self.controller.pathPlanner.next()
         self.last_intersection = self.num_frames
+        self.controller.passed_horiz_line = False
         self.controller.ongoing_intersection = False
 
     def crosswalk_maneuver_routine(self):
