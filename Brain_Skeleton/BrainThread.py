@@ -225,7 +225,7 @@ class BrainThread(Thread):
         thetas = []
 
         for i in range(5):
-
+            frame = self.get_crt_frame()
             self.outP_brain_lane.send(True)
             time_start, lane_info, left_line, right_line, road_line = self.inP_lane.recv()
             self.show_image(frame, [], lane_info, left_line, right_line, road_line)
@@ -353,7 +353,7 @@ class BrainThread(Thread):
 
     def get_crt_frame(self):
         frame = self.cameraThread.frame
-        return copy,deepcopy(frame)
+        return copy.deepcopy(frame)
 
     def _init_threads(self):
 
