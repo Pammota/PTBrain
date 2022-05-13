@@ -76,6 +76,8 @@ class ServerListener:
 					# Receive data from the socket. Buffer size = 1500 bytes
 					data, server_ip = s.recvfrom(1500, 0)
 
+					print(self.__server_data.is_new_server)
+
 					# convert the received message
 					subscriptionPort = int(data.decode("utf-8"))
 					
