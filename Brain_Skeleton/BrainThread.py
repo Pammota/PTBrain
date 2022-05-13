@@ -1,4 +1,5 @@
 import copy
+import traceback
 from threading import Thread
 from multiprocessing import Pipe
 from LaneDetectionThread import LaneDetectionThread
@@ -248,6 +249,7 @@ class BrainThread(Thread):
             self.terminate()
         except Exception as e:
             print(str(e))
+            traceback.print_stack()
 
         imuThread.stop()
         self.controller.dir_idx += 1
