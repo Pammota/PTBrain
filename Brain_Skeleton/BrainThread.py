@@ -592,6 +592,15 @@ class BrainThread(Thread):
 
             # dt = 0.01
 
+            # trapez tracking
+
+            ref_points.append((117, 40))
+            ref_points.append((137, 75))
+            ref_points.append((147, 117))
+            ref_points.append((137, 159))
+            ref_points.append((117, 194))
+
+
 
             # ref_points_aux = pathGenerator.generate_line_points(x1=135, y1=10, x2=135, y2=40, n=3)
             # for point in ref_points_aux:
