@@ -75,7 +75,7 @@ def compute_direction(edge, next_edge):
 class PathPlanner:
     def __init__(self, nodes_list=None, tasks_list=None, starting_points=None):
 
-        self.image = cv2.imread("track.png")
+        #self.image = cv2.imread("track.png")
 
         self.edges = {}
         self.nodes = {}
@@ -88,6 +88,8 @@ class PathPlanner:
             self.construct_nodes_list(tasks_list, starting_points)
 
         self.node_idx = 0
+
+        print(self.nodes_list)
 
     def __declare_edges(self):
         ###### insert the edges
@@ -151,7 +153,7 @@ class PathPlanner:
         self.nodes["J"] = Node(None, (585, 172), ["C", "I", "G"])
         self.nodes["K"] = Node(None, (702, 172), ["J", "G"])
 
-        ###### draw all nodes on graph
+        """###### draw all nodes on graph
         for id, properties in self.nodes.items():
             cv2.putText(self.image, id, properties.coords, cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
@@ -159,7 +161,7 @@ class PathPlanner:
         for edge, descr in self.edges.items():
             x = edge[0]
             y = edge[1]
-            cv2.arrowedLine(self.image, self.nodes[x].coords, self.nodes[y].coords, (0, 128, 128), 1)
+            cv2.arrowedLine(self.image, self.nodes[x].coords, self.nodes[y].coords, (0, 128, 128), 1)"""
 
         """cv2.imshow("graph", self.image)
         cv2.waitKey(0)
@@ -208,7 +210,7 @@ class PathPlanner:
         while graph["nodes"][recreated_path[-1]].prev != "-":
             recreated_path.append(graph["nodes"][recreated_path[-1]].prev)
 
-        print(recreated_path)
+        #print(recreated_path)
 
         recreated_path = [rn[0] for rn in recreated_path]
 
@@ -290,22 +292,18 @@ class PathPlanner:
 
     def current(self):
         crt_node = self.nodes[self.nodes_list[self.node_idx]]
-        if self.node_idx < len(self.nodes_list) - 1:
-            next_node = self.nodes[self.nodes_list[self.node_idx + 1]]
-            edge = self.edges.get(self.nodes_list[self.node_idx - 1] + self.nodes_list[self.node_idx])
-            if self.node_idx != 0:
-                prev_node = self.nodes[self.nodes_list[self.node_idx - 1]]
-                next_edge = self.edges.get(self.nodes_list[self.node_idx] + self.nodes_list[self.node_idx + 1])
-                cv2.arrowedLine(self.image, prev_node.coords,
-                                crt_node.coords, (0, 128, 128), 2)
-                direction = compute_direction(edge, next_edge)
-            else:
-                direction = "forward"
+        if self.node_idx < len(self.nodes_list) - 2:
+            edge = self.edges.get(self.nodes_list[self.node_idx] + self.nodes_list[self.node_idx + 1])
+            #prev_node = self.nodes[self.nodes_list[self.node_idx - 1]]
+            next_edge = self.edges.get(self.nodes_list[self.node_idx + 1] + self.nodes_list[self.node_idx + 2])
+            """cv2.arrowedLine(self.image, prev_node.coords,
+                            crt_node.coords, (0, 128, 128), 2)"""
+            direction = compute_direction(edge, next_edge)
         else:
             direction = "stop"
             edge = None
         #print(direction)
-        """ cv2.imshow("next edge", self.image)
+        """cv2.imshow("next edge", self.image)
         cv2.waitKey(0)"""
         return direction, self.nodes_list[self.node_idx] ,self.nodes_list[min(self.node_idx + 1, len(self.nodes_list) - 1)]
 
@@ -315,7 +313,7 @@ class PathPlanner:
         return self.current()
 
 if __name__ == "__main__":
-    pp = PathPlanner(tasks_list=["parking", "semaphore", "crosswalk"], starting_points=["J", "G"])
+    pp = PathPlanner(tasks_list=["parking", "semaphore", "crosswalk"], starting_points=["I", "J"])
 
     print("INITIALIZING!! Car starts! (waits for the semaphore, goes straight forward)")
 
