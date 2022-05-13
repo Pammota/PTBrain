@@ -601,9 +601,9 @@ class BrainThread(Thread):
             ref_points.append((140, 90))
             # ref_points.append(())
             # ref_points.append((147, 107))
-            ref_points.append((135, 127))
+            ref_points.append((138, 127))
             ref_points.append((110, 159))
-            ref_points.append((85, 194))
+            ref_points.append((90, 194))
 
 
 
