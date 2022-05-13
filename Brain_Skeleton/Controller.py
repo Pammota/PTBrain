@@ -241,7 +241,7 @@ class Controller():
 
     def __localize(self, fulfilled=None):
         if not RANDOM_POSITION:
-            return PathPlanner(["A", "B", "C", "D"])
+            return PathPlanner(["I", "J", "G", "H"])
 
         start_con_time = time.time()
 
