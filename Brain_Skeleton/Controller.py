@@ -17,7 +17,7 @@ class Controller():
                  "sem_green": False, "priority": False, "crosswalk": False, "stop": False}
         self.flags_history = []
         self.state = "Lane Follow"
-        self.directions = ["roundabout_forward", "left", "left", "right", "left", "right", "right", "stop", "stop"]
+        self.directions = ["right", "roundabout_forward", "left", "left", "right", "left", "right", "right", "stop", "stop"]
         self.dir_idx = 0
         self.had_parking = False
         self.base_speed = 14
@@ -268,7 +268,7 @@ class Controller():
             except Exception as e:
                 print(str(e))
 
-        return PathPlanner(["I", "J", "G", "H"])
+        return PathPlanner(["H", "G", "J", "I"])
 
     @staticmethod
     def getAngleCommand(theta):
