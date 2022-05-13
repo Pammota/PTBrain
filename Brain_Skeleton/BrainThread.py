@@ -3,6 +3,7 @@ from threading import Thread
 from multiprocessing import Pipe
 from LaneDetectionThread import LaneDetectionThread
 from ObjectDetectionThread import ObjectDetectionThread
+from ImageAquisitionThread import ImageAquisitionThread
 from Controller import Controller
 from writethread import WriteThread
 from DistSensor import DistanceSensor
@@ -37,11 +38,12 @@ class BrainThread(Thread):
         # holds the threads managed by this object
         self.threads = []
         self.laneDetectionThread = None
+        self.cameraThread = ImageAquisitionThread()
         self.imuThread = None
 
         # constructs the video feed (from file if cameraSpoof exists, otherwise from camera
         self.cameraSpoof = cameraSpoof
-        self.camera = cv2.VideoCapture(0 if cameraSpoof is None else cameraSpoof)
+
 
         # params for video debugging
         self.show_vid = show_vid
@@ -101,25 +103,19 @@ class BrainThread(Thread):
 
         while not self.stop_car:
             loop_start_time = time.time()
-            # grabs an image from the camera (or from the video)
-            grabbed, self.frame = self.camera.read()
-            frame = copy.deepcopy(self.frame)
+            frame = self.get_crt_frame()
 
-            # sends the image through the pipe if it exists
-            if grabbed is True:
-
-                if self.num_frames % 2 == 0:
-                    self.objectDetectionThread_working = True
-                    self.outP_brain_obj.send(True)
-                    if PRINT_EXEC_TIMES:
-                        print("Sent image to object detection afer {}".format(time.time() - loop_start_time))
-
-                self.laneDetectionThread_working = True
-                self.outP_brain_lane.send(True)
+            if self.num_frames % 2 == 0:
+                self.objectDetectionThread_working = True
+                self.outP_brain_obj.send(True)
                 if PRINT_EXEC_TIMES:
-                    print("Sent image to lane detection after {}".format(time.time() - loop_start_time))
-            else:
-                break
+                    print("Sent image to object detection afer {}".format(time.time() - loop_start_time))
+
+            self.laneDetectionThread_working = True
+            self.outP_brain_lane.send(True)
+            if PRINT_EXEC_TIMES:
+                print("Sent image to lane detection after {}".format(time.time() - loop_start_time))
+
 
             # waits for the outputs of the other threads and gets them
             time_start, lane_info, left_line, right_line, road_line = self.inP_lane.recv()
@@ -229,8 +225,6 @@ class BrainThread(Thread):
         thetas = []
 
         for i in range(5):
-            grabbed, self.frame = self.camera.read()
-            frame = copy.deepcopy(self.frame)
 
             self.outP_brain_lane.send(True)
             time_start, lane_info, left_line, right_line, road_line = self.inP_lane.recv()
@@ -358,7 +352,8 @@ class BrainThread(Thread):
         return self.speed
 
     def get_crt_frame(self):
-        return self.frame
+        frame = self.cameraThread.frame
+        return copy,deepcopy(frame)
 
     def _init_threads(self):
 
@@ -397,6 +392,9 @@ class BrainThread(Thread):
             self.threads.append(WriteThread(self.inP_com, self.serialComNucleo,
                                             zero_theta_command, zero_speed_command))
             #self.threads.append(ReadThread(self.serialComNucleo))
+        
+        self.threads.append(self.cameraThread)
+        self.cameraThread.start()
 
         """self.imuThread = IMU_tracking(self)
         self.threads.append(self.imuThread)"""
