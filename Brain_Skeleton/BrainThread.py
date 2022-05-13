@@ -526,7 +526,7 @@ class BrainThread(Thread):
                                                               alpha_max=3.14)
             ref_points.append((145, 57))
             # ref_points.append((155, 77))
-            end_point = (155, 57)
+            end_point = (155, 65)
             # end_point = (155, 57)
             intersection = True
             isForward = False
