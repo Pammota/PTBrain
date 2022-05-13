@@ -40,6 +40,13 @@ class ServerConfig:
 
     @staticmethod
     def getlocalip():
+        if os.name == "nt":
+            # On Windows
+            hostname = socket.gethostname()
+
+            host = socket.gethostbyname(hostname)
+
+            return host
         gw = os.popen("ip -4 route show default").read().split()
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)

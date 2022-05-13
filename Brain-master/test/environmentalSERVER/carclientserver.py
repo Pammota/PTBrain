@@ -29,10 +29,9 @@
 import os
 import json
 import threading
-import SocketServer
+import socketserver
 import socket
 import time
-from cryptography.utils import signature
 
 try:
     from server.utils import load_private_key, load_public_key, sign_data, verify_data
@@ -57,8 +56,8 @@ class CarClientServerThread(threading.Thread):
 
 
 
-class CarClientServer (SocketServer.ThreadingTCPServer, object):
-    """ It has role to serve the car client as a data collector for information about obstacles. It's a subclass of 'SocketServer.ThreadingTCPServer',
+class CarClientServer (socketserver.ThreadingTCPServer, object):
+    """ It has role to serve the car client as a data collector for information about obstacles. It's a subclass of 'socketserver.ThreadingTCPServer',
     so it creates a new thread for communicating the client. The server use a private key for authentication itself and another one for authenticating the client
     . It stores the data about obstacles in the data_saver object. The identification number of car 
     is equal with id of Aruco marker placed on robot. The client requests are handled by objects of 'CarClientHandler' class. 
@@ -82,14 +81,14 @@ class CarClientServer (SocketServer.ThreadingTCPServer, object):
         self.dataSaver.saving()
         super(CarClientServer,self).shutdown()
 
-class CarClientHandler(SocketServer.BaseRequestHandler):
+class CarClientHandler(socketserver.BaseRequestHandler):
     """CarClientHandler responds for a client. Firstly it requests a identification number of robot and the encrypted id. If it validates the robot, it 
     will send a message and a signature, which can help for authenticating the server.
     While the connection is alive and the process isn't stopped.
     
     Parameters
     ----------
-    SocketServer : [type]
+    socketserver : [type]
         [description]
     """
 
