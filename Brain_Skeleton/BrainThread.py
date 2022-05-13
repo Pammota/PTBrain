@@ -242,7 +242,7 @@ class BrainThread(Thread):
         try:
             self.path_tracking(case=direction, x_car=x_offset, y_car=y_offset,
                                theta_yaw_map=theta_yaw_map, yaw=yaw,
-                               v=14,
+                               v=15,
                                dt=0.05, L=25.8, imuTracker=imuThread)
         except KeyboardInterrupt:
             self.terminate()
@@ -510,18 +510,21 @@ class BrainThread(Thread):
         if case == "stop":
             self.terminate()
         if case == "left":
+            x0, y0 = 105, 10
             ref_thresh = 5
-            final_thresh = 10
-            ref_points = pathGenerator.generate_circle_points(r=88, d=9, x_c=10, y_c=10, alpha_min=0, alpha_max=1.57)
-            end_point = (10, 98)
+            final_thresh = 15
+            ref_points = pathGenerator.generate_circle_points(r=95, d=9, x_c=10, y_c=10, alpha_min=0, alpha_max=1.57)
+            end_point = (10, 103)
             intersection = True
             isForward = False
         if case == "right":
             ref_thresh = 10
-            final_thresh = 20
+            final_thresh = 10
             ref_points = pathGenerator.generate_circle_points(r=47, d=6, x_c=145, y_c=10, alpha_min=1.57,
                                                               alpha_max=3.14)
-            end_point = (145, 57)
+            ref_points.append((145, 57))
+            ref_points.append((155, 67))
+            end_point = (155, 57)
             # end_point = (155, 57)
             intersection = True
             isForward = False
