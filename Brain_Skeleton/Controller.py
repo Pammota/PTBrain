@@ -17,7 +17,7 @@ class Controller():
                  "sem_green": False, "priority": False, "crosswalk": False, "stop": False}
         self.flags_history = []
         self.state = "Lane Follow"
-        self.directions = ["left", "forward", "left", "right", "left", "right", "right", "stop", "stop"]
+        self.directions = ["roundabout_forward", "left", "left", "right", "left", "right", "right", "stop", "stop"]
         self.dir_idx = 0
         self.had_parking = False
         self.base_speed = 14
@@ -241,7 +241,7 @@ class Controller():
 
     def __localize(self, fulfilled=None):
         if not RANDOM_POSITION:
-            return PathPlanner(["A", "B", "E"])
+            return PathPlanner(["A", "B", "C", "D"])
 
         start_con_time = time.time()
 
