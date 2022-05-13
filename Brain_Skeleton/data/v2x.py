@@ -40,6 +40,7 @@ class V2X():
         try:
             self.env.stream(obstacle_id, coords['x'], coords['y'])
         except Exception as e:
+            print(str(e))
             print("Could not stream data. This is not an error.")
 
     def get_vehicles_data(self):
