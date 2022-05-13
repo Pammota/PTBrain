@@ -44,6 +44,7 @@ class Controller():
         self.graph = GraphPars()
 
         self.tasks_list = ["parking", "crosswalk", "semaphore"]
+        self.pathPlanner = None
         self.pathPlanner = self.__localize(None)
         print(self.pathPlanner.nodes_list)
         self.v1 = None
@@ -78,16 +79,15 @@ class Controller():
 
         if self.state == "Lane Follow":
             if self.passed_horiz_line and not self.flags["crosswalk"]:
-                if self.dir_idx > len(self.directions):
-                    self.state = "Terminate"
-                else:
-                    #self.setExecuted(parking=False, crosswalk=False)
-                    if self.validate_intersection():
-                        self.state = "Intersection"
-                        self.passed_one_intersection = True
-                        self.ongoing_intersection = True
+                #self.setExecuted(parking=False, crosswalk=False)
+                if self.validate_intersection():
+                    self.state = "Intersection"
+                    self.passed_one_intersection = True
+                    self.ongoing_intersection = True
             if self.passed_horiz_line and self.flags["crosswalk"] and not self.executed["crosswalk"]:
                 self.state = "Crosswalk"
+                if not self.passed_one_intersection:
+                    self.__localize(["crosswalk"])
                 self.timer_start = time.time()
 
             # if there is a car ahead and not PID defined, define a PID
@@ -105,8 +105,6 @@ class Controller():
 
         elif self.state == "Crosswalk":
             if not self.executed["crosswalk"]:
-                if not self.passed_one_intersection:
-                    self.__localize(["crosswalk"])
                 if self.timer_crt - self.timer_start > 5:
                     if self.front_distance() > 60:
                         print("Stopped at the crosswalk")
@@ -211,7 +209,6 @@ class Controller():
 
     def validate_sem(self):
 
-
         if self.sem_data is None:
             return
         if self.v1 == "B" and self.v2 == "E":  ## sem with id 1
@@ -246,6 +243,9 @@ class Controller():
             return PathPlanner(["A", "B", "E", "H", "I", "0"])
 
         start_con_time = time.time()
+
+        if fulfilled is None:
+            return self.pathPlanner
 
         while time.time() - start_con_time < 3:
             try:
