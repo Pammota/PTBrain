@@ -146,10 +146,10 @@ class Controller():
             return [self.base_speed, self.theta, 0, 0, 0, 0, 0]
 
         if self.state == "Intersection":
-            """try:
+            try:
                 direction, self.v1, self.v2 = self.pathPlanner.current()
-            except:"""
-            direction = self.directions[self.dir_idx]
+            except:
+                direction = self.directions[self.dir_idx]
 
             self.validate_sem()
             self.send_sign_data()
