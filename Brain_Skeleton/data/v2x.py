@@ -38,7 +38,8 @@ class V2X():
         streams a message containing an obstacle_id and its position to the environmental server
         """
         try:
-            self.env.stream(obstacle_id, coords['x'], coords['y'])
+            self.env.send(obstacle_id, coords['x'], coords['y'])
+            print("Obstacle successfully streamed?")
         except Exception as e:
             print(str(e))
             print("Could not stream data. This is not an error.")

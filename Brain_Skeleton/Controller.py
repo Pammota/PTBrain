@@ -127,16 +127,12 @@ class Controller():
 
     def takeAction(self):
 
-        print(self.state)
-
         if self.state == "Lane Follow":
             if self.flags["parking"]:
-                print("set had_parking to True")
                 self.had_parking = True
                 self.env_conn.stream(3, self.coords)
             elif self.had_parking is True and not self.flags["parking"] and not self.executed["parking"]:
                 self.setExecuted(parking=True)
-                print("Set had_parking to false")
                 self.had_parking = False
                 if not self.passed_one_intersection:
                     self.__localize(["parking"])
