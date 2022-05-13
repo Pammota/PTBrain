@@ -595,9 +595,9 @@ class BrainThread(Thread):
             # trapez tracking
 
             ref_points.append((117, 40))
-            ref_points.append((137, 75))
+            ref_points.append((137, 70))
             # ref_points.append((147, 107))
-            ref_points.append((130, 127))
+            ref_points.append((120, 127))
             ref_points.append((107, 159))
             ref_points.append((87, 194))
 
