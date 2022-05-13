@@ -127,6 +127,8 @@ class Controller():
 
     def takeAction(self):
 
+        print(self.state)
+
         if self.state == "Lane Follow":
             if self.flags["parking"]:
                 self.had_parking = True
