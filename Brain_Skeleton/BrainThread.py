@@ -616,6 +616,23 @@ class BrainThread(Thread):
             end_point = (80, 194)
             # ref_points.append(end_point)
 
+        if case == "roundabout_right":
+            # info for roundabout
+            x0, y0 = 117, 10
+            v = 13
+            ref_thresh = 5
+            final_thresh = 10
+            isForward = False
+            size_pixel = 500
+            size_cm = 234
+            intersection = True
+
+            end_point = (197, 90)
+            ref_points.append(end_point)
+            ref_points.append((117, 40))
+            ref_points.append((147, 50))
+            ref_points.append((167, 70))
+
 
 
         if intersection == True:
