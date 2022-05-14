@@ -59,12 +59,18 @@ class HaarCascadeClassifier():
 
         start = time.time()
 
+        print("Reached here")
+
         while time.time() - start > 600:
             frame = cameraThread.frame
             frame = cv2.resize(frame, (320, 240))
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
+            print("Reached here too")
+
             rects = aggregate(gray, self.detectors, 2, self.sizes, self.n_neighb)
+
+            print("Reached here too")
 
             for rect in rects:
                 x, y, w, h, = rect
