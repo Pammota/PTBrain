@@ -4,7 +4,6 @@ import config
 
 def accept_box(x1, x2, y1, y2, w, h):
 
-
     if (x2 - x1) > w * 0.35 or (y2 - y1) > h * 0.35:  #No huge boxes
         return False
 
