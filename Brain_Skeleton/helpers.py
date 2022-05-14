@@ -4,8 +4,8 @@ import config
 
 def accept_box(x1, x2, y1, y2, w, h):
 
-    print(x1, x2, y1, y2)
-    """if (x2 - x1) > w * 0.35 or (y2 - y1) > h * 0.35:  #No huge boxes
+
+    if (x2 - x1) > w * 0.35 or (y2 - y1) > h * 0.35:  #No huge boxes
         return False
 
     if (x2 - x1) < w * 0.08 and (y2 - y1) < h * 0.08:  #No small boxes
@@ -13,7 +13,8 @@ def accept_box(x1, x2, y1, y2, w, h):
 
     if x1 > w * 0.98 or x2 < w * 0.02 or y1 > h * 0.98 or y2 < h * 0.02:
 
-        return False"""
+        print(x1, x2, y1, y2, w, h)
+        return False
 
     """if x2 < w * 0.65 or y1 > h * 0.65:  #No signs in the left half or bottom half
         return False
