@@ -658,7 +658,7 @@ class BrainThread(Thread):
         # ref_points.append((x_obs -35, y_obs + lane_y))
         ref_points.append((x - 40, y + 50))
         ref_points.append((x_front - 45, y_front + 70))
-        end_point = (x_front, y_front + )
+        # end_point = (x_front, y_front + )
         end_point = (x_front - 30, y_front + 90)
         # end_point = (x_front - 30, y_front + 140)
         ref_points.append(end_point)
