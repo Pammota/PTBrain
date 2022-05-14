@@ -61,7 +61,7 @@ class HaarCascadeClassifier():
 
         print("Reached here")
 
-        while time.time() - start > 600:
+        while time.time() - start < 600:
             frame = cameraThread.frame
             frame = cv2.resize(frame, (320, 240))
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
