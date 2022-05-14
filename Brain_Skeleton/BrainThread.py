@@ -639,9 +639,9 @@ class BrainThread(Thread):
         x_front, y_front = x_obs, y_obs + L
         x = x_obs
         y = y_obs - distance
-        if distance < 27:
+        if distance < 35:
             steering = 0
-            time = float((27 - distance) / 13)
+            time = float((35 - distance) / 13)
             speed = -13
             time.sleep(time)
             y = y - speed * time
