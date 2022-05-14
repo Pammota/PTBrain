@@ -8,7 +8,7 @@ class ImageAquisitionThread(Thread):
         super(ImageAquisitionThread, self).__init__()
 
         self.camera = cv2.VideoCapture(0)
-        self.frame = np.zeros((640, 480))
+        self.frame = np.zeros((640, 480, 3))
         self.__running = True
 
     def run(self):
