@@ -50,6 +50,8 @@ class HaarCascadeClassifier():
         self.sizes = [(32, 32), (24, 24), (32, 32)]
         self.n_neighb = [18, 3, 28]
 
+        self.__running = True
+
     def wait_pedestrian(self, cameraThread):
 
         on_screen = True
@@ -61,7 +63,7 @@ class HaarCascadeClassifier():
 
         print("Reached here")
 
-        while time.time() - start < 600:
+        while self.__running:
             frame = cameraThread.frame
             #frame = cv2.resize(frame, (320, 240))
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -77,8 +79,16 @@ class HaarCascadeClassifier():
                 cv2.rectangle(frame, (int(x), int(y)), (int(x + w), int(y + h)), (0, 0, 255), 2)
             cv2.imshow("haarcascade", frame)
             cv2.waitKey(1)
+        cameraThread.stop()
 
+    def stop(self):
+        self.__running = False
 
 if __name__ == "__main__":
     hc = HaarCascadeClassifier()
-    hc.wait_pedestrian(ImageAquisitionThread())
+    try:
+        hc.wait_pedestrian(ImageAquisitionThread())
+    except KeyboardInterrupt:
+        hc.stop()
+
+
