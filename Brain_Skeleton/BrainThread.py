@@ -632,9 +632,9 @@ class BrainThread(Thread):
             pathTracking.run()
 
     def overtaking_maneuver(self, distance):
-        x_obs, y_obs = 150, 150
-        ref_thresh = 5
-        final_thresh = 20
+        x_obs, y_obs = 100, 100
+        ref_thresh = 20
+        final_thresh = 25
         L = 45 # length of car
         x_front, y_front = x_obs, y_obs + L
         x = x_obs
@@ -649,16 +649,18 @@ class BrainThread(Thread):
             self.outP_com.send((theta_command, speed_command))
 
             time.sleep(timp)
-            y = y - speed * timp
+            y = y + speed * timp
 
 
         ref_points = []
         lane_x = 30
         lane_y = 25
-        ref_points.append((x_obs - 40, y_obs + lane_y))
-        ref_points.append((x_front - 40, y_front + 20))
-        ref_points.append((x_front - 40, y_front + 70))
-        end_point = (x_front, y_front + 90)
+        # ref_points.append((x_obs -35, y_obs + lane_y))
+        ref_points.append((x - 40, y + 50))
+        ref_points.append((x_front - 48, y_front + 70))
+        # end_point = (x_front, y_front + )
+        end_point = (x_front - 40, y_front + 100)
+        # end_point = (x_front - 30, y_front + 140)
         ref_points.append(end_point)
 
         size_pixel = 300
