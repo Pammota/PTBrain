@@ -105,7 +105,7 @@ class HaarCascadeClassifier():
 
             new_xs = self.append_objects(rects, True)
 
-            for x in new_xs:
+            for x in [obj["x"] for obj in self.objects]:
                 cv2.line(frame, (x, 0), (x, 479), (0, 255, 0), 2)
 
             cv2.imshow("haarcascade", frame)
@@ -126,7 +126,7 @@ class HaarCascadeClassifier():
                 cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), (0, 0, 255), 2)
 
 
-            for x in new_xs:
+            for x in [obj["x"] for obj in self.objects]:
                 cv2.line(frame, (x, 0), (x, 479), (0, 255, 0), 2)
 
             cv2.imshow("haarcascade", frame)
