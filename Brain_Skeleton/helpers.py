@@ -7,7 +7,7 @@ def accept_box(x1, x2, y1, y2, w, h):
     if (x2 - x1) > w * 0.25 or (y2 - y1) > h * 0.25:  #No huge boxes
         return False
 
-    if (x2 - x1) < w * 0.07 and (y2 - y1) < h * 0.07:  #No small boxes
+    if (x2 - x1) < w * 0.12 and (y2 - y1) < h * 0.12:  #No small boxes
         return False
 
     if (x2 - x1) < w * 0.03 or (y2 - y1) < h * 0.03:  #No very small boxes
