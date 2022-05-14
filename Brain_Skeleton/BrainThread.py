@@ -639,6 +639,7 @@ class BrainThread(Thread):
         x_front, y_front = x_obs, y_obs + L
         x = x_obs
         y = y_obs - distance
+        print("distance = {} cm".format(distance))
         if distance < 50:
             steering = 0
             timp = float((50 - distance) / 13)
