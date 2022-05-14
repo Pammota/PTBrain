@@ -656,7 +656,7 @@ class BrainThread(Thread):
 
         size_pixel = 300
         size_cm = 150
-        imuTracking = IMU_tracking(self)
+        imuTracker = IMU_tracking(self)
         pathTracking = PathTracking(self.outP_com, map=map, ref_points=ref_points, size_pixel=size_pixel,
                                     size_cm=size_cm,
                                     x_car=x, y_car=y, theta_yaw_map=90, yaw=90,
