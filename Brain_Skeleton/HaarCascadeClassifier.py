@@ -51,6 +51,9 @@ class HaarCascadeClassifier():
     def wait_pedestrian(self, cameraThread):
 
         on_screen = True
+
+        cameraThread.start()
+
         while on_screen:
             frame = cameraThread.frame
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
