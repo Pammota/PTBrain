@@ -3,7 +3,7 @@ from helpers import *
 from ImageAquisitionThread import ImageAquisitionThread
 import cv2
 
-def aggregate(detectors, n_agg, sizes, n_neighb):
+def aggregate(gray, detectors, n_agg, sizes, n_neighb):
 
     rects_agg = []
 
@@ -53,7 +53,9 @@ class HaarCascadeClassifier():
         on_screen = True
         while on_screen:
             frame = cameraThread.frame
-            rects = aggregate(self.detectors, 2, self.sizes, self.n_neighb)
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+            rects = aggregate(gray, self.detectors, 2, self.sizes, self.n_neighb)
 
             for rect in rects:
                 x, y, w, h, = rect
