@@ -141,9 +141,7 @@ class Controller():
                 elif self.executed["parking"] == 1:
                     self.setExecuted(parking=2)
                     self.had_parking = False
-                    """if not self.passed_one_intersection:
-                        self.__localize(["parking"])"""
-                return [0, 0, 0, 0, 0, 0, 1]  #activate parking flag
+                    return [0, 0, 0, 0, 0, 0, 1]  #activate parking flag
             # if a PID is defined => we have a car ahead
             elif self.PIDController is not None:  # keep distance from the car in front
                 speed_off = self.PIDController.update(self.front_distance())
