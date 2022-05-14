@@ -117,7 +117,7 @@ class HaarCascadeClassifier():
 
             rects = aggregate(gray, self.detectors, 2, self.sizes, self.n_neighb)
 
-            new_xs = self.append_objects(rects, True)
+            new_xs = self.append_objects(rects)
 
             for rect in [obj["rect"] for obj in self.objects]:
                 x, y, w, h = rect
