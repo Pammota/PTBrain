@@ -22,7 +22,7 @@ def aggregate(gray, detectors, n_agg, sizes, n_neighb):
             for i, group in enumerate(groups):
                 for other_rect in group:
                     iou = get_IoU_cascade(rect, other_rect)
-                    if iou > 0.4:
+                    if iou > 0.25:
                         group.append(rect)
                         group_idx = i
                         break
@@ -50,7 +50,7 @@ class HaarCascadeClassifier():
         self.sizes = [(32, 32), (24, 24), (32, 32)]
         self.n_neighb = [18, 3, 28]
 
-        self.stabilizer = ObjectStabilizer(1, 0.5, 0.25)
+        self.stabilizer = ObjectStabilizer(5, 0.1, 0.25)
 
         self.__running = True
 
