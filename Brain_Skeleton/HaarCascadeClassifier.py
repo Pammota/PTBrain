@@ -108,6 +108,9 @@ class HaarCascadeClassifier():
             for x in new_xs:
                 cv2.line(frame, (x, 0), (x, 479), (0, 255, 0), 2)
 
+            cv2.imshow("haarcascade", frame)
+            cv2.waitKey(1)
+
         while self.__running:
             frame = cameraThread.frame
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
