@@ -3,7 +3,10 @@ import copy
 from helpers import *
 
 class ObjectStabilizer:
-    def __init__(self, num_frames=5, threshold=0.5):
+    def __init__(self, num_frames=5, threshold=0.5, IoU_thresh = 0.4):
+
+        self.IoU_thresh = IoU_thresh
+
         self.num_frames = num_frames
         if threshold <= 0 or threshold >= 1:
             threshold = 0.5
@@ -23,7 +26,7 @@ class ObjectStabilizer:
                     continue
 
                 IoU = get_IoU(ent_box, boxes[j])
-                if IoU > 0.4:  #is the same object
+                if IoU > self.IoU_thresh:  #is the same object
                     disappears = False
                     self.objects[i]["boxes"].append(boxes[j])
                     self.objects[i]["scores"] = scores[j]

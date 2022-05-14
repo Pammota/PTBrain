@@ -54,6 +54,32 @@ def get_IoU(a, b):
     union = float(area(a) + area(b) - intersection)
     return float(intersection / union)
 
+def get_IoU_cascade(a, b):
+
+    try:
+        ax1, ay1, aw, ah = a
+        bx1, by1, bw, bh = b
+
+        ax2, ay2 = ax1 + aw, ay1 + ah
+        bx2, by2 = bx1 + bw, by1 + bh
+    except TypeError:
+        return 0.0
+
+    cy1 = max(ay1, by1)
+    cy2 = min(ay2, by2)
+    cx1 = max(ax1, bx1)
+    cx2 = min(ax2, bx2)
+
+    intersection = max(0, cx2 - cx1 + 1) * max(0, cy2 - cy1 + 1)
+
+    union = float(area_cascade(a) + area_cascade(b) - intersection)
+    return float(intersection / union)
+
+def area_cascade(box):
+    x1, y1, w, h = box
+    x2, y2 = x1 + w, y1 + h
+    return (y2 - y1 + 1) * (x2 - x1 + 1)
+
 
 def area(box):
     x1, y1, x2, y2 = box

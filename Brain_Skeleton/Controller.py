@@ -7,14 +7,15 @@ import numpy as np
 from PIDControl import PIDControl
 from GraphPars import GraphPars
 
-
 RANDOM_POSITION = True
 
-
 class Controller():
-    def __init__(self):
+    def __init__(self, brain):
         self.flags = {"forward": False, "forbidden": False, "parking": False, "sem_yellow": False, "sem_red": False,
                  "sem_green": False, "priority": False, "crosswalk": False, "stop": False}
+
+        self.brain = brain
+
         self.flags_history = []
         self.state = "Lane Follow"
         self.directions = ["front", "roundabout_forward", "left", "left", "right", "left", "right", "right", "stop", "stop"]
@@ -80,10 +81,9 @@ class Controller():
         if self.state == "Lane Follow":
             if self.passed_horiz_line and not self.flags["crosswalk"]:
                 #self.setExecuted(parking=False, crosswalk=False)
-                if self.validate_intersection():
-                    self.state = "Intersection"
-                    self.passed_one_intersection = True
-                    self.ongoing_intersection = True
+                self.state = "Intersection"
+                self.passed_one_intersection = True
+                self.ongoing_intersection = True
             if self.passed_horiz_line and self.flags["crosswalk"] and not self.executed["crosswalk"]:
                 self.state = "Crosswalk"
                 """if not self.passed_one_intersection:
@@ -143,6 +143,11 @@ class Controller():
                 speed_off = self.PIDController.update(self.front_distance())
                 speed_off = np.clip(speed_off, -13, 13)
                 print("PID GIVEN SPEED = {}".format(speed_off))
+
+                if speed_off < -8:
+                    self.brain.overtaking_maneuver(self.front_distance(), self.theta)
+                    return [self.base_speed, 0, 0, 0, 0, 0, 0]
+
                 return [self.base_speed + speed_off, self.theta, 0, 0, 0, 0, 0]
             return [self.base_speed, self.theta, 0, 0, 0, 0, 0]
 

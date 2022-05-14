@@ -65,14 +65,14 @@ class BrainThread(Thread):
         self.objectDetectionThread_working = False
 
         #  creates a controller object to control the car
-        self.controller = Controller()
+        self.controller = Controller(self)
         time.sleep(0.1)
 
         # initializes the distance sensor
         devFileDS = '/dev/ttyACM0'
         devFileNucleo = '/dev/ttyACM1'
 
-        self.serialComNucleo = serial.Serial(devFileNucleo, 19200, timeout=0.003)
+        self.serialComNucleo = serial.Serial(devFileNucleo, 19200, timeout=0.03)
         self.serialComNucleo.flushInput()
         self.serialComNucleo.flushOutput()
 
