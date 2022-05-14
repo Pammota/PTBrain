@@ -139,8 +139,11 @@ class GraphPars():
             return "J", "I"
         if position in ["63"] or (int(position) >= 172 and int(position) <= 197) or (int(position) >= 231 and int(position) <= 266):
             return "J", "G"
-
-
+        if (int(position) >= 308 and int(position) <= 342) or (int(position) >= 375 and int(position) <= 398)\
+                or (int(position) >= 426 and int(position) <= 468) or position == "49":
+            return "C", "J"
+        if (int(position) >= 343 and int(position) <= 374) or (int(position) >= 399 and int(position) <= 425):
+            return "J", "C"
 
     def validate_intersection(self, coords):
         position = self.get_closest_id(coords)

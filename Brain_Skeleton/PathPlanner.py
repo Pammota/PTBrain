@@ -38,7 +38,6 @@ def compute_direction(edge, next_edge):
     if next_edge.type == "roundabout":
         direction = "roundabout_"
         if edge.type == "highway":
-            direction = "highway_roundabout_"
             edgedir = DIR_UP
         elif edge.type == "normal" and edge.xy == "GJ":
             edgedir = DIR_LEFT
@@ -46,12 +45,7 @@ def compute_direction(edge, next_edge):
             edgedir = DIR_RIGHT
         elif edge.type == "normal" and edge.xy == "CK":
             edgedir = DIR_LEFT
-    elif next_edge.type == "country":
-        direction = "country_"
-    elif next_edge.type == "highway":
-        direction = "highway_"
     elif next_edge.type == "highway_exit":
-        direction = "highway_exit_"
         edgedir = DIR_LEFT
     elif next_edge.type == "normal":
         if edge.type == "roundabout":
@@ -104,7 +98,6 @@ class PathPlanner:
         self.edges["BE"] = Edge(DIR_UP, "normal", ["semaphore"])
 
         self.edges["CB"] = Edge(DIR_LEFT, "highway_exit", [])
-        self.edges["CK"] = Edge(DIR_RIGHT, "country", ["tailing"], "CK")
         self.edges["CJ"] = Edge(DIR_RIGHT, "highway", ["highway", "roundabout"])
         self.edges["CF"] = Edge(DIR_UP, "highway_exit", [])
 
@@ -136,14 +129,11 @@ class PathPlanner:
         self.edges["JG"] = Edge(DIR_RIGHT, "roundabout", ["ramp", "crosswalk", "parking"])
         self.edges["JI"] = Edge(DIR_LEFT, "roundabout", ["crosswalk"])
 
-        self.edges["KG"] = Edge(DIR_RIGHT, "normal", ["ramp", "crosswalk", "parking"], "KG")
-        self.edges["KJ"] = Edge(DIR_LEFT, "normal", ["roundabout"])
-
         ######## insert the nodes
         self.nodes["0"] = Node(None, (53, 649), ["A"])
         self.nodes["A"] = Node(None, (53, 582), ["0", "D", "B"])
         self.nodes["B"] = Node(None, (180, 582), ["A", "E", "C"])
-        self.nodes["C"] = Node(None, (302, 582), ["B", "F", "J", "K"])
+        self.nodes["C"] = Node(None, (302, 582), ["B", "F", "J"])
         self.nodes["D"] = Node(None, (53, 462), ["A", "G", "E"])
         self.nodes["E"] = Node(None, (180, 462), ["B", "D", "H", "F"])
         self.nodes["F"] = Node(None, (302, 462), ["C", "I", "E"])
@@ -151,7 +141,6 @@ class PathPlanner:
         self.nodes["H"] = Node(None, (180, 301), ["G", "I"])
         self.nodes["I"] = Node(None, (302, 301), ["F", "H", "J"])
         self.nodes["J"] = Node(None, (585, 172), ["C", "I", "G"])
-        self.nodes["K"] = Node(None, (702, 172), ["J", "G"])
 
         """###### draw all nodes on graph
         for id, properties in self.nodes.items():
@@ -191,6 +180,13 @@ class PathPlanner:
                             continue
                         if graph["nodes"][crt_node].prev[0] == "K" and neighb[0] == "J":
                             continue
+                        if graph["nodes"][crt_node].prev[0] == "J" and neighb[0] == "B":
+                            continue
+                        if crt_node[0] == "J" and graph["nodes"][crt_node].prev[0] == "C" and neighb[0] == "I":
+                            continue
+                        if graph["nodes"][crt_node].prev[0] == "G" and neighb[0] == "C":
+                            continue
+
                         queue.append(neighb)
                         graph["nodes"][neighb].prev = crt_node
 
@@ -281,6 +277,9 @@ class PathPlanner:
         graph = {"nodes": copy.deepcopy(self.nodes),
                  "edges": copy.deepcopy(self.edges)}
 
+        if starting_points[1] == "J" and "roundabout" in tasks_list:
+            tasks_list.remove("roundabout")
+
         for k, e in graph["edges"].items():
             e.x = k[0]
             e.y = k[1]
@@ -313,7 +312,7 @@ class PathPlanner:
         return self.current()
 
 if __name__ == "__main__":
-    pp = PathPlanner(tasks_list=["parking", "semaphore", "crosswalk"], starting_points=["I", "J"])
+    pp = PathPlanner(tasks_list=["parking", "semaphore", "crosswalk", "roundabout"], starting_points=["J", "C"])
 
     print("INITIALIZING!! Car starts! (waits for the semaphore, goes straight forward)")
 
