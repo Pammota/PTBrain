@@ -627,13 +627,13 @@ class BrainThread(Thread):
             size_cm = 234
             intersection = True
 
-            end_point = (187, 110)
+            end_point = (197, 120)
             # ref_points.append(end_point)
             # ref_points.append((117, 40))
             # ref_points.append((147, 50))
             # ref_points.append((167, 70))
 
-            ref_points = pathGenerator.generate_circle_points(r=80, d=10, x_c=197, y_c=40, alpha_max=3.14, alpha_min=1.4)
+            ref_points = pathGenerator.generate_circle_points(r=80, d=10, x_c=197, y_c=43, alpha_max=3.14, alpha_min=1.57)
             ref_points.append(end_point)
 
             # ref_points.append((117, 40))
