@@ -627,7 +627,7 @@ class BrainThread(Thread):
             size_cm = 234
             intersection = True
 
-            end_point = (197, 130)
+            end_point = (197, 120)
             # ref_points.append(end_point)
             # ref_points.append((117, 40))
             # ref_points.append((147, 50))
