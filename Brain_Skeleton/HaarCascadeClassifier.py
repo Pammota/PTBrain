@@ -1,5 +1,5 @@
 import time
-
+from ObjectStabilizer import ObjectStabilizer
 import numpy as np
 from helpers import *
 from ImageAquisitionThread import ImageAquisitionThread
@@ -50,6 +50,8 @@ class HaarCascadeClassifier():
         self.sizes = [(32, 32), (24, 24), (32, 32)]
         self.n_neighb = [18, 3, 28]
 
+        self.stabilizer = ObjectStabilizer(7, 0.5)
+
         self.__running = True
 
     def wait_pedestrian(self, cameraThread):
@@ -59,24 +61,28 @@ class HaarCascadeClassifier():
         cameraThread.start()
         time.sleep(0.5)
 
-        start = time.time()
-
-        print("Reached here")
-
         while self.__running:
             frame = cameraThread.frame
             #frame = cv2.resize(frame, (320, 240))
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-            print("Reached here too")
-
             rects = aggregate(gray, self.detectors, 2, self.sizes, self.n_neighb)
 
-            print("Reached here too")
+            labels = ["doll"] * len(rects)
+            boxes = [[x, y, x + w, y + h] for x, y, w, h in rects]
+            scores = [1] * len(rects)
 
-            for rect in rects:
-                x, y, w, h, = rect
-                cv2.rectangle(frame, (int(x), int(y)), (int(x + w), int(y + h)), (0, 0, 255), 2)
+            ids = self.stabilizer.add_frame(boxes, labels, scores)
+
+            for idx in range(len(ids)):
+                exists, box, label, score = self.stabilizer.get_object_data(ids[idx])
+
+                if not exists:
+                    continue
+
+                x1, y1, x2, y2 = box
+                cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), (0, 0, 255), 2)
+
             cv2.imshow("haarcascade", frame)
             cv2.waitKey(1)
         cameraThread.stop()
