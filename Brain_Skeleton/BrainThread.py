@@ -312,10 +312,7 @@ class BrainThread(Thread):
             s_leep -= 0.01
         for index in range(r_ange):
             self.outP_com.send((theta_command, speed_command))
-            image = self.cameraThread.frame
-            cv2.imshow("CAR POV", image)
-            cv2.waitKey(1)
-            time.sleep(s_leep)
+            time.sleep(s_leep + 0.01)
 
 
     def plot_timeframes_graph(self, timeframes):
