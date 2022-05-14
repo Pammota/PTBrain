@@ -667,7 +667,7 @@ class BrainThread(Thread):
                                     size_cm=size_cm,
                                     x_car=x, y_car=y, theta_yaw_map=90, yaw=90,
                                     v=13, dt=0.05, ref_thresh=ref_thresh, final_thresh=final_thresh,
-                                    end_point=end_point, imu_tracker=imuTracker, L=L, isForward=False)
+                                    end_point=end_point, imu_tracker=imuTracker, L=L, isForward=True)
         pathTracking.run()
 
 
