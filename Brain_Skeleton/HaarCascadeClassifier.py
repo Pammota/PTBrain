@@ -50,7 +50,7 @@ class HaarCascadeClassifier():
         self.sizes = [(32, 32), (24, 24), (32, 32)]
         self.n_neighb = [18, 3, 28]
 
-        self.stabilizer = ObjectStabilizer(7, 0.5)
+        self.stabilizer = ObjectStabilizer(7, 0.3)
 
         self.__running = True
 
