@@ -18,10 +18,12 @@ class Controller():
 
         self.flags_history = []
         self.state = "Lane Follow"
-        self.directions = ["front", "roundabout_forward", "left", "left", "right", "left", "right", "right", "stop", "stop"]
+        self.directions = ["right", "forward", "forward", "roundabout_right", "forward", "forward", "forward", "forward", "forward", "stop", "stop", "stop"]
         self.dir_idx = 0
         self.had_parking = False
         self.base_speed = 14
+        if not RANDOM_POSITION:
+            self.base_speed = 25
         self.theta = 0
         self.thetas = []
         self.passed_horiz_line = False
@@ -33,7 +35,7 @@ class Controller():
         self.PIDController = None
         self.passed_one_intersection = False
 
-        self.executed = {"parking": False, "crosswalk": False}
+        self.executed = {"parking": 0, "crosswalk": False}
 
         self.env_conn = V2X()
         self.env_conn.start()
@@ -132,11 +134,15 @@ class Controller():
             if self.flags["parking"]:
                 self.had_parking = True
                 self.env_conn.stream(3, self.coords)
-            elif self.had_parking is True and not self.flags["parking"] and not self.executed["parking"]:
-                self.setExecuted(parking=True)
-                self.had_parking = False
-                """if not self.passed_one_intersection:
-                    self.__localize(["parking"])"""
+            elif self.had_parking is True and not self.flags["parking"]:
+                if self.executed["parking"] == 0:
+                    self.setExecuted(parking=1)
+                    self.had_parking = False
+                elif self.executed["parking"] == 1:
+                    self.setExecuted(parking=2)
+                    self.had_parking = False
+                    """if not self.passed_one_intersection:
+                        self.__localize(["parking"])"""
                 return [0, 0, 0, 0, 0, 0, 1]  #activate parking flag
             # if a PID is defined => we have a car ahead
             elif self.PIDController is not None:  # keep distance from the car in front
@@ -154,9 +160,9 @@ class Controller():
             return [self.base_speed, self.theta, 0, 0, 0, 0, 0]
 
         if self.state == "Intersection":
-            try:
+            if RANDOM_POSITION:
                 direction, self.v1, self.v2 = self.pathPlanner.current()
-            except:
+            else:
                 direction = self.directions[self.dir_idx]
 
             self.validate_sem()
@@ -200,6 +206,8 @@ class Controller():
     def setExecuted(self, parking=None, crosswalk=None):
         if crosswalk is not None:
             self.executed["crosswalk"] = crosswalk
+        if parking is not None:
+            self.executed["parking"] = parking
 
     def front_distance(self):
         return np.median(self.front_distances)
@@ -248,7 +256,7 @@ class Controller():
 
     def __localize(self, fulfilled=None):
         if not RANDOM_POSITION:
-            return PathPlanner(["I", "J", "G", "H"])
+            return PathPlanner(["0", "A", "B", "E", "F", "I", "J", "G", "D", "A", "0"])
 
         start_con_time = time.time()
 
@@ -275,7 +283,7 @@ class Controller():
             except Exception as e:
                 print(str(e))
 
-        return PathPlanner(["F", "I", "J", "G"])
+        return PathPlanner(["0", "A", "B", "E", "F", "I", "J", "G", "D", "A", "0"])
 
     @staticmethod
     def getAngleCommand(theta):
