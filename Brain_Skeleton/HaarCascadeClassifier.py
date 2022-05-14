@@ -1,3 +1,5 @@
+import time
+
 import numpy as np
 from helpers import *
 from ImageAquisitionThread import ImageAquisitionThread
@@ -53,6 +55,7 @@ class HaarCascadeClassifier():
         on_screen = True
 
         cameraThread.start()
+        time.sleep(0.5)
 
         while on_screen:
             frame = cameraThread.frame
