@@ -51,8 +51,34 @@ class HaarCascadeClassifier():
         self.n_neighb = [18, 3, 28]
 
         self.stabilizer = ObjectStabilizer(5, 0.1, 0.25)
+        self.objects = []
 
         self.__running = True
+
+
+    def append_objects(self, rects, add_new = False):
+
+        new_xs = []
+
+        for rect in rects:
+            exists = False
+            new_x = int(rect[0] + rect[1] // 2)
+
+            for obj in self.objects:
+                iou = get_IoU_cascade(rect, obj["rect"])
+                if iou > 0.4:  # same objects
+                    obj["rect"] = rect
+                    if new_x > obj["x"]:
+                        obj["x"] = new_x
+                        new_xs.append(new_x)
+                    exists = True
+                    continue
+            if not exists and add_new:
+                self.objects.append({"rect": rect, "x": new_x})
+
+        return new_xs
+
+
 
     def wait_pedestrian(self, cameraThread):
 
@@ -61,16 +87,29 @@ class HaarCascadeClassifier():
         cameraThread.start()
         time.sleep(0.5)
 
-        frame = cameraThread.frame
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-        rects = aggregate(gray, self.detectors, 2, self.sizes, self.n_neighb)
+        ### Gather objects on the screen
+        start = time.time()
 
-        labels = [0] * len(rects)
-        boxes = [[x, y, x + w, y + h] for x, y, w, h in rects]
-        scores = [1] * len(rects)
+        while time.time() - start < 2:
+            frame = cameraThread.frame
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-        ids = self.stabilizer.add_frame(boxes, labels, scores)
+            rects = aggregate(gray, self.detectors, 2, self.sizes, self.n_neighb)
+
+            for rect in rects:
+                x, y, w, h = rect
+
+                x1, y1, x2, y2 = x, y, x + w, y + h
+                cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), (0, 0, 255), 2)
+
+            new_xs = self.append_objects(rects, True)
+
+            for x in [obj["x"] for obj in self.objects]:
+                cv2.line(frame, (x, 0), (x, 479), (0, 255, 0), 2)
+
+            cv2.imshow("haarcascade", frame)
+            cv2.waitKey(1)
 
         while self.__running:
             frame = cameraThread.frame
@@ -78,20 +117,17 @@ class HaarCascadeClassifier():
 
             rects = aggregate(gray, self.detectors, 2, self.sizes, self.n_neighb)
 
-            labels = [0] * len(rects)
-            boxes = [[x, y, x + w, y + h] for x, y, w, h in rects]
-            scores = [1] * len(rects)
+            new_xs = self.append_objects(rects)
 
-            ids = self.stabilizer.add_frame(boxes, labels, scores)
+            for rect in [obj["rect"] for obj in self.objects]:
+                x, y, w, h = rect
 
-            for idx in range(len(ids)):
-                exists, box, label, score = self.stabilizer.get_object_data(ids[idx])
-
-                if not exists:
-                    continue
-
-                x1, y1, x2, y2 = box
+                x1, y1, x2, y2 = x, y, x + w, y + h
                 cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), (0, 0, 255), 2)
+
+
+            for x in [obj["x"] for obj in self.objects]:
+                cv2.line(frame, (x, 0), (x, 479), (0, 255, 0), 2)
 
             cv2.imshow("haarcascade", frame)
             cv2.waitKey(1)
