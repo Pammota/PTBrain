@@ -10,7 +10,10 @@ def accept_box(x1, x2, y1, y2, w, h):
     if (x2 - x1) < w * 0.08 and (y2 - y1) < h * 0.08:  #No small boxes
         return False
 
-    if x1 > w * 0.98 or x2 < w * 0.02 or y1 > h * 0.98 or y2 < h * 0.02:
+    if (x2 - x1) < w * 0.03 or (y2 - y1) < h * 0.03:  # No small boxes
+        return False
+
+    if x1 > w * 0.97 or x2 < w * 0.03 or y1 > h * 0.97 or y2 < h * 0.03:
 
         print(x1, x2, y1, y2, w, h)
         return False
