@@ -282,7 +282,7 @@ class BrainThread(Thread):
 
     def parking_maneuver(self):
         print("Executing parking maneuver")
-        self.hardcoded_move(0, -20, 10, 0.02)
+        self.hardcoded_move(0, -20, 25, 0.02)
         self.hardcoded_move(22.9, -20, 75, 0.02)
         time.sleep(0.02)
         self.hardcoded_move(-22.9, -20, 71, 0.02)
