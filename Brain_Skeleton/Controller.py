@@ -144,7 +144,7 @@ class Controller():
                 speed_off = np.clip(speed_off, -13, 13)
                 print("PID GIVEN SPEED = {}".format(speed_off))
 
-                if speed_off < -8:
+                if speed_off < -9:
                     self.brain.overtaking_maneuver(self.front_distance())
                     return [self.base_speed, 0, 0, 0, 0, 0, 0]
 

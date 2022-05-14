@@ -644,8 +644,13 @@ class BrainThread(Thread):
             steering = 0
             timp = float((50 - distance) / 13)
             speed = -13
+
+            speed_command, theta_command = Controller.getSpeedCommand(speed), Controller.getAngleCommand(steering)
+            self.outP_com.send((theta_command, speed_command))
+
             time.sleep(timp)
             y = y - speed * timp
+
 
         ref_points = []
         lane_x = 30
