@@ -628,11 +628,13 @@ class BrainThread(Thread):
             intersection = True
 
             end_point = (197, 90)
-            ref_points.append(end_point)
-            ref_points.append((117, 40))
-            ref_points.append((147, 50))
-            ref_points.append((167, 70))
+            # ref_points.append(end_point)
+            # ref_points.append((117, 40))
+            # ref_points.append((147, 50))
+            # ref_points.append((167, 70))
 
+            ref_points = pathGenerator.generate_circle_points(r=80, d=10, x_c=197, y_c=10, alpha_max=3.14, alpha_min=1.57)
+            ref_points.append(end_point)
 
 
         if intersection == True:
