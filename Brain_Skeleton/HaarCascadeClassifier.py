@@ -68,9 +68,9 @@ class HaarCascadeClassifier():
 
             rects = aggregate(gray, self.detectors, 2, self.sizes, self.n_neighb)
 
-            labels = ["doll" for i in range(len(rects))]
+            labels = [0] * len(rects)
             boxes = [[x, y, x + w, y + h] for x, y, w, h in rects]
-            scores = [1 for i in range(len(rects))]
+            scores = [1] * len(rects)
 
             ids = self.stabilizer.add_frame(boxes, labels, scores)
 
