@@ -59,6 +59,7 @@ class HaarCascadeClassifier():
 
         while on_screen:
             frame = cameraThread.frame
+            frame = cv2.resize(frame, (320, 240))
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
             rects = aggregate(gray, self.detectors, 2, self.sizes, self.n_neighb)
