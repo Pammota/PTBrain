@@ -22,7 +22,7 @@ def aggregate(gray, detectors, n_agg, sizes, n_neighb):
             for i, group in enumerate(groups):
                 for other_rect in group:
                     iou = get_IoU_cascade(rect, other_rect)
-                    if iou > 0.25:
+                    if iou > 0.4:
                         group.append(rect)
                         group_idx = i
                         break
