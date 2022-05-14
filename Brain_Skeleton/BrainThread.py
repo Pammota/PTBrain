@@ -633,7 +633,7 @@ class BrainThread(Thread):
 
     def overtaking_maneuver(self, distance):
         x_obs, y_obs = 150, 150
-        ref_thresh = 10
+        ref_thresh = 15
         final_thresh = 25
         L = 45 # length of car
         x_front, y_front = x_obs, y_obs + L
