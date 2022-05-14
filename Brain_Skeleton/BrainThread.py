@@ -649,7 +649,7 @@ class BrainThread(Thread):
             self.outP_com.send((theta_command, speed_command))
 
             time.sleep(timp)
-            y = y - speed * timp
+            y = y + speed * timp
 
 
         ref_points = []
