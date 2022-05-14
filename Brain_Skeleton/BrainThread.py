@@ -310,6 +310,8 @@ class BrainThread(Thread):
             r_ange -= 30
         if s_leep > 0.011:
             s_leep -= 0.01
+        for index in range(r_ange):
+            time.sleep(s_leep)
 
 
     def plot_timeframes_graph(self, timeframes):
