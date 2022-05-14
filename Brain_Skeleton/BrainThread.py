@@ -632,7 +632,7 @@ class BrainThread(Thread):
             pathTracking.run()
 
     def overtaking_maneuver(self, distance):
-        x_obs, y_obs = 150, 150
+        x_obs, y_obs = 100, 100
         ref_thresh = 20
         final_thresh = 25
         L = 45 # length of car
