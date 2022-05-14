@@ -661,7 +661,7 @@ class BrainThread(Thread):
         end_point = (x_front, y_front + 40)
 
         size_pixel = 300
-        size_cm = 150
+        size_cm = 300
         imuTracker = IMU_tracking(self)
         pathTracking = PathTracking(self.outP_com, map=map, ref_points=ref_points, size_pixel=size_pixel,
                                     size_cm=size_cm,
