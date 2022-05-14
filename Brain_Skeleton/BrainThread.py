@@ -633,8 +633,8 @@ class BrainThread(Thread):
 
     def overtaking_maneuver(self, distance):
         x_obs, y_obs = 150, 150
-        ref_thresh = 10
-        final_thresh = 5
+        ref_thresh = 5
+        final_thresh = 20
         L = 45 # length of car
         x_front, y_front = x_obs, y_obs + L
         x = x_obs
@@ -654,14 +654,15 @@ class BrainThread(Thread):
 
         ref_points = []
         lane_x = 30
-        lane_y = 20
-        ref_points.append((x - 60, y + lane_y))
-        ref_points.append((x_front - lane_x, y_front + 20))
-        ref_points.append((x_front, y_front + 40))
-        end_point = (x_front, y_front + 40)
+        lane_y = 25
+        ref_points.append((x_obs - 40, y_obs + lane_y))
+        ref_points.append((x_front - 40, y_front + 20))
+        ref_points.append((x_front - 40, y_front + 70))
+        end_point = (x_front, y_front + 90)
+        ref_points.append(end_point)
 
         size_pixel = 300
-        size_cm = 150
+        size_cm = 300
         imuTracker = IMU_tracking(self)
         pathTracking = PathTracking(self.outP_com, map=map, ref_points=ref_points, size_pixel=size_pixel,
                                     size_cm=size_cm,

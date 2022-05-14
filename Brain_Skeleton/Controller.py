@@ -146,6 +146,8 @@ class Controller():
 
                 if speed_off < -9:
                     self.brain.overtaking_maneuver(self.front_distance())
+                    self.PIDController = None
+                    self.front_distances = [1000, 1000, 1000, 1000, 1000, 1000, 1000]
                     return [self.base_speed, 0, 0, 0, 0, 0, 0]
 
                 return [self.base_speed + speed_off, self.theta, 0, 0, 0, 0, 0]
