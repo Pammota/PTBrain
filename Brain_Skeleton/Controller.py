@@ -128,7 +128,6 @@ class Controller():
 
     def takeAction(self):
 
-        print(self.state)
 
         if self.state == "Lane Follow":
             if self.flags["parking"]:
@@ -189,11 +188,12 @@ class Controller():
         self.flags_history = self.flags_history[-25:]
         for k in self.flags.keys():
             if k == "crosswalk":
-                self.flags[k] = (np.sum([1 if fl[k] is True else 0 for fl in self.flags_history]) > 1)
+                self.flags[k] = (np.sum([1 if fl[k] is True else 0 for fl in self.flags_history]) > 3)
             elif k == "stop":
                 self.flags[k] = (np.sum([1 if fl[k] is True else 0 for fl in self.flags_history[-20:]]) > 4)
             else:
                 self.flags[k] = (np.sum([1 if fl[k] is True else 0 for fl in self.flags_history[-10:]]) > 3)
+
 
     def setTheta(self, LD_info):
         self.thetas.append(LD_info["theta"])
@@ -281,7 +281,7 @@ class Controller():
             except Exception as e:
                 print(str(e))
 
-        return PathPlanner(["C", "J", "G"])
+        return PathPlanner(["0", "A", "B", "E", "F", "I", "J", "G", "D", "A", "0"])
 
     @staticmethod
     def getAngleCommand(theta):

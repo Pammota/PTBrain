@@ -273,7 +273,7 @@ class LaneDetectionThread(Thread):
                     # cv2.line(frame_ROI_IPM, (y1_IPM_cv, x1_IPM_cv), (y2_IPM_cv, x2_IPM_cv), (255, 255, 0), 2)
                     # self.utils.draw_line([line_IPM], (0, 255, 255), frame_ROI_IPM)
         print(sum)
-        if sum > 250:
+        if sum > 350:
 
             slope_horiz /= len(horizontal_lines)
             coeff = np.polynomial.polynomial.polyfit(x_points, y_points, deg=1)
