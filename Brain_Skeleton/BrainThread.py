@@ -657,8 +657,9 @@ class BrainThread(Thread):
         lane_y = 20
         ref_points.append((x - 40, y + lane_y))
         ref_points.append((x_front - lane_x, y_front + 20))
-        ref_points.append((x_front - lane_x, y_front + 115))
+        ref_points.append((x_front - lane_x, y_front + 105))
         end_point = (x_front, y_front + 115)
+        ref_points.append(end_point)
 
         size_pixel = 300
         size_cm = 300
@@ -667,7 +668,7 @@ class BrainThread(Thread):
                                     size_cm=size_cm,
                                     x_car=x, y_car=y, theta_yaw_map=90, yaw=90,
                                     v=13, dt=0.05, ref_thresh=ref_thresh, final_thresh=final_thresh,
-                                    end_point=end_point, imu_tracker=imuTracker, L=L, isForward=True)
+                                    end_point=end_point, imu_tracker=imuTracker, L=L, isForward=False)
         pathTracking.run()
 
 
