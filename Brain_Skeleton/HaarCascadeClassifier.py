@@ -62,7 +62,7 @@ class HaarCascadeClassifier():
 
         for rect in rects:
             exists = False
-            new_x = rect[0] + rect[1] // 2
+            new_x = int(rect[0] + rect[1] // 2)
 
             for obj in self.objects:
                 iou = get_IoU_cascade(rect, obj["rect"])
@@ -114,13 +114,14 @@ class HaarCascadeClassifier():
 
             rects = aggregate(gray, self.detectors, 2, self.sizes, self.n_neighb)
 
-            for rect in rects:
+            new_xs = self.append_objects(rects, True)
+
+            for rect in [obj["rect"] for obj in self.objects]:
                 x, y, w, h = rect
 
                 x1, y1, x2, y2 = x, y, x + w, y + h
                 cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), (0, 0, 255), 2)
 
-            new_xs = self.append_objects(rects, True)
 
             for x in new_xs:
                 cv2.line(frame, (x, 0), (x, 479), (0, 255, 0), 2)
