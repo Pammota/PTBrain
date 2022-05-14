@@ -641,10 +641,10 @@ class BrainThread(Thread):
         y = y_obs - distance
         if distance < 50:
             steering = 0
-            time = float((50 - distance) / 13)
+            timp = float((50 - distance) / 13)
             speed = -13
-            time.sleep(time)
-            y = y - speed * time
+            time.sleep(timp)
+            y = y - speed * timp
 
         ref_points = []
         lane_x = 30
