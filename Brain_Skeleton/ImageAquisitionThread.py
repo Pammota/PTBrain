@@ -16,7 +16,6 @@ class ImageAquisitionThread(Thread):
             grabbed, frame = self.camera.read()
             if grabbed:
                 self.frame = frame
-
             time.sleep(0.04)
     
     def stop(self):
