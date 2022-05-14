@@ -312,6 +312,7 @@ class BrainThread(Thread):
             s_leep -= 0.01
         for index in range(r_ange):
             time.sleep(s_leep)
+            self.outP_com.send((theta_command, speed_command))
 
 
     def plot_timeframes_graph(self, timeframes):
