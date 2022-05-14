@@ -15,7 +15,6 @@ def accept_box(x1, x2, y1, y2, w, h):
 
     if x1 > w * 0.97 or x2 < w * 0.03 or y1 > h * 0.97 or y2 < h * 0.03:
 
-        print(x1, x2, y1, y2, w, h)
         return False
 
     """if x2 < w * 0.65 or y1 > h * 0.65:  #No signs in the left half or bottom half
